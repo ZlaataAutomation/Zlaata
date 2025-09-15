@@ -1,11 +1,17 @@
 package utils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -14,6 +20,7 @@ import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -720,6 +727,44 @@ public class ExcelXLSReader {
 		return true;
 	}
 	 
+	//Saroj Excel Reader
+	public static List<Map<String, Object>> readProductsWithMultipleListing(String filePath) throws IOException {
+	    List<Map<String, Object>> productList = new ArrayList<>();
+	    FileInputStream fis = new FileInputStream(filePath);
+	    XSSFWorkbook workbook = new XSSFWorkbook(fis);
+	    XSSFSheet sheet = workbook.getSheetAt(0);
+
+	    DataFormatter formatter = new DataFormatter();
+
+	    int rowCount = sheet.getPhysicalNumberOfRows();
+	    Row headerRow = sheet.getRow(0);
+
+	    for (int i = 1; i < rowCount; i++) {
+	        Row row = sheet.getRow(i);
+	        if (row == null) {
+	            continue;
+	        }
+	        Map<String, Object> product = new HashMap<>();
+
+	        for (int j = 0; j < headerRow.getPhysicalNumberOfCells(); j++) {
+	            String header = formatter.formatCellValue(headerRow.getCell(j)).trim();
+	            String value  = formatter.formatCellValue(row.getCell(j)).trim();
+
+	            // Handle multiple listing names separated by commas
+	            if (header.equalsIgnoreCase("Product Listing Name")) {
+	                product.put(header, Arrays.asList(value.split(",")));
+	            } else {
+	                product.put(header, value);
+	            }
+	        }
+	        productList.add(product);
+	    }
+
+	    workbook.close();
+	    fis.close();
+	    return productList;
+	}
+
 	
 	
 

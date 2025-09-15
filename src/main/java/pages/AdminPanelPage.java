@@ -1,8 +1,12 @@
 package pages;
 
+import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Assume;
@@ -25,7 +29,9 @@ import com.aventstack.extentreports.Status;
 
 import manager.FileReaderManager;
 import objectRepo.AdminPanelObjRepo;
+import stepDef.ExtentManager;
 import utils.Common;
+import utils.ExcelXLSReader;
 
 public final class AdminPanelPage extends AdminPanelObjRepo  {
 	
@@ -284,6 +290,8 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	    Common.waitForElement(2);
 	    
 	}
+	
+	
 	//Verify the product successfull showing in user application home page top selling Section
 	
 	public void verifyProductShowInTopSelling(String productName) throws InterruptedException {
@@ -341,9 +349,154 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	    }
 	}
 	    
-	    
+	  
 	
+	
+	//Negative Testcase Top Selling Section
+	
+	public void forNegativeGivesProductName() {
+		Common.waitForElement(4);
+	    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+	    System.out.println("✅ Successfull redirect to Adimn Product page");
+		 // Open product listing
+	    click(productListingMenu);  
+	    System.out.println("✅ Successfull click product listing menu");
+	    waitFor(productSearchBox);
+	    click(productSearchBox);
 
+	    // Fetch the product name directly from Excel map
+	    String productName = Common.getValueFromTestDataMap("ProductListingName");
+	    System.out.println("✅ Successfull fetch product listing name from excel sheet");
+	 // Search or enter the product
+	    type(productSearchBox, productName + Keys.ENTER);
+	    Common.waitForElement(2);
+	    System.out.println("✅ Successfull put product listing name in searchbox and also click enter");
+
+		
+	}
+	public String forNegativeFetchSkuFromProduct() {
+		
+	    // now click edit, etc…
+	    waitFor(editProductButton);
+	    click(editProductButton);
+	    System.out.println("✅ Successfull click product edit option");
+	    // now click item, etc…
+	    waitFor(itemProductButton);
+	    click(itemProductButton);
+	    System.out.println("✅ Successfull click product item option");
+	    
+	 // now take Sku
+	    waitFor(skuField);
+	    System.out.println("✅ Successfull copy the SKU from skufield");
+        return skuField.getAttribute("value").trim();
+     
+        
+	   	
+	}
+	// Remove SKU from Top Selling list
+	public void removeSkuFromTopSelling(String sku) {
+	    try {
+	        Common.waitForElement(2);
+	        waitFor(generalSettingsMenu);
+	        click(generalSettingsMenu);
+	        Common.waitForElement(2);
+
+	        waitFor(topSellingEdit);
+	        click(topSellingEdit);
+	        System.out.println("✅ Clicked Top Selling Edit button");
+
+	        waitFor(topSellingSkuInput);
+	        String current = topSellingSkuInput.getAttribute("value");
+	        String cleaned = (current == null) ? "" : current.trim();
+
+	        if (cleaned.startsWith("[") && cleaned.endsWith("]")) {
+	            cleaned = cleaned.substring(1, cleaned.length() - 1).trim();
+	        }
+
+	        List<String> skuList = new ArrayList<>();
+	        if (!cleaned.isEmpty()) {
+	            for (String part : cleaned.split(",")) {
+	                String val = part.trim();
+	                if (!val.isEmpty()) skuList.add(val);
+	            }
+	        }
+
+	        boolean exists = skuList.removeIf(s -> s.equalsIgnoreCase(sku));
+
+	        String updated;
+	        String message;
+	        if (!exists) {
+	            updated = "[" + String.join(", ", skuList) + "]";
+	            message = "SKU '" + sku + "' not found. No changes made.";
+	        } else if (skuList.isEmpty()) {
+	            updated = "[]";
+	            message = "SKU '" + sku + "' removed. List is now empty.";
+	        } else {
+	            updated = "[" + String.join(", ", skuList) + "]";
+	            message = "SKU '" + sku + "' removed from Top Selling list.";
+	        }
+
+	        topSellingSkuInput.clear();
+	        type(topSellingSkuInput, updated);
+	        click(saveTopSelling);
+
+	        System.out.println("✅ " + message);
+
+	    } catch (Exception e) {
+	        String error = "❌ Failed to remove SKU due to: " + e.getMessage();
+	        System.err.println(error);
+	        throw e;
+	    }
+
+	    Common.waitForElement(2);
+	    waitFor(clearCatchButton);
+	    click(clearCatchButton);
+	    System.out.println("✅ Successfully clicked Clear Cache Button");
+	    Common.waitForElement(2);
+	}
+
+
+	// Verify product is NOT in Top Selling (Negative Test)
+	public void verifyProductNotInTopSelling(String productName) throws InterruptedException {
+	    switchToWindow(1);
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    Common.waitForElement(3);
+	    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,700);");
+
+	    int timeoutMinutes = 5;   // total wait time
+	    boolean productFound = false;
+
+	    long endTime = System.currentTimeMillis() + timeoutMinutes * 60 * 1000;
+
+	    while (System.currentTimeMillis() < endTime) {
+	        try {
+	            driver.navigate().refresh();
+	            Common.waitForElement(3);
+
+	            List<WebElement> elements = driver.findElements(By.xpath(
+	                    "//div[contains(@class,'products_cards')]//h3[@class='product_heading' and normalize-space(text())='" 
+	                    + productName + "']"
+	            ));
+
+	            if (elements.isEmpty()) {
+	                // ✅ Product is gone → stop waiting immediately
+	                productFound = false;
+	                break;
+	            } else if (elements.get(0).isDisplayed()) {
+	                // Product is still there → set flag true
+	                productFound = true;
+	            }
+	        } catch (Exception ignored) {}
+
+	        Thread.sleep(2000);
+	    }
+
+	    if (!productFound) {
+	        System.out.println("✅ Product '" + productName + "' is NOT visible in Top Selling (as expected).");
+	    } else {
+	        System.err.println("❌ Product '" + productName + "' still visible in Top Selling even after removal!");
+	    }
+	}
 
 //New Arrivals
 	 private String copiedSku;
@@ -364,7 +517,7 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	 // Search or enter the product
 	    type(productSearchBox, productName + Keys.ENTER);
 	    Common.waitForElement(2);
-	    System.out.println("✅  Entered product listing name in search box & pressed ENTER");
+	    System.out.println("✅ Entered product listing name in search box & pressed ENTER");
 	    
 	 // now click edit, etc…
 	    Common.waitForElement(3);
@@ -787,8 +940,181 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 
 
+//Bulk Product Add 
+	public void UploadTheProductExcel(String excelPath) {
+		Common.waitForElement(2);
+	    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+	    System.out.println("✅ Successful redirect to Adimn Product page");
+	    
+	    Common.waitForElement(2);
+	    waitFor(importButton);
+        click(importButton);
+        System.out.println("✅ Clicked  Importbutton");
+        
+     // Upload new bulk order
+	    Common.waitForElement(2);
+	    waitFor(uploadExcelButton);
+	    uploadExcelButton.sendKeys(excelPath);
+	    System.out.println("✅ successful product added");
+        
+	 // Save changes
+        Common.waitForElement(2);
+        waitFor(submitButton);
+        submitButton.click();
+	    System.out.println("✅ successful saved");
+	        
+       // Assert.assertTrue("❌ Excel upload failed!", successMessage.isDisplayed());
+        System.out.println("✅ Excel uploaded successfully");
+    }
+	
+	public void verifyProductsInAdmin(String filePath) throws IOException {
+		Common.waitForElement(2);
+		//driver.navigate().refresh();
+		List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath)
+			    .stream()
+			    .filter(product -> {
+			        Object skuObj = product.get("Sku");
+			        return skuObj != null && !skuObj.toString().trim().isEmpty();
+			    })
+			    .collect(Collectors.toList());
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+	    for (Map<String, Object> product : products) {
+	        String sku = (String) product.get("Sku");
+
+	        // Click SKU menu
+	        wait.until(ExpectedConditions.elementToBeClickable(clickSKU)).click();
+
+	        // Wait for search boxes
+	        List<WebElement> searchBoxes = wait.until(d -> {
+	            List<WebElement> elements = d.findElements(By.xpath("//input[@role='searchbox']"));
+	            return elements.size() >= 2 ? elements : null;
+	        });
+	        WebElement adminSearchBox = searchBoxes.get(1);
+
+	        // Type SKU
+	        wait.until(ExpectedConditions.elementToBeClickable(adminSearchBox));
+	        adminSearchBox.clear();
+	        adminSearchBox.sendKeys(sku);
+	        adminSearchBox.sendKeys(Keys.ENTER);
+
+	        // ✅ Print only once per SKU
+	        System.out.println("✅ Searched for SKU: " + sku);
+
+	        // Wait for SKU to appear in table
+	        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@title='" + sku + "']")));
+	        System.out.println("✅ SKU is visible in Admin panel: " + sku);
+
+	        // Click outside after confirming visibility (optional)
+	        wait.until(ExpectedConditions.elementToBeClickable(clickBlankSpace)).click();
+	    }
+	    
+	    //Clear Catch
+	    Common.waitForElement(2);
+	    waitFor(clearCatchButton);
+	    click(clearCatchButton);
+	    System.out.println("✅ Successfull click Clear Catch Button");
+	    Common.waitForElement(2);
+	}
+
+	
+	public void verifyProductsInUserApp(String filePath) throws IOException {
+	    switchToWindow(1);
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    Common.waitForElement(3);
+
+	    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	    
+	    // Create ExtentTest once
+	    ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Products in User App");
+	    ExtentManager.setTest(test);
 
 
+	    for (Map<String, Object> product : products) {
+
+	        // ✅ Treat as List, not String
+	        @SuppressWarnings("unchecked")
+	        List<String> listingNames = (List<String>) product.get("Product Listing Name");
+
+	        if (listingNames == null || listingNames.isEmpty()) {
+	            System.out.println(" Skipping empty listing names");
+	            continue;
+	        }
+
+	        for (String listingName : listingNames) {
+	            if (listingName == null || listingName.trim().isEmpty()) continue;
+
+	            // Search in user app
+	            wait.until(ExpectedConditions.elementToBeClickable(userSearchBox));
+	            userSearchBox.clear();
+	            userSearchBox.sendKeys(listingName);
+	            System.out.println("✅ Searched for listing: " + listingName);
+
+	            // Wait for product to appear
+	            By productLocator = By.xpath("//h6[normalize-space()='" + listingName + "']");
+	            wait.until(ExpectedConditions.visibilityOfElementLocated(productLocator));
+
+	            WebElement productElement = driver.findElement(productLocator);
+	            Assert.assertTrue("❌ Listing name not found in User App: " + listingName, productElement.isDisplayed());
+
+	            // Click product
+	            productElement.click();
+	            System.out.println("✅ Product opened in User App: "+ listingName);
+
+
+	            try {
+	                // Actual price
+	                WebElement actualPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_actual_price']")
+	                ));
+
+	                // Current price
+	                WebElement currentPrice = driver.findElement(
+	                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_current_price']")
+	                );
+	                
+	             // Product Discount Percentage 
+	                WebElement discountPercentage = driver.findElement(
+	                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_discount_percentage']")
+	                );
+
+	                // Delivery date
+	                WebElement deliveryDate = driver.findElement(
+	                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prodcut_list_cards_best_pricing_txt']/span")
+	                );
+
+	                // Section 
+	                WebElement section = driver.findElement(
+	                    By.xpath("//div[@class='prod_main_details_head']//h5[@class='prod_category']")
+	                );
+
+	                // ✅ Print details
+	                System.out.println(" Product: " + listingName);
+	                System.out.println("    Actual Price   : " + actualPrice.getText());
+	                System.out.println("    Discount Price : " + currentPrice.getText());
+	                System.out.println("    Percentage     : " + discountPercentage.getText());
+	                System.out.println("    Delivery Date  : " + deliveryDate.getText());
+	                System.out.println("    Section        : " + section.getText());
+	                
+	                // Log all details properly
+	                test.pass("Product Name       : " + listingName);
+	                test.pass("Section            : " + section.getText());
+	                test.pass("Actual Price       : " + actualPrice.getText());
+	                test.pass("Current Price      : " + currentPrice.getText());
+	                test.pass("Discount Percentage: " + discountPercentage.getText());
+	                test.pass("Delivery Date      : " + deliveryDate.getText());
+	                
+
+	            } catch (Exception e) {
+	                System.out.println("⚠ Could not fetch all details for product: " + listingName);
+	            }
+	        }
+	         
+	    }
+	    ExtentManager.getExtentReports().flush();
+	}
 
 
 

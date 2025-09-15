@@ -1,5 +1,7 @@
 package stepDef;
 
+import java.io.IOException;
+
 import context.TestContext;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -61,6 +63,23 @@ public class AdminPanelStepDef {
 		admin.verifyProductShowInTopSelling(productName);
 	}
 
+	//Top Selling Negative Test
+	@When("I remove the product with SKU from Top Selling")
+		public void i_remove_the_product_with_sku_from_top_selling() {
+		admin.forNegativeGivesProductName();
+		capturedSku = admin.forNegativeFetchSkuFromProduct();
+		admin.removeSkuFromTopSelling(capturedSku);
+		   
+		}
+
+		@Then("I should not see product  in Top Selling section on user app")
+		public void i_should_not_see_product_in_top_selling_section_on_user_app() throws InterruptedException {
+			String productName = Common.getValueFromTestDataMap("ProductListingName");
+			admin.verifyProductNotInTopSelling(productName);
+		}
+
+
+
 	
 	// Verify New Arrivals
 
@@ -103,6 +122,29 @@ public class AdminPanelStepDef {
 	public void iShouldSeeTheUpdatedBannerInUserApp() {
 		admin.verifyBannerUserApp();
 	}
+
+//Bulk Product
+	
+	
+		@When("I upload the product excel {string}")
+		public void i_upload_the_product_excel(String filePath) {
+			String excelPath= System.getProperty("user.dir") + "/src/test/resources/BulkProduct/" + filePath;
+			admin.UploadTheProductExcel(excelPath);
+		}
+
+		@Then("the products from {string} should be visible in admin panel")
+		public void the_products_from_should_be_visible_in_admin_panel(String filePath) throws IOException {
+			String excelPath= System.getProperty("user.dir") + "/src/test/resources/BulkProduct/" + filePath;
+			admin.verifyProductsInAdmin(excelPath);
+		    
+		}
+		@Then("the products from {string} should be visible in user app")
+		public void the_products_from_should_be_visible_in_user_app(String filePath) throws IOException {
+			String excelPath= System.getProperty("user.dir") + "/src/test/resources/BulkProduct/" + filePath;
+			admin.verifyProductsInUserApp(excelPath);
+		
+		}
+
 
 
 

@@ -10,6 +10,9 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_01   |
   
+  
+    @Positive
+    @Regression
     @TC_UI_Zlaata_ADM_02
 Scenario Outline: TC_UI_Zlaata_ADM_02 |Verify Top Selling Section Product Display on Homepage.| "<TD_ID>"  
  
@@ -33,7 +36,7 @@ Scenario Outline: TC_UI_Zlaata_ADM_03 |Verify New Arrivals Section Product Displ
 Examples:  
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_03   |
-  
+  @Regression
    @TC_UI_Zlaata_ADM_04
 Scenario Outline: TC_UI_Zlaata_ADM_04 |Verify Category Section Display on Website.| "<TD_ID>"  
    Given admin is logged in
@@ -43,4 +46,29 @@ Scenario Outline: TC_UI_Zlaata_ADM_04 |Verify Category Section Display on Websit
 Examples:  
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_04   |
+  
+   @TC_UI_Zlaata_ADM_05
+Scenario Outline: TC_UI_Zlaata_ADM_05 |Verify bulk product upload and visibility.| "<TD_ID>" 
+   Given admin is logged in
+    When I upload the product excel "Auto Product.xlsx"
+    Then the products from "Auto Product.xlsx" should be visible in admin panel
+    And the products from "Auto Product.xlsx" should be visible in user app
+
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Zlaata_ADM_05   |
+  
+     @Negative
+     @TC_UI_Zlaata_ADM_06
+Scenario Outline: TC_UI_Zlaata_ADM_06 |Remove product SKU from Top Selling and verify on User App.| "<TD_ID>" 
+     Given admin is logged in
+    When I remove the product with SKU from Top Selling
+    Then I should not see product  in Top Selling section on user app
+
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Zlaata_ADM_06   |
+  
+  
+  
   

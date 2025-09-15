@@ -207,7 +207,57 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 
 	    @FindBy(xpath = "//input[@class='file-limitation']") 
 	    protected WebElement desktopBannerUpload;
+	    
+	    
+	    
+	    
+	    //Bull Product 
+	    @FindBy(xpath = "//button[normalize-space()='Import']")
+	    protected WebElement importButton;
+	    
+	    @FindBy(xpath = "//input[@id='importFile']")
+	    protected WebElement uploadExcelButton;
 
+	    @FindBy(xpath = "//button[normalize-space()='Submit']")
+	    protected WebElement submitButton;
+
+	    @FindBy(xpath = "//div[@class='noty_body']")
+	    protected WebElement successMessage;
+	    
+	    @FindBy(xpath = "//a[normalize-space()='SKU']")
+	    protected WebElement clickSKU;
+
+	    @FindBy(xpath = "(//input[@role='searchbox'])[2]")
+	    protected WebElement adminSearchBox;
+	  
+		 @FindBy(xpath = "(//div[@class='col-sm-0 col-md-4 text-center'])[1]")
+		 protected WebElement clickBlankSpace;
+
+	    @FindBy(xpath = "//input[@id='search__product']")
+	    protected WebElement userSearchBox;
+
+
+	 
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 	    
 }
 
