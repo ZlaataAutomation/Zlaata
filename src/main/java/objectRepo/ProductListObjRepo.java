@@ -10,16 +10,16 @@ import basePage.BasePage;
 
 public abstract  class ProductListObjRepo extends BasePage {
 	
-	@FindBy(xpath = "//li[@class='navigation_menu_list nav_menu_dropdown shop']")
+	@FindBy(xpath = "//span[@class='navigation_menu_txt'][normalize-space()='Shop']")
 	protected WebElement shopMenu;
 	
-	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ALL')]")
+	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//ul/li/a[translate(normalize-space(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = 'ALL']")
 	protected WebElement category;
 	
-	@FindBy(xpath = "//a[@class='bread_crumb_link']")
+	@FindBy(xpath = "//a[contains(@class,'bread_crumb_link')]")
 	protected WebElement homeCrumbLink;
 	
-	@FindBy(xpath = "//a[@class='carousel_banner  ']")
+	@FindBy(xpath = "//div[contains(@class,'home_banner_container')]")
 	protected WebElement banners;
 	
 	

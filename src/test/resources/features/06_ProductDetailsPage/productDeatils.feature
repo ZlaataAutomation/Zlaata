@@ -8,6 +8,8 @@ Feature: Product Details Page Feature
   # Expected: Product details page sanity
   #===========================================================================
   
+  @PDP
+  @Sanity
  @TC_UI_Zlaata_PDP_01
 Scenario Outline: TC_UI_Zlaata_PDP_01 | Verify Product price is displaying on product details page | "<TD_ID>"
   Given User Verifies Display of Product Price on Product details page #excel need to update
@@ -22,6 +24,8 @@ Scenario Outline: TC_UI_Zlaata_PDP_02 | Verify  Discounted Price Calculating on 
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_02   |
     
+     @PDP
+  @Sanity
   @TC_UI_Zlaata_PDP_03
 Scenario Outline: TC_UI_Zlaata_PDP_03 | Verify product images are changeable using arrow button | "<TD_ID>"
   Given User Verifies images are chaneable using arrow button
@@ -29,6 +33,8 @@ Scenario Outline: TC_UI_Zlaata_PDP_03 | Verify product images are changeable usi
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_03   |
 
+ @PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_04
 Scenario Outline: TC_UI_Zlaata_PDP_04 | Verify Wishlist Button Functionality on Product details page | "<TD_ID>"
   Given User Verifies Wishlist Button Functionality on Product details page #excel need to update
@@ -36,13 +42,19 @@ Scenario Outline: TC_UI_Zlaata_PDP_04 | Verify Wishlist Button Functionality on 
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_04   |
 
+
+
+ @PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_05
-Scenario Outline: TC_UI_Zlaata_PDP_05 | Verify "Best Price" Functionality | "<TD_ID>"
-  Given User Verifies "Best Price" Functionality
+Scenario Outline: TC_UI_Zlaata_PDP_05 | Verify Color item Selection Functionality | "<TD_ID>"
+  Given User Verifies Color item Selection Functionality
   Examples:
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_05   |
 
+ @PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_06
 Scenario Outline: TC_UI_Zlaata_PDP_06 | Verify Color Selection Functionality | "<TD_ID>"
   Given User Verifies Color Selection Functionality
@@ -50,6 +62,8 @@ Scenario Outline: TC_UI_Zlaata_PDP_06 | Verify Color Selection Functionality | "
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_06   |
 
+@PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_07
 Scenario Outline: TC_UI_Zlaata_PDP_07 | Verify Color Section Dropdown Arrow | "<TD_ID>"
   Given User Verifies Color Section Dropdown Arrow
@@ -64,6 +78,9 @@ Scenario Outline: TC_UI_Zlaata_PDP_08 | Verify Size Chart Availability | "<TD_ID
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_08   |
 
+
+@PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_09
 Scenario Outline: TC_UI_Zlaata_PDP_09 | Verify Size Selection Functionality | "<TD_ID>"
   Given User Verifies Size Selection Functionality
@@ -71,6 +88,9 @@ Scenario Outline: TC_UI_Zlaata_PDP_09 | Verify Size Selection Functionality | "<
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_09   |
 
+
+@PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_10
 Scenario Outline: TC_UI_Zlaata_PDP_10 | Verify that the category name is displayed on the Product Details Page | "<TD_ID>"
  Given User verifies that the category name is displayed on the Product Details Page
@@ -79,6 +99,8 @@ Scenario Outline: TC_UI_Zlaata_PDP_10 | Verify that the category name is display
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_10   |
 
+@PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_11
 Scenario Outline: TC_UI_Zlaata_PDP_11 | Verify "Add to Cart" Button Functionality on Product details page | "<TD_ID>"
   Given User Verifies "Add to Cart" Button Functionality on Product details page #excel need to update
@@ -86,6 +108,8 @@ Scenario Outline: TC_UI_Zlaata_PDP_11 | Verify "Add to Cart" Button Functionalit
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_11   |
 
+@PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_12
 Scenario Outline: TC_UI_Zlaata_PDP_12 | Verify "Buy Now" Button Functionality on Product details page | "<TD_ID>"
   Given User Verifies Buy Now  Functionality on Product details page 
@@ -135,6 +159,8 @@ Scenario Outline: TC_UI_Zlaata_PDP_18 | Verify Dropdown Arrows for Sections (Pro
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_18   |
 
+@PDP
+  @Sanity
 @TC_UI_Zlaata_PDP_19
 Scenario Outline: TC_UI_Zlaata_PDP_19 | Verify "Click Here" Link in Return & Exchange Section | "<TD_ID>"
   Given User Verifies "Click Here" Link in Return & Exchange Section

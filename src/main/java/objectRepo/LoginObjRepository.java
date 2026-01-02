@@ -25,13 +25,13 @@ public abstract class LoginObjRepository extends BasePage {
 //	protected WebElement profile;
 	
 	
-	@FindBy(xpath = "//div[@class='navigation_cta_icon_list account_icon_btn open__popup ']")
+	@FindBy(xpath = "//div[contains(@class,'account_icon_btn') and @title='User Icon']")
 	protected WebElement profile;
 	
 	@FindBy(id = "userNumber")
 	protected WebElement loginNumber;
 	
-	@FindBy(xpath = "//button[@class='send_otp_btn btn___2 send_otp']")
+	@FindBy(xpath = "//button[contains(@class,'send_otp_btn') and normalize-space()='Send OTP']")
 	protected WebElement sendotp;
 	
 	@FindBy(xpath = "//form[@class='digit-group login_otp_input_form']")

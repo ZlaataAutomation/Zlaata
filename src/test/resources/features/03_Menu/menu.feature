@@ -6,46 +6,106 @@ Feature: This is Menu feature
   #ScenarioDescription : Complete Menu
   #Expected: Menu sanity 
   #============================================================================
+  @Sanity
+  @Menu
   @TC_UI_Zlaata_Menus_01
-  Scenario Outline: TC_UI_Zlaata_Menus_01 |Verify that the user is able to click the Homepage header menu.|"<TD_ID>"
+  Scenario Outline: TC_UI_Zlaata_Menus_01 |Verify that the user is able to click All  Header menu.|"<TD_ID>"
      
-     Given User clicks on home page header menu
+     Given User clicks on All  Header menu
     
 
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Menus_01 |
-    
-      @TC_UI_Zlaata_Menus_02
-  Scenario Outline: TC_UI_Zlaata_Menus_02 |Verify that the user is able to click the "New Arrival" page header menu.|"<TD_ID>"
+      
+    @Sanity
+      @Menu
+   @TC_UI_Zlaata_Menus_02
+  Scenario Outline: TC_UI_Zlaata_Menus_02 |Verify that the user is able to click the "New Arrival" page header menu All Suggestion products.|"<TD_ID>"
      
-     Given User clicks on newAriivals header
+     Given User clicks on newAriivals header suggestion all products.
     
 
     Examples: 
       | TD_ID                  |
-      | TD_UI_Zlaata_Menus_02 |
-    
-      @TC_UI_Zlaata_Menus_03
-  Scenario Outline: TC_UI_Zlaata_Menus_03 |Verify that the user is able to click the "New Arrival" hover image.|"<TD_ID>"
+      | TD_UI_Zlaata_Menus_02 |    
+      
+      
+       @Sanity
+         @Menu
+        @TC_UI_Zlaata_Menus_03
+  Scenario Outline: TC_UI_Zlaata_Menus_03 |Verify that the user is able to click any all category in the "Shop" dropdown.|"<TD_ID>"
      
-     Given User clicks on new arrivals suggestion
+     Given User clicks on shop all category,Collections and Styles.
     
 
     Examples: 
       | TD_ID                  |
-      | TD_UI_Zlaata_Menus_03 |
-    
-      @TC_UI_Zlaata_Menus_04
-  Scenario Outline: TC_UI_Zlaata_Menus_04 |Verify that the user is able to click the "Sale" header menu.|"<TD_ID>"
+      | TD_UI_Zlaata_Menus_03 |   
+      
+      
+       @Sanity
+         @Menu
+         @TC_UI_Zlaata_Menus_04
+  Scenario Outline: TC_UI_Zlaata_Menus_04 |Verify that the user is able to click the "Bss-Lady" header menu All Suggestions.|"<TD_ID>"
      
-     Given User clicks on sale menu
+     Given User clicks on Boss lady menu  All Suggestions
     
 
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Menus_04 |
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
     
+
       @TC_UI_Zlaata_Menus_05
   Scenario Outline: TC_UI_Zlaata_Menus_05 |Verify that the user is able to click the "Boss Lady" hover image.|"<TD_ID>"
      

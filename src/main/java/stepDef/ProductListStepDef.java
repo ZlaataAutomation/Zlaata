@@ -25,20 +25,17 @@ public class ProductListStepDef {
 
 	@Given("User clicks on home text after landing product listing page")
 	public void user_clicks_on_home_text_after_landing_product_listing_page() {
-		home.homeLaunch();
 		pLp.homeCrumbLink();
 	}
 
 	@Given("User verifies weather the landed page heading is same as link")
-	public void user_verifies_weather_the_landed_page_heading_is_same_as_link() {
-		home.homeLaunch();
+	public void user_verifies_weather_the_landed_page_heading_is_same_as_link() throws InterruptedException {
 		pLp.pLpHeading();;
 	}
 
 
 	@Given("User verifies pagination")
-	public void user_verifies_pagination() {
-		home.homeLaunch();
+	public void user_verifies_pagination() throws InterruptedException {
 		pLp.pagination();
 	}
 
@@ -50,7 +47,6 @@ public class ProductListStepDef {
 
 	@Given("User clicks on available page number in product listing page")
 	public void user_clicks_on_available_page_number_in_product_listing_page() {
-		home.homeLaunch();
 		pLp.paginationNumber();
 	}
 
@@ -83,15 +79,14 @@ public class ProductListStepDef {
 
 
 	@Given("User clicks on wish list icon")
-	public void user_clicks_on_wish_list_icon() {
-		home.homeLaunch();
+	public void user_clicks_on_wish_list_icon() throws InterruptedException {
+	
 		pLp.wishListIcon();
 	}
 
 
 	@Given("User clicks on add to cart button")
-	public void user_clicks_on_add_to_cart_button() {
-		home.homeLaunch();
+	public void user_clicks_on_add_to_cart_button() throws InterruptedException {
 		pLp.addToCart();
 	}
 }

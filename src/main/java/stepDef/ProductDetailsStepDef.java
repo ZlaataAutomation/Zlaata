@@ -24,8 +24,8 @@ public class ProductDetailsStepDef {
 
 	@Given("User Verifies Display of Product Price on Product details page #excel need to update")
 	public void user_verifies_display_of_product_price_on_product_details_page_excel_need_to_update() {
-		home.homeLaunch();
-		pDP.productPrice();
+	
+		pDP.productNameAndPercentageAndPrice();
 	}
 
 	@Given("User Verifies Discount price calculating  on Product details page #excel need to update")
@@ -36,9 +36,8 @@ public class ProductDetailsStepDef {
 
 
 	@Given("User Verifies images are chaneable using arrow button")
-	public void user_verifies_images_are_chaneable_using_arrow_button() {
-		home.homeLaunch();
-		pDP.productImageChage();
+	public void user_verifies_images_are_chaneable_using_arrow_button() throws InterruptedException {
+		pDP.productImageChange();
 	}
 
 	@Given("User Verifies Wishlist Button Functionality on Product details page #excel need to update")
@@ -48,35 +47,35 @@ public class ProductDetailsStepDef {
 	}
 
 
-	@Given("User Verifies {string} Functionality")
-	public void user_verifies_functionality(String string) {
-		home.homeLaunch();
-		pDP.verifyBestPriceCalculation();
-	}
+		@Given("User Verifies Color item Selection Functionality")
+		public void user_verifies_color_item_selection_functionality() throws InterruptedException {
+			pDP.verifyColoSelectionPDP();
+		}
+
+
+
 
 	@Given("User Verifies Color Selection Functionality")
 	public void user_verifies_color_selection_functionality() throws InterruptedException {
-		home.homeLaunch();
-		pDP.verifyColorOptions();
+	
+		pDP.verifyMultiColorProductColorMatch();
 	}
 
 	@Given("User Verifies Color Section Dropdown Arrow")
-	public void user_verifies_color_section_dropdown_arrow() {
-		home.homeLaunch();
-		pDP.colordropDown();
+	public void user_verifies_color_section_dropdown_arrow() throws InterruptedException {
+		pDP.verifyColorDropdownToggle();
 	}
 
 
 	@Given("User Verifies Size Chart Availability")
 	public void user_verifies_size_chart_availability() {
-		home.homeLaunch();
 		pDP.sizeChart(Hooks.getScenario());
 	}
 
 	@Given("User Verifies Size Selection Functionality")
 	public void user_verifies_size_selection_functionality() {
-		home.homeLaunch();
-		pDP.verifySizeOptions();
+	
+		pDP.verifySizeOption();
 	}
 
 	//
@@ -88,7 +87,6 @@ public class ProductDetailsStepDef {
 	@Given("User verifies that the category name is displayed on the Product Details Page")
 	public void user_verifies_that_the_category_name_is_displayed_on_the_product_details_page() {
 
-		home.homeLaunch();
 		pDP.categoryName();
 
 
@@ -99,15 +97,14 @@ public class ProductDetailsStepDef {
 
 	@Given("User Verifies {string} Button Functionality on Product details page #excel need to update")
 	public void user_verifies_button_functionality_on_product_details_page_excel_need_to_update(String string) {
-		home.homeLaunch();
-		pDP.addToCartButton();
+		pDP.addToCartAndVerify();
 	}
 
 
 	@Given("User Verifies Buy Now  Functionality on Product details page")
 	public void user_verifies_buy_now_functionality_on_product_details_page() {
-		home.homeLaunch();
-		pDP.buyNow(Hooks.getScenario());
+		
+		pDP.buyNowBtn();
 	}
 
 
@@ -154,8 +151,7 @@ public class ProductDetailsStepDef {
 
 	@Given("User Verifies {string} Link in Return & Exchange Section")
 	public void user_verifies_link_in_return_exchange_section(String string) {
-		home.homeLaunch();
-		pDP.returnAndExchangeLink();
+		pDP.verifyReturnAndExchangeLink();
 	}
 
 	@Given("User Verifies {string} Button Clickability on Product details page #excel need to update")

@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.time.Duration;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -32,24 +36,90 @@ public final class HomePage extends HomePageObjRepo {
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 //				type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
 //				click(submit);
-		//popup();
+		handleAccessCodeIfPresentFast();
+			popup();
 
 
 	}
 	public void popup() {
-		try {
-			WebElement popUp = driver.findElement(By.xpath("//button[@class='close-btn']"));
-			Common.waitForElement(5);
+	    List<WebElement> popUps = driver.findElements(
+	            By.xpath("//div[contains(@class,'chrismas_closebtn')]")
+	    );
 
-			if (popUp.isDisplayed()) {
-				popUp.click();
-			}
-
-		} catch (Exception e) {
-
-		}
-
+	    if (!popUps.isEmpty()) {
+	    	 ((JavascriptExecutor) driver)
+             .executeScript("arguments[0].click();", popUps.get(0));
+	    }
 	}
+
+	public void handleAccessCodeIfPresentFast() {
+
+        try {
+            List<WebElement> accessCodeInput = driver.findElements(
+                    By.xpath("//input[@id='security_code']")
+            );
+
+            // 🔹 Instant check – if not present, skip
+            if (accessCodeInput.isEmpty()) {
+                return;
+            }
+
+            WebElement input = accessCodeInput.get(0);
+
+            if (input.isDisplayed()) {
+
+                String accessCode = FileReaderManager.getInstance()
+                        .getJsonReader()
+                        .getValueFromJson("Access");
+
+                // Type access code
+                input.clear();
+                input.sendKeys(accessCode);
+
+                // Click submit
+                WebElement submitBtn = driver.findElement(
+                        By.xpath("//form[contains(@action,'accessCheckProcess')]//button")
+                );
+
+                ((JavascriptExecutor) driver)
+                        .executeScript("arguments[0].click();", submitBtn);
+                
+                System.out.println("⚡ Access code entered (fast path)");
+            }
+
+        } catch (Exception e) {
+            // swallow – fast skip mode
+        }
+    }
+	public void homeLaunchAfterSaved() {
+
+        try {
+            
+            profile.click();
+
+            WebElement userName = driver.findElement(
+                    By.xpath("//div[contains(@class,'account_tabs_user_content')]//h2")
+            );
+
+            if (userName.isDisplayed()) {
+                System.out.println("\u001B[32m✅ User already logged in: " 
+                    + userName.getText() + "\u001B[0m");
+                return; 
+            }
+
+        } catch (Exception e) {
+
+           
+            System.out.println("\u001B[33m⚠ User not logged in. Proceeding with login flow...\u001B[0m");
+
+            driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+            handleAccessCodeIfPresentFast();
+            popup();
+            LoginPage login=new LoginPage(driver);
+            login.userLogin();
+        }
+    }
 	public void scrollToElementUsingJSE(WebElement ele) {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("arguments[0].scrollIntoView();", ele);
@@ -63,7 +133,7 @@ public final class HomePage extends HomePageObjRepo {
 	}
 
 	public void bannerClick() {
-		homeLaunch();
+//		homeLaunch();
 		Common.waitForElement(5);
 		click(banners);
 		//		WebElement bannerRedirection = driver.findElement(By.xpath("//h3[@class='prod_list_topic']"));
@@ -662,9 +732,60 @@ public final class HomePage extends HomePageObjRepo {
 
 
 
+	public void verifyUrlAndLogo() {
 
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String RESET  = "\u001B[0m";
+	    Common.waitForElement(2);
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    WebElement homeMenu = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[normalize-space()='Home']") 
+	    ));
+	    homeMenu.click();
+	    String expectedUrl = "https://www.zlaata.com/";
+	    String actualUrl = driver.getCurrentUrl();
 
+	    assertEquals(
+	            "❌ URL mismatch! Expected: " + expectedUrl + " but got: " + actualUrl,
+	            expectedUrl,
+	            actualUrl
+	    );
+	    System.out.println(
+	            GREEN + "✅ URL verified successfully | Expected: "
+	            + expectedUrl + " | Actual: " + actualUrl + RESET
+	    );
+	    WebElement logo = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//img[@alt='zlaata Logo']")   
+	    ));
 
+	    assertTrue(
+	            "❌ Logo is not displayed on the page",
+	            logo.isDisplayed()
+	    );
+
+	    System.out.println(GREEN + "✅ Logo is displayed" + RESET);
+	    logo.click();
+
+	    WebElement logoAfterClick = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//img[@alt='zlaata Logo']")
+	    ));
+
+	    assertTrue(
+	            "❌ Logo is not displayed after clicking",
+	            logoAfterClick.isDisplayed()
+	    );
+
+	    System.out.println(GREEN + "✅ Logo is displayed after clicking" + RESET);
+	}
+
+//TC-01
+public void validateUrlAndLogo() {
+	
+	driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	
+	verifyUrlAndLogo();
+}
 
 
 

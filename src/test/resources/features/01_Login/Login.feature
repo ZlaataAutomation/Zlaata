@@ -6,25 +6,158 @@ Feature: This is Login feature
   #ScenarioDescription : User Login scenario
   #Expected: Order placed successfully
   #============================================================================
-  @TC_UI_Zlaata_Login_01
-  Scenario Outline: TC_UI_Zlaata_Login_01 |User Login Scenario|"<TD_ID>"
+  
+  @Sanity
+  @Login
+     @TC_UI_Zlaata_Login_01
+  Scenario Outline: TC_UI_Zlaata_Login_01 |User Login Negative Scenario|"<TD_ID>"
      
-     Given User going to login in zlaata application "user"
+     Given User going to login in zlaata application user
     
 
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Login_01 |
-      
-    @TC_UI_Zlaata_Login_02
-  Scenario Outline: TC_UI_Zlaata_Login_02 |FirstBuy200 Coupon is displaying|"<TD_ID>"
+  
+  
+  @Sanity
+  @Login
+     @TC_UI_Zlaata_Login_02
+  Scenario Outline: TC_UI_Zlaata_Login_02 |User Login Valid Scenario|"<TD_ID>"
      
-     Given FirstBuy200 Coupon is displaying
+     Given User login in zlaata application user
     
 
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Login_02 |
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
   
   @TC_UI_Zlaata_Login_03
   Scenario Outline: TC_UI_Zlaata_Login_03 |User left phone_number field Empty|"<TD_ID>"

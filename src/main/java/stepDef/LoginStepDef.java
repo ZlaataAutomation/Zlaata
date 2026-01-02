@@ -17,11 +17,42 @@ public class LoginStepDef {
 		
 	}
 
+		@Given("User going to login in zlaata application user")
+		public void user_going_to_login_in_zlaata_application_user() {
+			login.validateLoginNegativeCredantial();
+		}
+
+
+	@Given("User login in zlaata application user")
+			public void user_login_in_zlaata_application_user() {
+				login.validateUserLoginWithValidCredantial();
+			}
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Given("User going to login in zlaata application {string}")
 	public void user_going_to_login_in_zlaata_application(String string) throws InterruptedException {
 		
-	login.userLogin();
+	login.validateUserLoginWithValidCredantial();
 		
 } 
 		

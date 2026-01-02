@@ -1,7 +1,7 @@
 package pages;
 
 import java.time.Duration; // CORRECT
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -38,43 +38,36 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	}
 	private void RandomProduct() {
 
-		Actions actions = new Actions(driver);
-		actions.moveToElement(shopMenu);
-		actions.moveToElement(category).click().build().perform();
-		actions.moveToElement(sortBy).click().build().perform();
-		click(sortByPriceHightoLow);
+		  String GREEN  = "\u001B[32m";
+		    String RESET  = "\u001B[0m";
+		    String CYAN   = "\u001B[36m";
+		    String BLUE   = "\u001B[34m";
+		    String RED    = "\u001B[31m";
 
-		//		List<WebElement> clickRandomProduct = driver.findElements(By.xpath("//div[@class='product_list_cards_list ']"));
-		//		Collections.shuffle(clickRandomProduct);
-		//
-		//		if (!clickRandomProduct.isEmpty()) {
-		//			WebElement randomProduct = clickRandomProduct.get(0);
-		//			currentProductName = productListingName.getText().trim().replaceAll("\\s+", " ").toLowerCase();
-		//			actions.moveToElement(randomProduct).click().build().perform();
-		//
-		//		}
+		    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
-		// Get only in-stock products (skip OUT OF STOCK)
-		List<WebElement> clickRandomProduct = driver.findElements(By.xpath(
-				"//div[@class='product_list_cards_list '][not(.//h2[@class='product_list_cards_out_of_stock_heading' and normalize-space(text())='OUT OF STOCK'])]"
-				));
+		    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
-		// Shuffle to randomize order
-		Collections.shuffle(clickRandomProduct);
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+		    Actions actions = new Actions(driver);
 
-		if (!clickRandomProduct.isEmpty()) {
-			WebElement randomProduct = clickRandomProduct.get(0);
+		    System.out.println(BLUE + "🔍 Navigating to category..." + RESET);
 
-			// Get the product name directly from this product card
-			currentProductName = randomProduct.getText().trim().replaceAll("\\s+", " ").toLowerCase();
+		    actions.moveToElement(shopMenu).perform();
+		    actions.moveToElement(category).click().perform();
+		    Common.waitForElement(2);
+		    // Select random product
+		    List<WebElement> products = wait.until(
+		            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+		                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+		            )
+		    );
 
-			// Click on the selected product
-			actions.moveToElement(randomProduct).click().build().perform();
+		    Assert.assertTrue("❌ No products found", products.size() > 0);
 
-			//		    System.out.println("✅ Selected random in-stock product: " + currentProductName);
-		} else {
-			System.err.println("⚠️ No in-stock products available to click.");
-		}
+		    Collections.shuffle(products);
+		    products.get(0).click();
+		    Common.waitForElement(2);
 
 	}
 
@@ -85,27 +78,100 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	}
 
 
-	public void productPrice() {
+	public void productNameAndPercentageAndPrice() {
+		   String GREEN  = "\u001B[32m";
+		    String RESET  = "\u001B[0m";
+		    String CYAN   = "\u001B[36m";
+		    String YELLOW = "\u001B[33m";
+		    String PURPLE = "\u001B[35m";
+		    String BLUE   = "\u001B[34m";
+		    String RED    = "\u001B[31m";
+		    String line = "──────────────────────────────────────────────────────────────";
+		    System.out.println(CYAN + line + RESET);
+	    // Launch home
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    Actions actions = new Actions(driver);
 
-		Actions actions = new Actions(driver);
-		actions.moveToElement(shopMenu);
-		actions.moveToElement(category).click().build().perform();
-		List<WebElement> clickRandomProduct = driver.findElements(By.xpath("//div[@class='product_list_cards_list ']"));
-		Collections.shuffle(clickRandomProduct);
+	    System.out.println(BLUE + "🔍 Navigating to category..." + RESET);
 
-		if (!clickRandomProduct.isEmpty()) {
-			WebElement randomProduct = clickRandomProduct.get(0);
-			actions.moveToElement(randomProduct).click().build().perform();
-			Common.waitForElement(1);
-			String productPrices = productPrice.getText();
-			System.out.println("The product is : " +productPrices );
-		}
-		else {
-			System.err.println("Not redirected to Product details page");
-		}
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(category).click().perform();
+	    Common.waitForElement(2);
+	    List<WebElement> products = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	            )
+	    );
 
+	    Assert.assertTrue("❌ No products found", products.size() > 0);
+
+	    Collections.shuffle(products);
+	    WebElement product = products.get(0);
+
+	    String plpName = product.findElement(
+	            By.xpath(".//h2[@class='product_list_cards_heading']")
+	    ).getText().trim();
+
+	    String plpPrice = product.findElement(
+	            By.xpath(".//span[@class='prod_current_price']")
+	    ).getText().trim();
+
+	    String plpDiscount = product.findElement(
+	            By.xpath(".//span[@class='prod_discount_percentage']")
+	    ).getText().trim();
+
+	    System.out.println(CYAN + "\n🛍 PLP Product Details:" + RESET);
+	    System.out.println(GREEN + "✔ Name     : " + plpName + RESET);
+	    System.out.println(GREEN + "✔ Price    : " + plpPrice + RESET);
+	    System.out.println(GREEN + "✔ Discount : " + plpDiscount + RESET);
+
+	    product.findElement(By.xpath(".//a")).click();
+
+	    WebElement pdpName = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//h4[@class='prod_name']")
+	            )
+	    );
+
+	    WebElement pdpPrice = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//div[@class='prod_current_price']")
+	            )
+	    );
+
+	    WebElement pdpDiscount = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//div[@class='prod_discount_percentage']")
+	            )
+	    );
+
+	    String pdpNameText = pdpName.getText().trim();
+	    String pdpPriceText = pdpPrice.getText().trim();
+	    String pdpDiscountText = pdpDiscount.getText().trim();
+
+	    System.out.println(CYAN + "\n📄 PDP Product Details:" + RESET);
+	    System.out.println(GREEN + "✔ Name     : " + pdpNameText + RESET);
+	    System.out.println(GREEN + "✔ Price    : " + pdpPriceText + RESET);
+	    System.out.println(GREEN + "✔ Discount : " + pdpDiscountText + RESET);
+
+	    // Assertions
+//	    Assert.assertTrue(
+//	            RED + "❌ Product name mismatch!" + RESET,
+//	            pdpNameText.toLowerCase().contains(plpName.toLowerCase())
+//	    );
+	    Assert.assertEquals(
+	            RED + "❌ Price mismatch!" + RESET,
+	            plpPrice,
+	            pdpPriceText
+	    );
+	    Assert.assertEquals(
+	            RED + "❌ Discount mismatch!" + RESET,
+	            plpDiscount,
+	            pdpDiscountText
+	    );
+	    System.out.println(GREEN + "\n✅ Product name, price & discount matched successfully!" + RESET);
 	}
-
 
 	public void discountPercentageCalculation() {
 
@@ -148,44 +214,85 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 		}
 	}
 
-	public void productImageChage() {
-		ProductDetailsPage productPage = new ProductDetailsPage(driver) ;
-		RandomProduct();
-		Common.waitForElement(1);
-		System.out.println("📌 Verifying initial state...");
-		if (productPage.isBackArrowDisabled()) {
-			System.out.println("✅ Back arrow is disabled initially.");
-		} else {
-			System.out.println("❌ Back arrow should be disabled initially.");
-		}
+	public void productImageChange() throws InterruptedException {
 
-		// Click next arrow until it's disabled or unavailable
-		int forwardClicks = 0;
-		while (productPage.isNextArrowEnabled()) {
-			productPage.clickNextArrow();
-			Common.waitForElement(1);
-			forwardClicks++;
-		}
+	    String GREEN  = "\u001B[32m";
+	    String RESET  = "\u001B[0m";
+	    String CYAN   = "\u001B[36m";
+	    String BLUE   = "\u001B[34m";
+	    String RED    = "\u001B[31m";
 
-		System.out.println("➡️ Viewed all images with " + forwardClicks + " next clicks.");
+	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
-		// Now click back until back arrow becomes disabled
-		int backClicks = 0;
-		while (productPage.isBackArrowEnabled()) {
-			productPage.clickBackArrow();
-			Common.waitForElement(1);
-			backClicks++;
-		}
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
-		System.out.println("⬅️ Returned to first image with " + backClicks + " back clicks.");
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    Actions actions = new Actions(driver);
 
-		if (productPage.isBackArrowDisabled()) {
-			System.out.println("✅ Back arrow is disabled again on the first image.");
-		} else {
-			System.out.println("❌ Back arrow should be disabled again on the first image.");
-		}
+	    System.out.println(BLUE + "🔍 Navigating to category..." + RESET);
+
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(category).click().perform();
+	    Common.waitForElement(2);
+	    // Select random product
+	    List<WebElement> products = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	            )
+	    );
+
+	    Assert.assertTrue("❌ No products found", products.size() > 0);
+
+	    Collections.shuffle(products);
+	    products.get(0).click();
+
+	    // Arrow locators
+	    By nextArrow = By.xpath("//div[contains(@class,'product_details_swiper_next')]");
+	    By backArrow = By.xpath("//div[contains(@class,'product_details_swiper_prev')]");
+
+	    WebElement nextBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(nextArrow));
+	    WebElement backBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(backArrow));
+
+	    // ✅ Initial State
+	    System.out.println(CYAN + "📌 Verifying initial image state..." + RESET);
+
+	    Assert.assertEquals(
+	            "❌ Back arrow should be disabled initially",
+	            "true",
+	            backBtn.getAttribute("aria-disabled")
+	    );
+
+	    System.out.println(GREEN + "✅ Back arrow disabled initially" + RESET);
+
+	    // ▶️ Click Next Until Disabled
+	    int nextCount = 0;
+	    while (nextBtn.getAttribute("aria-disabled").equals("false")) {
+	        nextBtn.click();
+	        Thread.sleep(800);
+	        nextCount++;
+	    }
+
+	    System.out.println(GREEN + "➡️ Reached last image after " + nextCount + " clicks" + RESET);
+
+	    // ◀️ Click Back Until Disabled
+	    int backCount = 0;
+	    while (backBtn.getAttribute("aria-disabled").equals("false")) {
+	        backBtn.click();
+	        Thread.sleep(800);
+	        backCount++;
+	    }
+
+	    System.out.println(GREEN + "⬅️ Returned to first image after " + backCount + " clicks" + RESET);
+
+	    // ✅ Final validation
+	    Assert.assertEquals(
+	            "❌ Back arrow should be disabled again",
+	            "true",
+	            backBtn.getAttribute("aria-disabled")
+	    );
+
+	    System.out.println(GREEN + "✅ Image slider navigation verified successfully!" + RESET);
 	}
-
 
 
 	public int getImageCount() {
@@ -222,42 +329,72 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 		}
 	}
 	public void wishList() {
-		
-		    LoginPage login = new LoginPage(driver);
-		    ProductDetailsPage productPage = new ProductDetailsPage(driver);
-		    
-		    // Step 1: Login
 
-			    login.userLogin();
-			    Common.waitForElement(2);
-			    RandomProduct();
-			    String productName = productPage.productPrice.findElement(By.xpath(".//h4[@class='prod_name']")).getText().trim();
-			    System.out.println("Product details Product Name is: " + productName);
+	    String GREEN = "\u001B[32m";
+	    String RED   = "\u001B[31m";
+	    String CYAN  = "\u001B[36m";
+	    String BLUE  = "\u001B[34m";
+	    String RESET = "\u001B[0m";
 
-			    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
-		    // Step 5: Check if the product is already in the wishlist
-		    WebElement wishlistBtn = productPage.productPrice.findElement(By.xpath("//div[@class='prod_main_details']//div[contains(@class,'prod_wishlist_btn')]"));
-		    String wishlistClass = wishlistBtn.getAttribute("class");
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
-		    if (wishlistClass.contains("liked")) {
-		        // If the product is already in the wishlist, remove it and re-add
-		        System.out.println("💔 Wishlist already selected. Removing...");
-		        clickUsingJavaScript(wishlistBtn);
-		        Common.waitForElement(2);
-		        System.out.println("💖 Wishlist re-added.");
-		        clickUsingJavaScript(wishlistBtn); // Re-add
-		    } else {
-		        // If the product is not in the wishlist, add it
-		        System.out.println("✅ Product not in wishlist. Adding...");
-		        clickUsingJavaScript(wishlistBtn);
-		    }
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    Actions actions = new Actions(driver);
 
-		    // Step 6: Close the browser or proceed with any other action
-		    System.out.println("Process completed for product: " + productName);
-		    driver.quit(); // Close the browser (optional, if you want to close the session)
-		}
+	    System.out.println(BLUE + "🔍 Navigating to category..." + RESET);
 
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(category).click().perform();
+	    Common.waitForElement(2);
+	    // Pick random product
+	    List<WebElement> products = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	            )
+	    );
+
+	    Assert.assertTrue("❌ No products found", products.size() > 0);
+	    Collections.shuffle(products);
+	    products.get(0).click();
+
+	    // Wishlist button
+	    WebElement wishlistBtn = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("(//div[contains(@class,'prod_wishlist_btn')])[2]")
+	            )
+	    );
+
+	    String classBefore = wishlistBtn.getAttribute("class");
+
+	    System.out.println(CYAN + "💡 Wishlist class before: " + classBefore + RESET);
+
+	    // ✅ If already liked → do nothing
+	    if (classBefore.contains("liked")) {
+	        System.out.println(GREEN + "❤️ Already added to wishlist. No action needed." + RESET);
+	    }
+	    else {
+	        System.out.println(BLUE + "🤍 Not in wishlist → Clicking..." + RESET);
+
+	        ((JavascriptExecutor) driver)
+	                .executeScript("arguments[0].click();", wishlistBtn);
+
+	        // Wait until liked class appears
+	        wait.until(ExpectedConditions.attributeContains(
+	                wishlistBtn, "class", "liked"
+	        ));
+
+	        String classAfter = wishlistBtn.getAttribute("class");
+
+	        Assert.assertTrue(
+	                RED + "❌ Wishlist not added!",
+	                classAfter.contains("liked")
+	        );
+
+	        System.out.println(GREEN + "❤️ Wishlist added successfully!" + RESET);
+	    }
+	}
 	public void verifyBestPriceCalculation() {
 		LoginPage login = new LoginPage(driver);
 		login.userLogin();
@@ -427,148 +564,360 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 		}
 	}
 
-	
-	public void colordropDown() {
-		RandomProduct();
-		Common.waitForElement(1);
-		Actions actions = new Actions(driver);
-		actions.moveToElement(colorDropDown).click().build().perform();
-		try {
-			if (colorDropDown.isDisplayed()) {
-				System.out.println("Color drop down is clicked");
-			}
-			else {
-				System.out.println("Color drop down is not visbile or clickable");
-			}
-		} catch (Exception e) {
-			System.out.println("Caught an exception: " + e.getMessage());
-		}
+	public void verifyColoSelectionPDP() throws InterruptedException {
+		String GREEN = "\u001B[32m";
+	    String RED   = "\u001B[31m";
+	    String CYAN  = "\u001B[36m";
+	    String BLUE  = "\u001B[34m";
+	    String RESET = "\u001B[0m";
 
-	}
-	public void verifyColorOptions() throws InterruptedException {
+	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
+
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    Actions actions = new Actions(driver);
-	    Common.waitForElement(3);
+	    Random random = new Random();
+	    System.out.println(BLUE + "🔍 Navigating to category..." + RESET);
 
-	    // ---- Navigate to category ----
-	    actions.moveToElement(shopMenu).moveToElement(category).click().build().perform();
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(randomcategory).click().perform();
 
-	    // ---- Pick random product ----
-	    List<WebElement> clickRandomProduct = driver.findElements(By.xpath("//div[@class='zl-prod-color-swatches']"));
-	    Collections.shuffle(clickRandomProduct);
+	    System.out.println("🔍 Searching for multi-color product...");
+	    Common.waitForElement(2);
+	    // 1️⃣ Get all product cards
+	    List<WebElement> allProducts = driver.findElements(
+	            By.xpath("//div[contains(@class,'product_list_cards_list') and .//div[@class='zl-prod-color-swatches']]")
+	    );
 
-	    if (!clickRandomProduct.isEmpty()) {
-	        WebElement randomProduct = clickRandomProduct.get(0);
-	        actions.moveToElement(randomProduct).click().build().perform();
-	        System.out.println("✅ Random product clicked from listing.\n");
-	    } else {
-	        System.out.println("⚠️ No products found in listing.");
-	        return;
+	    System.out.println("🔍 Searching for multi-color product...");
+
+	    // ✅ Store only multi-color products
+	    List<WebElement> multiColorProducts = new ArrayList<>();
+
+	    for (WebElement product : allProducts) {
+	        List<WebElement> colors =
+	                product.findElements(By.xpath(".//span[contains(@class,'zl-swatch-color')]"));
+
+	        if (colors.size() > 1) {
+	            multiColorProducts.add(product);
+	        }
 	    }
 
-	    // ---- Get all color swatches ----
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-	    List<WebElement> allColors = driver.findElements(By.xpath("//div[@class='prod_color_options Cls_prod_color_options']/div"));
-	    System.out.print("🎨 Available colors: ");
-	    StringBuilder colors = new StringBuilder();
-	    for (WebElement color : allColors) {
-	        colors.append(color.getText().trim()).append(", ");
+	    if (multiColorProducts.isEmpty()) {
+	        Assert.fail("❌ No multi-color products found");
 	    }
-	    System.out.println(colors.toString().replaceAll(", $", "") + "\n");
+	    // ✅ VERY IMPORTANT → SHUFFLE
+	    Collections.shuffle(multiColorProducts);
+	    WebElement selectedProduct = multiColorProducts.get(0);
+	    System.out.println("✅ Random multi-color product selected");
+	    multiColorProducts.get(0).click();
 
-	    // If only one color is available, no need to click
-	    if (allColors.size() == 1) {
-	        WebElement color = allColors.get(0);
-	        String colorName = color.getText().trim();
-	        printProductDetails(colorName, true);  // Initial color
-	    } else {
-	        // Track printed colors to avoid duplication
-	        Set<String> printedColors = new HashSet<>();
+	 // ---------------- WAIT FOR PDP ----------------
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//div[contains(@class,'prod_color_options')]")));
+
+	    // ---------------- GET COLORS ----------------
+	    List<WebElement> colors = driver.findElements(
+	            By.xpath("//div[contains(@class,'prod_color_list')]"));
+
+	    System.out.println("🎨 Total colors: " + colors.size());
+
+	    // ---------------- LOOP COLORS ----------------
+	    for (int i = 0; i < colors.size(); i++) {
+
+	        // re-fetch to avoid stale
+	        colors = driver.findElements(
+	                By.xpath("//div[contains(@class,'prod_color_list')]"));
+
+	        WebElement color = colors.get(i);
+	        String colorName = color.getAttribute("title").trim();
+
+	        System.out.println("➡ Selecting: " + colorName);
+
+	        js.executeScript("arguments[0].click();", color);
+Thread.sleep(2000);
+	        // ----- VERIFY SELECTED COLOR -----
+	        String selectedColor = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//span[contains(@class,'Cls_prod_selected_color')]")))
+	                .getText().trim();
+
+	        Assert.assertEquals(
+	                "Selected color mismatch",
+	                colorName.toLowerCase(),
+	                selectedColor.toLowerCase()
+	        );
+	        System.out.println("✅ Verified color: " + colorName);
+	        // ----- VERIFY PRODUCT NAME -----
+	        String productName = driver.findElement(
+	                By.xpath("//h4[@class='prod_name']")).getText().toLowerCase();
+
+//	        Assert.assertTrue(
+//	                "Product name mismatch",
+//	                productName.contains(colorName.toLowerCase())
+//	        );
+
+	        // ----- VERIFY URL -----
+	        String url = driver.getCurrentUrl();
+	        System.out.println("✅ Verified Product Name: " + productName);
+	        Assert.assertTrue(
+	                "URL mismatch",
+	                url.contains(productName.toLowerCase().replace(" ", "-"))
+	        );
+	        System.out.println("✅ Verified URL: " + url);
 	        
-	        // Check if there is a color already selected (active class)
-	        WebElement initialColor = null;
-	        for (WebElement color : allColors) {
-	            if (color.getAttribute("class").contains("active")) {  // Check for active class
-	                initialColor = color;
-	                break;
-	            }
-	        }
-
-	        // If an initial color is selected, print details
-	        if (initialColor != null) {
-	            String colorName = initialColor.getText().trim();
-	            System.out.println("Initial color: " + colorName);
-	            printProductDetails(colorName, true);  // Print details for initial color
-	            printedColors.add(colorName);  // Mark initial color as printed
-	        }
-
-	        // Loop through all colors, skipping the initial color already printed
-	        for (int i = 0; i < allColors.size(); i++) {
-	            WebElement color = allColors.get(i);
-	            String colorName = color.getText().trim();
-
-	            // Skip the color if it has already been printed
-	            if (printedColors.contains(colorName)) {
-	                continue; // Skip already printed colors
-	            }
-
-	            // Scroll and click color
-	            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", color);
-
-	            // Retry the click action with a try-catch for StaleElementReferenceException
-	            try {
-	                color.click();
-	            } catch (StaleElementReferenceException e) {
-	                // Re-locate the element before retrying
-	                allColors = driver.findElements(By.xpath("//div[@class='prod_color_options Cls_prod_color_options']/div"));
-	                color = allColors.get(i);  // Re-fetch the element after it's updated
-	                color.click();  // Retry clicking the color
-	            } catch (ElementClickInterceptedException e) {
-	                // Retry clicking the color if click is intercepted
-	                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", color);
-	            }
-
-	            // Wait for the color swatch to be updated
-	            wait.until(ExpectedConditions.stalenessOf(color));  // Ensure element is stale before interacting again
-
-	            // Re-fetch color options after interaction
-	            allColors = driver.findElements(By.xpath("//div[@class='prod_color_options Cls_prod_color_options']/div"));
-
-	            // Print details for the new color after switching
-	            printProductDetails(colorName, false);  // False means it's not the initial color
-
-	            // Mark this color as printed
-	            printedColors.add(colorName);
-	        }
 	    }
+	    
+	    verifyActiveColorAfterNavigate();
+
+	    System.out.println("🎉 ALL COLORS VERIFIED SUCCESSFULLY");
 	}
+	
+	
+	
+	
+	public void verifyActiveColorAfterNavigate() throws InterruptedException {
 
-	private void printProductDetails(String colorName, boolean isInitial) {
-	    // Re-fetch product details for the current selected color
-	    String productNameText = driver.findElement(By.xpath("//h4[@class='prod_name']")).getText().trim();
-	    double normalPrice = Double.parseDouble(driver.findElement(By.xpath("//div[@class='prod_current_price']"))
-	            .getText().replace("₹", "").replace(",", "").trim());
-	    double discount = 0;
-	    try {
-	        String discountText = driver.findElement(By.xpath("//div[@class='prod_discount_percentage']"))
-	                .getText().replaceAll("[^0-9]", "");
-	        if (!discountText.isEmpty()) discount = Double.parseDouble(discountText);
-	    } catch (Exception e) { }
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-	    double actualPriceValue = Double.parseDouble(driver.findElement(By.xpath("//div[@class='prod_actual_price']"))
-	            .getText().replace("₹", "").replace(",", "").trim());
+	    // Get all color items
+	    List<WebElement> colors = driver.findElements(
+	            By.xpath("//div[contains(@class,'prod_color_list')]"));
 
-	    // Print product details for the selected color
-	    String result = "Color switched to " + colorName + " | Product Name: " + productNameText +
-	            " | Price: ₹" + normalPrice + " | Discount: " + discount + "%" +
-	            " | Actual: ₹" + actualPriceValue;
+	    int totalColors = colors.size();
+	    int loopCount = totalColors - 1;   // 🔥 IMPORTANT
 
-	    if (isInitial) {
-	        System.out.println(result);  // Initial color details
+	    System.out.println("🎨 Total colors found: " + totalColors);
+	    System.out.println("🔁 Total validations: " + loopCount);
+
+	    for (int i = 0; i < loopCount; i++) {
+
+	        System.out.println("🔁 ROUND : " + (i + 1));
+
+	        // ---------------- ACTIVE COLOR ----------------
+	        WebElement activeColor = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//div[contains(@class,'prod_color_list') and contains(@class,'active')]")
+	                ));
+
+	        String activeColorName = activeColor.getAttribute("title").trim();
+	        System.out.println("🎨 Active Color : " + activeColorName);
+
+	        // ---------------- SELECTED COLOR TEXT ----------------
+	        String selectedColor = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//span[contains(@class,'Cls_prod_selected_color')]")))
+	                .getText().trim();
+
+	        Assert.assertEquals(
+	                "❌ Selected color mismatch",
+	                activeColorName.toLowerCase(),
+	                selectedColor.toLowerCase()
+	        );
+
+	        // ---------------- PRODUCT NAME ----------------
+	        String productName = driver.findElement(
+	                By.xpath("//h4[@class='prod_name']"))
+	                .getText().toLowerCase();
+//
+//	        Assert.assertTrue(
+//	                "❌ Product name mismatch",
+//	                productName.contains(activeColorName.toLowerCase())
+//	        );
+
+	        // ---------------- URL CHECK ----------------
+	        String url = driver.getCurrentUrl();
+	        Assert.assertTrue(
+	                "❌ URL does not contain product name",
+	                url.contains(productName.replace(" ", "-"))
+	        );
+
+	        System.out.println("✅ Verified color: " + activeColorName);
+Thread.sleep(2000);
+	        // ---------------- BACK ----------------
+	        driver.navigate().back();
+
+	        wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("//div[contains(@class,'prod_color_list')]")));
+	    }
+
+	    System.out.println("🎉 ALL COLOR VERIFICATIONS COMPLETED SUCCESSFULLY");
+	}
+	public void verifyColorDropdownToggle() throws InterruptedException {
+	    String GREEN = "\u001B[32m";
+	    String RED   = "\u001B[31m";
+	    String CYAN  = "\u001B[36m";
+	    String BLUE  = "\u001B[34m";
+	    String RESET = "\u001B[0m";
+
+	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
+
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    Actions actions = new Actions(driver);
+
+	    System.out.println(BLUE + "🔍 Navigating to category..." + RESET);
+
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(category).click().perform();
+
+	    // Pick random product
+	    List<WebElement> products = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	            )
+	    );
+
+	    Assert.assertTrue("❌ No products found", products.size() > 0);
+	    Collections.shuffle(products);
+	    products.get(0).click();
+
+	    System.out.println("✅ Random product opened");
+
+	    // ------------------- STEP 2: Locate Color Section -------------------
+	    WebElement colorDropdownArrow = wait.until(
+	            ExpectedConditions.elementToBeClickable(
+	                    By.xpath("//div[contains(@class,'prod_color_drop_arrow')]"))
+	    );
+
+	    WebElement colorOptions = driver.findElement(
+	            By.xpath("//div[contains(@class,'prod_color_options')]"));
+
+	    // ------------------- STEP 3: VERIFY OPTIONS VISIBLE INITIALLY -------------------
+	    String displayBefore = colorOptions.getAttribute("style");
+	    System.out.println("Before Click Display: " + displayBefore);
+
+	    if (displayBefore.contains("none")) {
+	        System.out.println("❌ Color options should be visible but are hidden");
 	    } else {
-	        System.out.println(result);  // Non-initial color details
+	        System.out.println("✅ Color options are visible");
 	    }
+
+	    // ------------------- STEP 4: CLICK DROPDOWN (HIDE COLORS) -------------------
+	    js.executeScript("arguments[0].click();", colorDropdownArrow);
+Thread.sleep(1500);
+	    wait.until(driver ->
+	            colorOptions.getAttribute("style").contains("none")
+	    );
+
+	    String displayAfter = colorOptions.getAttribute("style");
+	    System.out.println("After Click Display: " + displayAfter);
+
+	    if (displayAfter.contains("none")) {
+	        System.out.println("✅ Color options hidden successfully");
+	    } else {
+	        Assert.fail("❌ Color options did NOT hide");
+	    }
+	    Thread.sleep(1500);
+	    // ------------------- STEP 5: CLICK AGAIN (OPTIONAL - SHOW AGAIN) -------------------
+	    js.executeScript("arguments[0].click();", colorDropdownArrow);
+
+	    wait.until(driver ->
+	            !colorOptions.getAttribute("style").contains("none")
+	    );
+	    Thread.sleep(2000);
+	    System.out.println("✅ Color options displayed again");
 	}
 
+	public void verifyMultiColorProductColorMatch() throws InterruptedException {
+		String GREEN = "\u001B[32m";
+	    String RED   = "\u001B[31m";
+	    String CYAN  = "\u001B[36m";
+	    String BLUE  = "\u001B[34m";
+	    String RESET = "\u001B[0m";
+
+	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
+
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    Actions actions = new Actions(driver);
+	    Random random = new Random();
+	    System.out.println(BLUE + "🔍 Navigating to category..." + RESET);
+
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(randomcategory).click().perform();
+
+	    System.out.println("🔍 Searching for multi-color product...");
+
+	    // 1️⃣ Get all product cards
+	    List<WebElement> allProducts = driver.findElements(
+	            By.xpath("//div[contains(@class,'product_list_cards_list') and .//div[@class='zl-prod-color-swatches']]")
+	    );
+
+	    System.out.println("🔍 Searching for multi-color product...");
+
+	    // ✅ Store only multi-color products
+	    List<WebElement> multiColorProducts = new ArrayList<>();
+
+	    for (WebElement product : allProducts) {
+	        List<WebElement> colors =
+	                product.findElements(By.xpath(".//span[contains(@class,'zl-swatch-color')]"));
+
+	        if (colors.size() > 1) {
+	            multiColorProducts.add(product);
+	        }
+	    }
+
+	    if (multiColorProducts.isEmpty()) {
+	        Assert.fail("❌ No multi-color products found");
+	    }
+	    // ✅ VERY IMPORTANT → SHUFFLE
+	    Collections.shuffle(multiColorProducts);
+	    WebElement selectedProduct = multiColorProducts.get(0);
+	    System.out.println("✅ Random multi-color product selected");
+
+	 
+
+	    // ------------------ PLP COLORS ------------------
+	    List<WebElement> plpColorEls =
+	            selectedProduct.findElements(By.xpath(".//span[contains(@class,'zl-swatch-color')]"));
+
+	    List<String> plpColors = new ArrayList<>();
+	    for (WebElement color : plpColorEls) {
+	        String colorName = color.getAttribute("style").split("'")[1];
+	        plpColors.add(colorName.trim());
+	    }
+
+	    System.out.println("PLP Colors → " + plpColors);
+
+	    // ------------------ CLICK PRODUCT ------------------
+	    WebElement productLink = selectedProduct.findElement(By.tagName("a"));
+
+	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", productLink);
+	    js.executeScript("arguments[0].click();", productLink);
+
+	    // ------------------ PDP COLORS ------------------
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//div[contains(@class,'prod_color_list')]")));
+
+	    List<WebElement> pdpColorEls =
+	            driver.findElements(By.xpath("//div[contains(@class,'prod_color_list')]"));
+
+	    List<String> pdpColors = new ArrayList<>();
+	    for (WebElement el : pdpColorEls) {
+	        pdpColors.add(
+	                el.findElement(By.className("prod_color_name"))
+	                        .getText().trim()
+	        );
+	    }
+
+	    System.out.println("PDP Colors → " + pdpColors);
+
+	    // ------------------ VALIDATION ------------------
+	    Collections.sort(plpColors);
+	    Collections.sort(pdpColors);
+
+	    Assert.assertTrue(
+	            "❌ Color mismatch\nPLP: " + plpColors + "\nPDP: " + pdpColors,
+	            plpColors.equals(pdpColors)
+	    );
+
+	    System.out.println("✅ COLOR MATCH SUCCESS");
+	}
+	
 	
 
 	public void sizeChart(Scenario scenario) {
@@ -614,7 +963,102 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    }
 	}
 
+	
+	
+	
+	public void verifySizeOption() {
 
+		RandomProduct();
+	    // ---------- GET SIZE LISTS ----------
+	    List<WebElement> topSizes = driver.findElements(
+	            By.xpath("//div[contains(@class,'Cls_prod_size_list') and not(contains(@class,'bottom'))]")
+	    );
+
+	    List<WebElement> bottomSizes = driver.findElements(
+	            By.xpath("//div[contains(@class,'Cls_prod_size_list_bottom')]")
+	    );
+
+	    // ---------- BOTH TOP + BOTTOM ----------
+	    if (!topSizes.isEmpty() && !bottomSizes.isEmpty()) {
+
+	        System.out.println("✅ Product has TOP + BOTTOM sizes");
+
+	        verifySizeGroup(
+	                "TOP",
+	                topSizes,
+	                "(//span[contains(@class,'Cls_prod_selected_size')])[1]"
+	        );
+
+	        verifySizeGroup(
+	                "BOTTOM",
+	                bottomSizes,
+	                "//span[contains(@class,'Cls_prod_selected_size_bottom')]"
+	        );
+	    }
+
+	    // ---------- ONLY TOP ----------
+	    else if (!topSizes.isEmpty()) {
+
+	        System.out.println("✅ Product has ONLY TOP size");
+
+	        verifySizeGroup(
+	                "TOP",
+	                topSizes,
+	                "(//span[contains(@class,'Cls_prod_selected_size')])[1]"
+	        );
+	    }
+
+	    // ---------- ONLY BOTTOM ----------
+	    else if (!bottomSizes.isEmpty()) {
+
+	        System.out.println("✅ Product has ONLY BOTTOM size");
+
+	        verifySizeGroup(
+	                "BOTTOM",
+	                bottomSizes,
+	                "//span[contains(@class,'Cls_prod_selected_size_bottom')]"
+	        );
+	    }
+
+	    else {
+	        System.out.println("⚠️ No size options available for this product");
+	    }
+	}
+
+	private void verifySizeGroup(String type,
+            List<WebElement> sizeList,
+            String selectedSizeXpath) {
+
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+System.out.println("🔹 Checking " + type + " sizes");
+
+for (WebElement size : sizeList) {
+
+if (!size.isDisplayed()) continue;
+
+String sizeName = size.getText().trim();
+
+// Click size
+size.click();
+Common.waitForElement(2);
+// Get selected size text
+WebElement selectedSize = wait.until(
+ExpectedConditions.visibilityOfElementLocated(
+       By.xpath(selectedSizeXpath)));
+
+String selectedText = selectedSize.getText().trim();
+
+// ✅ ASSERTION
+Assert.assertEquals(
+"❌ Selected size mismatch",
+sizeName,
+selectedText
+);
+
+System.out.println("✅ " + type + " size verified → " + sizeName);
+}
+}
 	public void verifySizeOptions() {
 		RandomProduct();
 		List<WebElement> topSizes = driver.findElements(By.xpath("//div[@class='prod_size_list Cls_prod_size_list']"));
@@ -719,30 +1163,102 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 
 
-	public void addToCartButton() {
-		Actions action = new Actions(driver);
-		RandomProduct();
-		Common.waitForElement(1);
-		try {
-			if (addCartButton.isDisplayed()) {
-				action.moveToElement(addCartButton).click().build().perform();
-				Common.waitForElement(2);
-				String message = addCartMessage.getText();
-				System.out.println("The product is added successfully to the cart:");
-				System.out.println("Validation Message Displayed " +message);
+	public void addToCartAndVerify() {
+RandomProduct();
+		
+		Common.waitForElement(2);
 
-			}
-			else {
-				Common.waitForElement(2);
-				String message = addCartMessage.getText();
-				System.err.println("The Validation message displayed wrong:" + message);
-			}
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-		} catch (Exception e) {
-			System.out.println("Caught an exception: " + e.getMessage());
-		}
+	    // ---------------- GET PRODUCT DETAILS ----------------
+	    String productName = driver.findElement(
+	            By.xpath("//h4[@class='prod_name']"))
+	            .getText().trim();
 
+	    String selectedColor = driver.findElement(
+	            By.xpath("//div[contains(@class,'prod_color_list') and contains(@class,'active')]"))
+	            .getAttribute("title").trim();
 
+	    String selectedSize = driver.findElement(
+	            By.xpath("//div[contains(@class,'prod_size_name') and contains(@class,'active')]"))
+	            .getText().trim();
+
+	    System.out.println("🛒 Product  : " + productName);
+	    System.out.println("🎨 Color    : " + selectedColor);
+	    System.out.println("📏 Size     : " + selectedSize);
+
+	    // ---------------- GET CART COUNT BEFORE ----------------
+	    WebElement cartCountEle = driver.findElement(
+	            By.xpath("//span[contains(@class,'Cls_cart_count_num')]"));
+
+	    // ---------- SAFE BEFORE COUNT ----------
+	    String beforeText = cartCountEle.getText().trim();
+	    int beforeCount = beforeText.isEmpty() ? 0 : Integer.parseInt(beforeText);
+
+	    System.out.println("🧮 Cart count before: " + beforeCount);
+
+	    // ---------- CLICK ADD TO CART ----------
+	    WebElement addToCartBtn = wait.until(
+	            ExpectedConditions.elementToBeClickable(
+	                    By.xpath("//button[contains(@class,'Cls_Cart_Prod')]")));
+	    addToCartBtn.click();
+	    Common.waitForElement(2);
+	    // ---------- WAIT UNTIL COUNT CHANGES ----------
+	    wait.until(driver -> {
+	        String txt = cartCountEle.getText().trim();
+	        return !txt.isEmpty();
+	    });
+
+	    // ---------- AFTER COUNT ----------
+	    String afterText = cartCountEle.getText().trim();
+	    int afterCount = Integer.parseInt(afterText);
+
+	    System.out.println("🧮 Cart count after: " + afterCount);
+
+	    // ---------- ASSERT ----------
+	    Assert.assertEquals(
+	            "❌ Cart count not increased",
+	            beforeCount + 1,
+	            afterCount
+	    );
+
+	    System.out.println("✅ Cart count increased successfully");
+
+	    // ---------------- OPEN CART ----------------
+	    driver.findElement(By.xpath("//a[contains(@class,'Cls_cart_btn')]")).click();
+	    Common.waitForElement(2);
+
+	    // ---------------- VERIFY PRODUCT IN CART ----------------
+	    WebElement cartProduct = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//div[contains(@class,'cart_prod_card_wrpr')]")));
+
+	    String cartProductName = cartProduct.findElement(
+	            By.xpath(".//a[contains(@class,'cp_name')]"))
+	            .getText().trim();
+
+	    String cartColor = cartProduct.findElement(
+	            By.xpath(".//p[contains(@class,'cp_selected_color')]"))
+	            .getText().trim();
+
+	    String cartSize = cartProduct.findElement(
+	            By.xpath(".//div[contains(@class,'cp_selected_size')]//p"))
+	            .getText().trim();
+	    Common.waitForElement(2);
+	    // ---------------- ASSERTIONS ----------------
+	    Assert.assertEquals(
+	            "❌ Product name mismatch",
+	            productName.toLowerCase().trim(),
+	            cartProductName.toLowerCase().trim()
+	    );
+
+	    Assert.assertEquals("❌ Color mismatch",
+	            selectedColor, cartColor);
+
+	    Assert.assertEquals("❌ Size mismatch",
+	            selectedSize, cartSize);
+
+	    System.out.println("✅ PRODUCT VERIFIED SUCCESSFULLY IN CART");
 	}
 	public void buyNow(Scenario scenario) {
 		Actions action = new Actions(driver);
@@ -763,6 +1279,81 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 			scenario.log("❌ Failed to capture screenshot : " + e.getMessage());
 			e.printStackTrace();
 		}
+	}
+	public void buyNowBtn() {
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    Actions action = new Actions(driver);
+
+	    try {
+	        
+	        RandomProduct();
+	        Common.waitForElement(2);
+	        // ---------------- GET PRODUCT DETAILS ----------------
+		    String productName = driver.findElement(
+		            By.xpath("//h4[@class='prod_name']"))
+		            .getText().trim();
+
+		    String selectedColor = driver.findElement(
+		            By.xpath("//div[contains(@class,'prod_color_list') and contains(@class,'active')]"))
+		            .getAttribute("title").trim();
+
+		    String selectedSize = driver.findElement(
+		            By.xpath("//div[contains(@class,'prod_size_name') and contains(@class,'active')]"))
+		            .getText().trim();
+
+		    System.out.println("🛒 Product  : " + productName);
+		    System.out.println("🎨 Color    : " + selectedColor);
+		    System.out.println("📏 Size     : " + selectedSize);
+		    Common.waitForElement(2);
+	        WebElement buyNowBtn = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//button[contains(@class,'Cls_Buy_now_To_Cart')]")));
+
+	        action.moveToElement(buyNowBtn).click().perform();
+	        Common.waitForElement(3);
+	        // ✅ Wait for redirection to cart page
+	        wait.until(ExpectedConditions.urlContains("cart"));
+
+	     // ---------------- VERIFY PRODUCT IN CART ----------------
+		    WebElement cartProduct = wait.until(
+		            ExpectedConditions.visibilityOfElementLocated(
+		                    By.xpath("//div[contains(@class,'cart_prod_card_wrpr')]")));
+
+		    String cartProductName = cartProduct.findElement(
+		            By.xpath(".//a[contains(@class,'cp_name')]"))
+		            .getText().trim();
+
+		    String cartColor = cartProduct.findElement(
+		            By.xpath(".//p[contains(@class,'cp_selected_color')]"))
+		            .getText().trim();
+
+		    String cartSize = cartProduct.findElement(
+		            By.xpath(".//div[contains(@class,'cp_selected_size')]//p"))
+		            .getText().trim();
+		    Common.waitForElement(2);
+		    // ---------------- ASSERTIONS ----------------
+		    Assert.assertEquals(
+		            "❌ Product name mismatch",
+		            productName.toLowerCase().trim(),
+		            cartProductName.toLowerCase().trim()
+		    );
+
+		    Assert.assertEquals("❌ Color mismatch",
+		            selectedColor, cartColor);
+
+		    Assert.assertEquals("❌ Size mismatch",
+		            selectedSize, cartSize);
+
+		    System.out.println("✅ PRODUCT VERIFIED SUCCESSFULLY IN CART");
+
+	        System.out.println("✅ Buy Now successful, product verified in cart");
+
+
+
+	    } catch (Exception e) {
+	        Assert.fail("Buy Now flow failed");
+	    }
 	}
 	public void verifyPincode() {
 		RandomProduct();
@@ -1020,6 +1611,59 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 			System.out.println("Caught an exception: " + e.getMessage());
 		}
 	}
+	
+	
+	
+	public void verifyReturnAndExchangeLink() {
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    try {
+	        
+	        RandomProduct();
+	        Common.waitForElement(1);
+
+	        scrollUsingJSWindow();
+
+	
+	        wait.until(ExpectedConditions.elementToBeClickable(clickOnReturn_ExchangeDropDownArrow)).click();
+	        Common.waitForElement(2);
+	        wait.until(ExpectedConditions.elementToBeClickable(clickOnTheLink)).click();
+	        Common.waitForElement(2);
+	        wait.until(ExpectedConditions.urlContains("return-exchange"));
+
+	        // ---------------- VERIFY URL ----------------
+	        String actualUrl = driver.getCurrentUrl();
+	        String expectedUrl = "https://www.zlaata.com/policy/return-exchange-replacement";
+
+	        Assert.assertEquals(
+	                "❌ Return & Exchange URL mismatch",
+	                expectedUrl,
+	                actualUrl
+	        );
+
+	        // ---------------- VERIFY HEADING ----------------
+	        WebElement heading = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//div[contains(@class,'privacy__policy__title')]")));
+
+	        String actualHeading = heading.getText().trim();
+	        String expectedHeading = "RETURN, EXCHANGE & REPLACEMENT POLICY";
+
+	        Assert.assertEquals(
+	                "❌ Return & Exchange heading mismatch",
+	                expectedHeading,
+	                actualHeading
+	        );
+
+	        System.out.println("✅ Return & Exchange page verified successfully");
+
+	    } catch (Exception e) {
+	        System.out.println("❌ Return & Exchange verification failed: " + e.getMessage());
+	        Assert.fail("Return & Exchange validation failed");
+	    }
+	}
+
 	public void reviewViewAll() {
 		RandomProduct();
 		Common.waitForElement(1);

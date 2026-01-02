@@ -7,6 +7,7 @@ import java.util.concurrent.TimeoutException;
 import context.TestContext;
 import pages.HomePage;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 
 
 public class HomePageStepdef {
@@ -20,10 +21,15 @@ public class HomePageStepdef {
 		home = testContext.getPageObjectManager().getHomePage();
 	}
 
+//TC-01
+		@Given("User able to Launch Url and Logo.")
+		public void user_able_to_launch_url_and_logo() {
+			home.validateUrlAndLogo();
+		}
 
-	@Given("User going to click available banners in home page")
+	@When("User going to click available banners in home page")
 	public void user_going_to_click_available_banners_in_home_page() {
-		home.homeLaunch();
+
 		home.bannerClick();
 	}
 

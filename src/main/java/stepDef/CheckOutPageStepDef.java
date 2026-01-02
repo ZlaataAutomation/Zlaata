@@ -19,18 +19,10 @@ public class CheckOutPageStepDef {
 
 	}
 
-	@Given("User Verifies Checkout page calculation")
-	public void user_verifies_checkout_page_calculation() {
-		cOp.verifyCheckoutCalculationsWithExcel();
-
-
-	}
-
-
 
 	@Given("User Verifies Bag Item Count")
 	public void user_verifies_bag_item_count() {
-		cOp.itemCount();
+		cOp.itemCountCartPage();
 	}
 
 
@@ -67,7 +59,7 @@ public class CheckOutPageStepDef {
 
 
 	@Given("User Verifies User Can Add New Product")
-	public void user_verifies_user_can_add_new_product() {
+	public void user_verifies_user_can_add_new_product() throws InterruptedException {
 		cOp.newProductToBag();
 	}
 	
@@ -96,6 +88,12 @@ public void the_user_verifies_that_on_the_checkout_page_the_accessories_button_t
 		cOp.allButtonOnCheckoutPage();
 }
 
+	
+	@Given("User Verifies Checkout page calculation")
+	public void user_verifies_checkout_page_calculation() {
+		cOp.verifyCheckoutCalculationsWithExcel();
 
+
+	}
 
 }

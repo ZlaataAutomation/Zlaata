@@ -19,6 +19,9 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
 	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ALL')]")
 	protected WebElement category;
 
+	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DRESSES')]")
+	protected WebElement randomcategory;
+	
 	@FindBy(xpath = "//h2[@class='product_list_cards_heading']")
 	protected  WebElement productListingName;
 

@@ -7,7 +7,8 @@ Feature: CheckOut Page Feature
   # Expected: Checkout page sanity
   #===========================================================================
   
-  
+  @Cart
+  @Sanity
   @TC_UI_Zlaata_COP_01
   Scenario Outline: TC_UI_Zlaata_COP_01 |Verify Bag Item Count Display|"<TD_ID>"
     Given User Verifies Bag Item Count

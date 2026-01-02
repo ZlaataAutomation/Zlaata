@@ -22,12 +22,98 @@ public class MenuStepDef {
 
 
 
+@Given("User clicks on All  Header menu")
+		public void user_clicks_on_all_header_menu() throws InterruptedException {
+	menu.validateAllHeaderMenus();
+		}
 
-	@Given("User clicks on home page header menu")
-	public void user_clicks_on_home_page_header_menu() {
-		home.homeLaunch();
-		menu.clickHome();
-	}
+
+
+@Given("User clicks on newAriivals header suggestion all products.")
+public void user_clicks_on_new_ariivals_header_suggestion_all_products() {
+	menu.validateNewArrivalSuggestions();
+	
+	
+}
+
+
+@Given("User clicks on shop all category,Collections and Styles.")
+public void user_clicks_on_shop_all_category_collections_and_styles() throws InterruptedException {
+	menu.validateShopAllCategories_CollectionsAndStyle();
+}
+
+
+@Given("User clicks on Boss lady menu  All Suggestions")
+public void user_clicks_on_boss_lady_menu_all_suggestions() {
+	menu.validateBossLadySuggestions();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	@Given("User clicks on newAriivals header")

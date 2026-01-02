@@ -96,8 +96,12 @@ public class WebDriverManager {
     private ChromeOptions getChromeOptions() {
         ChromeOptions chromeOptions = new ChromeOptions();
         if (isHeadLessModeEnabled) {
-            chromeOptions.addArguments("--headless", "window-size=1920,1080");
+        	chromeOptions.addArguments("--headless=new");
+            chromeOptions.addArguments("--window-size=1920,1080");
         }
+        
+        chromeOptions.addArguments("user-data-dir=C:/selenium-profile");
+        chromeOptions.addArguments("profile-directory=Default");
         chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
         chromeOptions.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
         chromeOptions.setAcceptInsecureCerts(true);

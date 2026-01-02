@@ -1,5 +1,6 @@
 package pages;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -10,6 +11,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import manager.FileReaderManager;
 import objectRepo.CheckOutPageObjRepo;
 import stepDef.Hooks;
 import utils.Common;
@@ -418,7 +421,43 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 				String.valueOf(expectedQty)
 				));
 	}
+	
+	public void deleteAllProductsFromCart() {
 
+	   
+	    driver.findElement(By.xpath("//a[@class='Cls_cart_btn Cls_redirect_restrict']")).click();
+	    Common.waitForElement(1);
+	    try {
+	        if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	            System.out.println("🛍️ Cart already empty. No delete action needed.");
+	            return; 
+	        }
+	    } catch (NoSuchElementException ignored) {
+	        
+	    }
+	    while (true) {
+	        try {
+	            WebElement deleteBtn = driver.findElement(By.xpath("//div[@title='Delete']"));
+	            deleteBtn.click();
+	            System.out.println("🗑️ Product deleted");
+	            Common.waitForElement(1); 
+	        } catch (NoSuchElementException e) {
+	            System.out.println("✅ No more products to delete.");
+	            break;
+	        } catch (Exception e) {
+	            System.out.println("⚠️ Error while deleting: " + e.getMessage());
+	            break;
+	        }
+	    }
+
+	    try {
+	        if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	            System.out.println("🛍️ Cart is empty, Continue Shopping displayed.");
+	        }
+	    } catch (NoSuchElementException e) {
+	        System.out.println("ℹ️ Bag is not empty message not found.");
+	    }
+	}
 
 	//BAG TO CHECKOUT CODE MERGE
 	public void itemCount() {
@@ -451,6 +490,110 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 			throw e1;
 		}
 	}
+	public void addRandomProduct() {
+		  String GREEN = "\u001B[32m";
+		    String RED   = "\u001B[31m";
+		    String CYAN  = "\u001B[36m";
+		    String RESET = "\u001B[0m";
+		    String line = "──────────────────────────────────────────────────────────────";
+		    System.out.println(CYAN + line + RESET);
+	    // Launch home
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+		 // Hover and open category
+		    Actions actions = new Actions(driver);
+		    actions.moveToElement(shopMenu).perform();
+		    actions.moveToElement(category).click().perform();
+
+		    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+
+		    // 🔹 Wait for product card
+		    WebElement productCard = wait.until(
+		            ExpectedConditions.visibilityOfElementLocated(
+		                    By.xpath("(//div[contains(@class,'product_list_cards_list')])[1]")
+		            )
+		    );
+		    WebElement addToBagBtn = productCard.findElement(
+		            By.xpath(".//div[contains(@class,'product_list_add_to_cart')]")
+		    );
+		    ((JavascriptExecutor) driver)
+            .executeScript("arguments[0].scrollIntoView({block:'center'});", addToBagBtn);
+    ((JavascriptExecutor) driver)
+            .executeScript("arguments[0].click();", addToBagBtn);
+    Common.waitForElement(2);
+    System.out.println(GREEN + "✅ PLP Add to Bag clicked" + RESET);
+    // 🔹 Click Add to Bag in popup
+    WebElement popupAddBtn = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                    By.xpath("//button[contains(@class,'add_bag_prod_buy_now_btn')]")
+            )
+    );
+    popupAddBtn.click();
+
+    System.out.println(GREEN + "✅ Product added to cart" + RESET);
+    Common.waitForElement(2);
+    // 🔹 Open cart
+    WebElement cartIcon = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                    By.xpath("//a[contains(@class,'Cls_cart_btn')]")
+            )
+    );
+    cartIcon.click();
+	}
+	public void itemCountCartPage() {
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    // Open home
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader().getApplicationUrl());
+
+	    // Open Cart
+	    click(bagIcon);
+	    Common.waitForElement(2);
+
+	    // ---------------- CHECK IF ITEM COUNT EXISTS ----------------
+	    List<WebElement> itemCountElements = driver.findElements(
+	            By.xpath("//span[contains(@class,'Cls_bag_items_count')]"));
+
+	    if (itemCountElements.isEmpty()
+	            || itemCountElements.get(0).getText().trim().equals("0")) {
+
+	        System.out.println("🛒 Cart empty → Adding product");
+
+	        // Add product
+	        addRandomProduct();
+	        Common.waitForElement(3);
+
+	        // Open cart again
+	        click(bagIcon);
+	        Common.waitForElement(2);
+	    }
+
+	    // ---------------- VERIFY ITEM COUNT ----------------
+	    WebElement itemCountEle = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//span[contains(@class,'Cls_bag_items_count')]"))
+	    );
+
+	    String itemCount = itemCountEle.getText().trim();
+
+	    System.out.println("✅ Cart Item Count: " + itemCount);
+
+	    // Assertions
+	    Assert.assertFalse(
+	            "❌ Item count is empty",
+	            itemCount.isEmpty()
+	    );
+
+	    Assert.assertTrue(
+	            "❌ Item count should be greater than 0",
+	            Integer.parseInt(itemCount) > 0
+	    );
+
+	    System.out.println("🎉 Cart item count validation successful");
+	}
+
 
 	public void wishListInbag() {
 		LoginPage login = new LoginPage(driver);
@@ -529,7 +672,7 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 
 
 
-	public void bagDelete() {
+	public void bagDelete() throws InterruptedException {
 		HomePage home = new HomePage(driver);
 		home.homeLaunch();
 		Common.waitForElement(5);
@@ -596,7 +739,7 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 
 
 
-	public void changeTheProductSize() {
+	public void changeTheProductSize() throws InterruptedException {
 		HomePage home = new HomePage(driver);
 		home.homeLaunch();
 		Common.waitForElement(5);
@@ -766,7 +909,7 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 	}
 
 
-	public void newProductToBag() {
+	public void newProductToBag() throws InterruptedException {
 		HomePage home = new HomePage(driver);
 		home.homeLaunch();
 		Common.waitForElement(2);

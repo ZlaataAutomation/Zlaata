@@ -8,15 +8,36 @@ Feature: This is HomePage feature
   #ScenarioDescription : Complete HomePage
   #Expected: HomePage sanity 
   #============================================================================
+  
+  @Sanity
   @TC_UI_Zlaata_Home_01
-  Scenario Outline: TC_UI_Zlaata_Home_01 |Verify if the user is able to click on the homepage banner.|"<TD_ID>"
-     
-     Given User going to click available banners in home page
+  Scenario Outline: TC_UI_Zlaata_Home_01 |Verify if the user is able to launch URL and click Logo and banner on the homepage banner.|"<TD_ID>"
+    
+     Given User able to Launch Url and Logo.
+ #    When User going to click available banners in home page
     
 
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Home_01 |
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     @TC_UI_Zlaata_Home_02
   Scenario Outline: TC_UI_Zlaata_Home_02 |Verify if the user is able to click on the forward and backward arrows on the homepage banner.|"<TD_ID>"
