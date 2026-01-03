@@ -247,8 +247,8 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    products.get(0).click();
 
 	    // Arrow locators
-	    By nextArrow = By.xpath("//div[contains(@class,'product_details_swiper_next')]");
-	    By backArrow = By.xpath("//div[contains(@class,'product_details_swiper_prev')]");
+	    By nextArrow = By.xpath("(//div[contains(@class,'swiper-button-next')])[1]");
+	    By backArrow = By.xpath("(//div[contains(@class,'swiper-button-prev')])[1]");
 
 	    WebElement nextBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(nextArrow));
 	    WebElement backBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(backArrow));
