@@ -22,15 +22,45 @@ public class MyOrdersStepdef {
 	}
 	
 
-		@Given("My orders page smoke testing {string}")
-		public void my_orders_page_smoke_testing(String arg) {
-			login.userLogin();
-	        if (arg.equalsIgnoreCase("Shop All")) {
-	        	myOrders.netBanking("Shop All");
-	        } else {
-	        	myOrders.netBanking();
-	        }
-		}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//		@Given("My orders page smoke testing {string}")
+//		public void my_orders_page_smoke_testing(String arg) {
+//			login.userLogin();
+//	        if (arg.equalsIgnoreCase("Shop All")) {
+//	        	myOrders.netBanking("Shop All");
+//	        } else {
+//	        	myOrders.netBanking();
+//	        }
+//		}
 }
 
 

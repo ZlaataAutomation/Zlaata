@@ -114,6 +114,7 @@ public class WebDriverManager {
         chromeOptions.setExperimentalOption("prefs", prefs);
         return chromeOptions;
     }
+    
 
     public void closeDriver() {
         if (driver != null) {

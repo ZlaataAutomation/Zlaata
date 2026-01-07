@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -503,14 +504,14 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 		 // Hover and open category
 		    Actions actions = new Actions(driver);
 		    actions.moveToElement(shopMenu).perform();
-		    actions.moveToElement(category).click().perform();
+		    actions.moveToElement(randomcategory).click().perform();
 
 		    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
 
 		    // 🔹 Wait for product card
 		    WebElement productCard = wait.until(
 		            ExpectedConditions.visibilityOfElementLocated(
-		                    By.xpath("(//div[contains(@class,'product_list_cards_list')])[1]")
+		                    By.xpath("(//div[contains(@class,'product_list_cards_list')])")
 		            )
 		    );
 		    WebElement addToBagBtn = productCard.findElement(
@@ -673,69 +674,205 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 
 
 	public void bagDelete() throws InterruptedException {
-		HomePage home = new HomePage(driver);
-		home.homeLaunch();
-		Common.waitForElement(5);
-		click(bagIcon);
-		List<WebElement> finalBagCount = driver.findElements(By.xpath("//span[@class='cart_count_num Cls_cart_count_num']"));
-		if (finalBagCount.isEmpty()) {
+		 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-			System.out.println("🛒 Adding product to check if bag count displays...");
-			// Add product again to verify count shows up
-			ProductListingPage product = new ProductListingPage(driver);
-			product.addToCart();
-			Common.waitForElement(2);
-			click(bagIcon);
+		    // Open home
+		    driver.get(FileReaderManager.getInstance()
+		            .getConfigReader().getApplicationUrl());
+
+		    // Open Cart
+		    click(bagIcon);
+		    Common.waitForElement(2);
+
+		    // ---------------- CHECK IF ITEM COUNT EXISTS ----------------
+		    List<WebElement> itemCountElements = driver.findElements(
+		            By.xpath("//span[contains(@class,'Cls_bag_items_count')]"));
+
+		    if (itemCountElements.isEmpty()
+		            || itemCountElements.get(0).getText().trim().equals("0")) {
+
+		        System.out.println("🛒 Cart empty → Adding product");
+
+		        // Add product
+		        addRandomProduct();
+		        Common.waitForElement(3);
+
+		        // Open cart again
+		        click(bagIcon);
+		        Common.waitForElement(2);
+		    }
+		    int deletedCount = 0;
+
+		    // ---------------- DELETE ALL PRODUCTS ----------------
+		    while (true) {
+		        List<WebElement> deleteButtons =
+		                driver.findElements(By.xpath("//div[@title='Delete']"));
+
+		        if (deleteButtons.isEmpty()) {
+		            break; // No more items
+		        }
+
+		        try {
+		            System.out.println("🗑️ Deleting product " + (deletedCount + 1));
+
+		            WebElement deleteBtn = deleteButtons.get(0);
+
+		            wait.until(ExpectedConditions.elementToBeClickable(deleteBtn));
+		            Common.waitForElement(1);
+		            deleteBtn.click();
+		            Common.waitForElement(1);
+		            deletedCount++;
+		            Common.waitForElement(1);
+
+		        } catch (StaleElementReferenceException | ElementClickInterceptedException e) {
+		            System.out.println("⚠️ Retrying delete due to DOM update...");
+		            Common.waitForElement(1);
+		        }
+		    }
+
+		    System.out.println("✅ Total products deleted from bag: " + deletedCount);
+
+		    // ---------------- VERIFY EMPTY BAG MESSAGE ----------------
+		    try {
+		        WebElement emptyMsg = wait.until(
+		                ExpectedConditions.visibilityOfElementLocated(
+		                        By.xpath("//h5[@class='empty-cart-title' and normalize-space()='Your bag is empty']")
+		                )
+		        );
+
+		        Assert.assertTrue("❌ Empty bag message not displayed", emptyMsg.isDisplayed());
+		        System.out.println("🛒✅ Bag is empty message displayed");
+
+		    } catch (TimeoutException e) {
+		        Assert.fail("❌ Bag is NOT empty. 'Your bag is empty' message not found");
+		    }
 		}
-		int deletedCount = 0;
-
-		List<WebElement> deleteButtons = driver.findElements(By.xpath("//div[@title='Delete']"));
-
-		for (int i = 0; i < deleteButtons.size(); i++) {
-			boolean deleted = false;
-			int retry = 0;
-
-			while (!deleted && retry < 3) {
-				try {
-					System.out.println("🛒 Attempting to delete product " + (i + 1) + "...");
-
-					// Refresh list each retry to avoid stale reference
-					deleteButtons = driver.findElements(By.xpath("//div[@title='Delete']"));
-
-					// Click delete
-					deleteButtons.get(i).click();
-					System.out.println("✅ Product " + (i + 1) + " deleted.");
-					deleted = true;
-					deletedCount++;
-
-					// Optional: Wait for deletion to reflect
-					Thread.sleep(1000);
-				} catch (StaleElementReferenceException e) {
-					retry++;
-					System.out.println("⚠️ Retry " + retry + " due to stale element...");
-				} catch (ElementClickInterceptedException e) {
-					retry++;
-					System.out.println("❌ Retry " + retry + ": Snackbar intercepted click. Waiting to retry...");
-					try {
-						Thread.sleep(1000); // Wait before retry
-					} catch (InterruptedException ie) {
-						// Ignore
-					}
-				} catch (Exception e) {
-					System.out.println("❌ Unexpected error during bag deletion: " + e.getMessage());
-					break;
-				}
-			}
-
-			if (!deleted) {
-				System.out.println("❌ Failed to delete product " + (i + 1) + " after multiple attempts.");
-			}
-		}
-
-		System.out.println("✅ Total products deleted from bag: " + deletedCount);
-	}
 
 
+public void changeTheProductSizeCartPage() {
+	 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    // Open home
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader().getApplicationUrl());
+	    
+	    // Open Cart
+	    click(bagIcon);
+	    Common.waitForElement(2);
+
+	    // ---------------- CHECK IF ITEM COUNT EXISTS ----------------
+
+	    List<WebElement> cartProducts = driver.findElements(
+	    	    By.xpath("//div[contains(@class,'Cls_cart_prod_card')]")
+	    	);
+	    
+	    if (cartProducts.isEmpty()) {
+
+	        System.out.println("🛒 Cart empty → Adding product");
+
+	        // Add product
+	        addRandomProduct();
+	        Common.waitForElement(3);
+
+	        // Open cart again
+	        click(bagIcon);
+	        Common.waitForElement(2);
+	    }
+	    WebElement firstProduct = driver.findElement(
+	    	    By.xpath("(//div[contains(@class,'Cls_cart_prod_card')])[1]")
+	    	);
+	    
+	    System.out.println("🛍️ Found first product in cart");
+	    
+	    List<WebElement> topSize = firstProduct.findElements(
+	    	    By.xpath(".//div[contains(@class,'cp_size_btn_card')][.//h6[text()='Top']]")
+	    	);
+
+	    	List<WebElement> bottomSize = firstProduct.findElements(
+	    	    By.xpath(".//div[contains(@class,'cp_size_btn_card')][.//h6[text()='Bottom']]")
+	    	);
+
+	    	List<WebElement> singleSize = firstProduct.findElements(
+	    	    By.xpath(".//div[contains(@class,'cp_size_btn_card')][.//h6[text()='Size']]")
+	    	);
+
+	    	if (!topSize.isEmpty() && !bottomSize.isEmpty()) {
+	    	    System.out.println("✅ First product has TOP + BOTTOM size");
+	    	    changeSizeForFirstProduct(firstProduct, "Top");
+	    	    changeSizeForFirstProduct(firstProduct, "Bottom");
+	    	}
+	    	else if (!singleSize.isEmpty()) {
+	    	    System.out.println("✅ First product has SINGLE size");
+	    	    changeSizeForFirstProduct(firstProduct, "Size");
+	    	}
+	    	else {
+	    	    System.out.println("⚠️ No size available for first product");
+	    	}
+}
+private void changeSizeForFirstProduct(WebElement productCard, String sizeType) {
+
+    JavascriptExecutor js = (JavascriptExecutor) driver;
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+    WebElement sizeCard = productCard.findElement(
+        By.xpath(".//div[contains(@class,'cp_size_btn_card')][.//h6[text()='" + sizeType + "']]")
+    );
+
+    // Open dropdown
+    WebElement dropdownArrow = sizeCard.findElement(
+        By.xpath(".//div[contains(@class,'cp_drop_arrow')]")
+    );
+    js.executeScript("arguments[0].click();", dropdownArrow);
+    Common.waitForElement(2);
+
+    // Get count first (important to avoid stale element)
+    List<WebElement> sizeOptions = sizeCard.findElements(
+        By.xpath(".//ul[contains(@class,'cp_dropdown_content')]//li")
+    );
+
+    if (sizeOptions.size() <= 1) {
+        System.out.println("⚠️ Only one " + sizeType + " size available");
+        return;
+    }
+
+    System.out.println("📋 Available " + sizeType + " sizes:");
+    
+    js.executeScript("arguments[0].click();", dropdownArrow);
+
+    for (int i = 0; i < sizeOptions.size(); i++) {
+
+        // 🔁 Re-open dropdown every time
+        js.executeScript("arguments[0].click();", dropdownArrow);
+        Common.waitForElement(1);
+
+        List<WebElement> refreshedOptions = sizeCard.findElements(
+            By.xpath(".//ul[contains(@class,'cp_dropdown_content')]//li")
+        );
+
+        WebElement option = refreshedOptions.get(i);
+        String sizeText = option.getText().trim();
+
+        System.out.println("➡️ Trying size: " + sizeText);
+
+        js.executeScript("arguments[0].click();", option);
+        Common.waitForElement(2);
+
+        // ✅ Re-locate selected size AFTER DOM refresh
+        WebElement selectedSize = sizeCard.findElement(
+            By.xpath(".//div[contains(@class,'cp_selected_size')]")
+        );
+
+        String selectedText = selectedSize.getText().trim();
+
+        Assert.assertEquals(
+        	    selectedText,
+        	    sizeText,
+        	    "❌ Size mismatch after selection. Expected: " + sizeText + " | Actual: " + selectedText
+        	);
+
+        	System.out.println("✅ Size selected & displayed: " + selectedText);
+    }
+}
 
 
 
@@ -824,7 +961,102 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 		System.out.println("\n✅ Completed size change for all products.");
 	}
 
+	
+	int prevQty ;
+	public void increaseAndDecreaseQTYCartPage() throws InterruptedException {
+		bagDelete();
+		
 
+		addRandomProduct();
+        Common.waitForElement(3);
+        
+        List<WebElement> products = driver.findElements(
+                By.xpath("//div[contains(@class,'cart_prod_card')]"));
+
+        if (products.isEmpty()) {
+            Assert.fail("❌ Cart is empty. Cannot verify quantity behavior.");
+        }
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement product = driver.findElement(
+                By.xpath("(//div[contains(@class,'cart_prod_card')])[1]")
+        );
+
+        WebElement incBtn = product.findElement(
+                By.xpath(".//button[contains(@class,'cp_quantity_increase_btn')]")
+        );
+
+        WebElement decBtn = product.findElement(
+                By.xpath(".//button[contains(@class,'cp_quantity_decrease_btn')]")
+        );
+
+        WebElement qty = product.findElement(
+                By.xpath(".//div[contains(@class,'cp_selected_quantity')]")
+        );
+
+        WebElement totalAmount = driver.findElement(
+                By.xpath("//div[contains(@class,'price_details_pair Cls_cart_total_amount')]")
+        );
+
+        // 🔹 1️⃣ Decrease button must be disabled initially
+        Assert.assertTrue(
+                "Decrease button should be disabled initially",
+                decBtn.getAttribute("class").contains("disabled")
+        );
+        System.out.println("✅ Decrease button is disabled initially");
+
+         prevQty = Integer.parseInt(qty.getText().trim());
+        int prevAmount = Integer.parseInt(
+                totalAmount.getAttribute("data-totalprice").trim()
+        );
+
+        // 🔹 2️⃣ Click increase until it becomes disabled
+        while (!incBtn.getAttribute("class").contains("disabled")) {
+
+            incBtn.click();
+            Common.waitForElement(2);
+            // wait until qty changes
+            wait.until(d ->
+                    Integer.parseInt(qty.getText().trim()) != prevQty
+            );
+
+            int currentQty = Integer.parseInt(qty.getText().trim());
+            int currentAmount = Integer.parseInt(
+                    totalAmount.getAttribute("data-totalprice").trim()
+            );
+
+            // 🔹 3️⃣ ASSERT quantity increased
+            Assert.assertEquals(
+                    "Quantity did not increase correctly",
+                    prevQty + 1,
+                    currentQty
+            );
+
+            // 🔹 4️⃣ ASSERT price increased
+            Assert.assertTrue(
+                    "Total amount did not increase",
+                    currentAmount > prevAmount
+            );
+
+            System.out.println("✅ Qty: " + prevQty + " → " + currentQty +
+                    " | Amount: " + prevAmount + " → " + currentAmount);
+
+            prevQty = currentQty;
+            prevAmount = currentAmount;
+        }
+
+        // 🔹 5️⃣ Increase button must be disabled at max qty
+        Assert.assertTrue(
+                "Increase button should be disabled at max quantity",
+                incBtn.getAttribute("class").contains("disabled")
+        );
+
+        System.out.println("✅ Increase button disabled at max quantity");
+    }
+		
+		
+	
 
 
 
