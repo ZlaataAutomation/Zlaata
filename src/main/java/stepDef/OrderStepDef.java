@@ -19,8 +19,8 @@ public class OrderStepDef {
 	}
 
 		@Given("User placing an order and verifing calculations including check out page")
-		public void user_placing_an_order_and_verifing_calculations_including_check_out_page() {
-		    order.verifyOrderPlacementAndValidationFlow(Hooks.getScenario());
+		public void user_placing_an_order_and_verifing_calculations_including_check_out_page() throws InterruptedException {
+		    order.verifyOrderPlacementAndCalculationAndAfterPalced();
 		}
 
 

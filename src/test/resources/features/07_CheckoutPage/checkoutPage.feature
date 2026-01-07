@@ -13,7 +13,6 @@ Feature: CheckOut Page Feature
   Scenario Outline: TC_UI_Zlaata_COP_01 |Verify Bag Item Count Display|"<TD_ID>"
     Given User Verifies Bag Item Count
      
-#5
     Examples:
       | TD_ID                  |
       | TD_UI_Zlaata_COP_01     |
@@ -26,6 +25,8 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_02     |
 
+@Cart
+  @Sanity
   @TC_UI_Zlaata_COP_03
   Scenario Outline: TC_UI_Zlaata_COP_03 |Verify Display of Delete Button|"<TD_ID>"
     Given User Verifies Display of Delete Button
@@ -34,6 +35,9 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_03     |
 
+
+@Cart
+  @Sanity
   @TC_UI_Zlaata_COP_04
   Scenario Outline: TC_UI_Zlaata_COP_04 |Verify That User Can Change Product Size|"<TD_ID>"
     Given User Verifies That User Can Change Product Size
@@ -42,6 +46,8 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_04     |
 
+@Cart
+  @Sanity
   @TC_UI_Zlaata_COP_05
   Scenario Outline: TC_UI_Zlaata_COP_05 |Verify User Can Increase or Decrease Product Quantity|"<TD_ID>"
     Given User Verifies User Can Increase or Decrease Product Quantity

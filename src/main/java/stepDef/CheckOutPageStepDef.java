@@ -48,13 +48,13 @@ public class CheckOutPageStepDef {
 
 	@Given("User Verifies That User Can Change Product Size")
 	public void user_verifies_that_user_can_change_product_size() throws InterruptedException {
-		cOp.changeTheProductSize();
+		cOp.changeTheProductSizeCartPage();
 	}
 
 
 	@Given("User Verifies User Can Increase or Decrease Product Quantity")
 	public void user_verifies_user_can_increase_or_decrease_product_quantity() throws InterruptedException {
-		cOp.increaseAndDecreaseQTY();
+		cOp.increaseAndDecreaseQTYCartPage();
 	}
 
 

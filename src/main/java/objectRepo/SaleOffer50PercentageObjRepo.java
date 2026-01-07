@@ -13,7 +13,7 @@ public abstract class SaleOffer50PercentageObjRepo extends BasePage{
 	@FindBy(xpath = "//li[@class='navigation_menu_list nav_menu_dropdown shop']")
 	protected WebElement shopMenu;
 	
-	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ALL')]")
+	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DRESSES')]")
 	protected WebElement category;
 	
 	@FindBy(xpath = "//li[@class='navigation_menu_list sale']")
@@ -28,7 +28,14 @@ public abstract class SaleOffer50PercentageObjRepo extends BasePage{
 	@FindBy(xpath = "//a[contains(text(),'Sale')]")
 	protected WebElement generalSale;
 	
+	@FindBy(xpath = "//input[@id='search_input']")
+	protected WebElement userSearchBox;
 	
+	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Continue']")
+	protected WebElement continueBtn;
+	
+	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Place order']")
+	protected WebElement placeOrderBtn;
 	
 	@FindBy(xpath = "//li[@class='navigation_menu_list new-arrivals']")
 	protected WebElement newArrivalMenu;
@@ -206,7 +213,7 @@ public abstract class SaleOffer50PercentageObjRepo extends BasePage{
 	@FindBy(xpath = "//button[@class='success']")
 	protected WebElement successButton;
 	
-	@FindBy(xpath = "//a[@class='view_details_btn']")
+	@FindBy(xpath = "//a[contains(@class,'view_details_btn') and (contains(text(),'View Order Details') or contains(text(),'View Orders'))]")
 	protected WebElement viewOrderDetails;
 	
 	@FindBy(xpath = "//a[@class='account_tabs_list_links active_tab']")
@@ -214,6 +221,10 @@ public abstract class SaleOffer50PercentageObjRepo extends BasePage{
 	
 	@FindBy(xpath = "(//a[@class='account_sidebar_menu_links'])[1]")
 	protected WebElement profileMyOrders;
+	
+	
+	@FindBy(xpath = "//h3[normalize-space()='price details']/following-sibling::div[contains(@class,'popup_containers_cls_btn')]")
+	protected WebElement closeBtn;
 	
 	@FindBy(xpath = "(//div[@class='order_placed_status_details'])[1]//h4")
 	protected WebElement orderDeliveredStatus;
@@ -454,9 +465,19 @@ public abstract class SaleOffer50PercentageObjRepo extends BasePage{
 	@FindBy(xpath = "//div[@aria-label='Delete']")
 	protected WebElement mailDelete;
 	
+	
+	@FindBy(xpath = "(//input[@placeholder='Enter Coupon Code'])[1]")
+	protected WebElement searchBox;
+	
+ 	@FindBy(xpath = "(//button[@type='submit'][normalize-space()='apply'])[1]")
+	protected WebElement applyBtn;
+ 	
 	@FindBy(xpath = "//input[@class='form-control product-name']")
 	protected WebElement descriptionBox;
 
 	@FindBy(xpath = "//input[@class='coupon_input Cls_coupon_input ']")
 	protected WebElement couponTextbox;
+	
+	@FindBy(xpath = "//input[@id='payment_type_COD']")
+	protected WebElement selectCOD;
 }
