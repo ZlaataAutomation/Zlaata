@@ -23,6 +23,12 @@ public class OrderStepDef {
 		    order.verifyOrderPlacementAndCalculationAndAfterPalced();
 		}
 
+			@Given("User Cancelling an order and labels")
+			public void user_cancelling_an_order_and_labels() {
+				order.validateOrderCancellation();
+			}
+
+
 
 
 	

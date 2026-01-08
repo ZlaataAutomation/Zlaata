@@ -57,6 +57,15 @@ Feature: This is Menu feature
       | TD_UI_Zlaata_Menus_04 |
       
       
+        @TC_UI_Zlaata_Menus_05
+  Scenario Outline: TC_UI_Zlaata_Menus_05 |Verify that the user is able to Mouse hover any all category in the "Shop" dropdown.|"<TD_ID>"
+     
+     Given User  Mouse hover  on shop all category,Collections and Styles.
+    
+
+    Examples: 
+      | TD_ID                  |
+      | TD_UI_Zlaata_Menus_05 |     
       
       
       
@@ -106,14 +115,7 @@ Feature: This is Menu feature
 
     
 
-      @TC_UI_Zlaata_Menus_05
-  Scenario Outline: TC_UI_Zlaata_Menus_05 |Verify that the user is able to click the "Boss Lady" hover image.|"<TD_ID>"
-     
-     Given User clicks on boss lady suggestions
-	
-    Examples: 
-      | TD_ID                  |
-      | TD_UI_Zlaata_Menus_05 |
+  
     
       @TC_UI_Zlaata_Menus_06
   Scenario Outline: TC_UI_Zlaata_Menus_06 |Verify that the user is able to click the "GET UPDATE" banner.|"<TD_ID>"

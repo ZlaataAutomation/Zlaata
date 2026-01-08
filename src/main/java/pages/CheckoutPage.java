@@ -865,9 +865,9 @@ private void changeSizeForFirstProduct(WebElement productCard, String sizeType) 
         String selectedText = selectedSize.getText().trim();
 
         Assert.assertEquals(
-        	    selectedText,
-        	    sizeText,
-        	    "❌ Size mismatch after selection. Expected: " + sizeText + " | Actual: " + selectedText
+        	    "❌ Size mismatch after selection. Expected: " + sizeText + " | Actual: " + selectedText,
+        	    sizeText.trim().toUpperCase(),
+        	    selectedText.trim().toUpperCase()
         	);
 
         	System.out.println("✅ Size selected & displayed: " + selectedText);

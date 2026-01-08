@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Assert;
@@ -1089,6 +1090,116 @@ public void saleMenu() {
 	    );
 	}
 	
+	public void verifyProductHoverImages_Shop_AllCategories_Collections_Styles() {
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	    Actions actions = new Actions(driver);
+
+	    // 🎨 Console colors
+	    String RESET  = "\u001B[0m";
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String PURPLE = "\u001B[35m";
+
+	    By shopMenuBy   = By.xpath("//span[normalize-space()='Shop']");
+	    By categoriesBy = By.xpath("//div[contains(@class,'nav_drop_down_box_category')]//ul/li/a");
+	    By productCardBy = By.xpath("//div[contains(@class,'product_list_cards_list')]//div[contains(@class,'prod_card')]");
+
+	    System.out.println(CYAN + "🔍 Verifying Product Hover Image Functionality (Shop)" + RESET);
+
+	    // ❌ Track failed categories
+	    List<String> failedCategories = new ArrayList<>();
+
+	    // Get category count (NO storing elements)
+	    int categoryCount = wait.until(ExpectedConditions
+	            .visibilityOfAllElementsLocatedBy(categoriesBy)).size();
+
+	    for (int c = 0; c < categoryCount; c++) {
+
+	        // 🔁 Re-hover Shop menu every loop
+	        WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+	        actions.moveToElement(shopMenu).pause(Duration.ofMillis(700)).perform();
+
+	        // 🔁 Re-fetch categories (AVOID STALE)
+	        List<WebElement> categories = wait.until(
+	                ExpectedConditions.visibilityOfAllElementsLocatedBy(categoriesBy)
+	        );
+
+	        WebElement category = categories.get(c);
+	        String categoryName = category.getText().trim();
+
+	        System.out.println(PURPLE + "\n📂 CATEGORY: " + categoryName + RESET);
+
+	        category.click();
+	        Common.waitForElement(2);
+
+	        List<WebElement> products = driver.findElements(productCardBy);
+	        int maxProducts = Math.min(4, products.size());
+
+	        boolean categoryFailed = false;
+
+	        for (int i = 0; i < maxProducts; i++) {
+	            try {
+	                WebElement product = products.get(i);
+
+	                // 🖱️ Hover product
+	                actions.moveToElement(product).pause(Duration.ofMillis(600)).perform();
+
+	                // Main image
+	                WebElement mainImg = product.findElement(
+	                        By.cssSelector("picture.prod_main_img img"));
+
+	                // Hover image
+	                WebElement hoverImg = product.findElement(
+	                        By.cssSelector("picture.prod_hover_img img"));
+
+	                String mainSrc  = mainImg.getAttribute("src");
+	                String hoverSrc = hoverImg.getAttribute("src");
+
+	                boolean mainOk  = mainSrc != null && !mainSrc.contains("placeholder-img");
+	                boolean hoverOk = hoverSrc != null && !hoverSrc.contains("placeholder-img");
+
+	                if (mainOk && hoverOk) {
+	                    System.out.println(GREEN + "✅ Product " + (i + 1)
+	                            + " → Main & Hover images OK" + RESET);
+	                } else {
+	                    categoryFailed = true;
+	                    System.out.println(RED + "❌ Product " + (i + 1)
+	                            + " → Image missing / placeholder" + RESET);
+	                }
+
+	            } catch (Exception e) {
+	                categoryFailed = true;
+	                System.out.println(RED + "❌ Product " + (i + 1)
+	                        + " → Image elements not found" + RESET);
+	            }
+	        }
+
+	        if (categoryFailed) {
+	            failedCategories.add(categoryName);
+	            System.out.println(RED + "❌ Category failed: " + categoryName + RESET);
+	        } else {
+	            System.out.println(GREEN + "✅ Category passed: " + categoryName + RESET);
+	        }
+
+	        // ⬅️ Back to menu safely
+	        driver.navigate().back();
+	        wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+	    }
+
+	    // 🚨 FINAL ASSERT (FAIL AT END)
+	    if (!failedCategories.isEmpty()) {
+	        Assert.fail(
+	                "❌ Image missing in categories: " + String.join(", ", failedCategories)
+	        );
+	    }
+
+	    System.out.println(
+	            GREEN + "\n🎉 All categories passed product hover image validation!" + RESET
+	    );
+	}
+
 	
 //TC-01	
 	public void validateAllHeaderMenus() throws InterruptedException {
@@ -1139,7 +1250,14 @@ public void saleMenu() {
 		verifyBossLadySuggestions();
 	}
 	
+//Tc-04
 	
+	public void validateMouseHoverAllCategories_CollectionAndStle() {
+		
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+		verifyProductHoverImages_Shop_AllCategories_Collections_Styles();
+	}
 	
 	
 	

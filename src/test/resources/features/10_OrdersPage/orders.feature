@@ -6,6 +6,7 @@ Feature: This is My orders feature
   #ScenarioDescription : Complete Orders
   #Expected: Orders sanity 
   #============================================================================
+  @Sanity
   @TC_UI_Zlaata_Orders_01
   Scenario Outline: TC_UI_Zlaata_Orders_01 |Verify user placing order and verifies all calculations|"<TD_ID>"
      
@@ -15,4 +16,14 @@ Feature: This is My orders feature
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Orders_01 |
-        
+       
+         @Sanity
+    @TC_UI_Zlaata_Orders_02
+  Scenario Outline: TC_UI_Zlaata_Orders_02 |Verify user Cancelling order and all labels.|"<TD_ID>"
+     
+     Given User Cancelling an order and labels
+    
+
+    Examples: 
+      | TD_ID                  |
+      | TD_UI_Zlaata_Orders_02 | 

@@ -465,6 +465,21 @@ public abstract class SaleOffer50PercentageObjRepo extends BasePage{
 	@FindBy(xpath = "//div[@aria-label='Delete']")
 	protected WebElement mailDelete;
 	
+	@FindBy(xpath="//label[normalize-space()='Incorrect size Ordered']")
+    protected WebElement selectReason;
+	
+	@FindBy(xpath="//label[normalize-space()='Found a better price elsewhere']")
+    protected WebElement selectCancelReason;
+	
+	
+ @FindBy(xpath="//button[contains(@class,'order_return_continue_btn')]")
+    protected WebElement continueReturnBtn;
+	
+	 @FindBy(xpath="(//div[@title='User Icon'])[1]")
+	    protected WebElement myProfileIcon;
+	 
+	 @FindBy(xpath="(//h2[normalize-space()='My Orders'])[1]")
+	    protected WebElement myOrdersBtn;
 	
 	@FindBy(xpath = "(//input[@placeholder='Enter Coupon Code'])[1]")
 	protected WebElement searchBox;
