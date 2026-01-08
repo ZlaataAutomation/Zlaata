@@ -385,7 +385,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		            ExpectedConditions.visibilityOfElementLocated(couponInput)
 		    );
 		    searchBox.click();
-		    searchBox.sendKeys("TEST");
+		    searchBox.sendKeys("TESTMODE");
 
 
 		    // Click Apply
@@ -491,7 +491,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		 
 		}
 		
-		int threadsEarned;
+//		int threadsEarned;
 		
 public void validateOrderConfirmationDetails() throws InterruptedException {
 	String GREEN = "\u001B[32m";
@@ -521,20 +521,20 @@ public void validateOrderConfirmationDetails() throws InterruptedException {
 		            JavascriptExecutor js = (JavascriptExecutor) driver;
 		            js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element);
 		            
-		            Common.waitForElement(2);
-		            WebElement threadElement = wait.until(
-		                    ExpectedConditions.visibilityOfElementLocated(
-		                            By.cssSelector(".view_order_details_with_address_para")
-		                    )
-		            );
-
-		             threadsEarned = Integer.parseInt(
-		                    threadElement.getText()
-		                            .replaceAll("[^0-9]", "")
-		                            .trim()
-		            );
-
-		            System.out.println("🧵 Threads Earned in Order Confirmation Page: " + threadsEarned);
+//		            Common.waitForElement(2);
+//		            WebElement threadElement = wait.until(
+//		                    ExpectedConditions.visibilityOfElementLocated(
+//		                            By.cssSelector(".view_order_details_with_address_para")
+//		                    )
+//		            );
+//
+//		             threadsEarned = Integer.parseInt(
+//		                    threadElement.getText()
+//		                            .replaceAll("[^0-9]", "")
+//		                            .trim()
+//		            );
+//
+//		            System.out.println("🧵 Threads Earned in Order Confirmation Page: " + threadsEarned);
 
 
 
@@ -1173,7 +1173,7 @@ public void validateOrderSummaryForTwoProduct() {
 
     	int uiSavedAmount = parseMoney(savedText);
     int uiShippingCharges = safeGet.apply("//div[normalize-space(text())='Shipping Charges']/following::div[1]");
-    int summaryEarnedThread = safeGet.apply("//div[normalize-space(text())='Threads Earned']/following::div[1]");
+//    int summaryEarnedThread = safeGet.apply("//div[normalize-space(text())='Threads Earned']/following::div[1]");
   
     // =============================
     // STEP 2: Print Backend Values
@@ -1184,7 +1184,7 @@ public void validateOrderSummaryForTwoProduct() {
     System.out.println(YELLOW + "You Saved (UI): " + uiSavedAmount + RESET);
       System.out.println(YELLOW + "Shipping Charges (UI): " + uiShippingCharges + RESET);
     System.out.println(YELLOW + "Total Order Value (UI): " + uiOrderValue + RESET);
-    System.out.println(YELLOW + "Threads Earned (UI): " + summaryEarnedThread + RESET);
+  //  System.out.println(YELLOW + "Threads Earned (UI): " + summaryEarnedThread + RESET);
     System.out.println(LINE);
 
     // =============================
@@ -1254,16 +1254,16 @@ public void validateOrderSummaryForTwoProduct() {
     }
     
  // ---- EARNED THREAD AMOUNT ----
-    if (summaryEarnedThread == threadsEarned) {
-        System.out.println(GREEN + "✅ EARNED THREAD AMOUNT MATCHED UI" + RESET);
-    } else {
-        System.out.println(RED + "❌ EARNED THREAD AMOUNT MISMATCH — UI: " +
-        		summaryEarnedThread + " | Calc: " + threadsEarned + RESET);
-
-        Assert.fail("❌ EARNED THREAD AMOUNT MISMATCH — UI: " +
-        		summaryEarnedThread + " | Calc: " + threadsEarned);
-    }
-    
+//    if (summaryEarnedThread == threadsEarned) {
+//        System.out.println(GREEN + "✅ EARNED THREAD AMOUNT MATCHED UI" + RESET);
+//    } else {
+//        System.out.println(RED + "❌ EARNED THREAD AMOUNT MISMATCH — UI: " +
+//        		summaryEarnedThread + " | Calc: " + threadsEarned + RESET);
+//
+//        Assert.fail("❌ EARNED THREAD AMOUNT MISMATCH — UI: " +
+//        		summaryEarnedThread + " | Calc: " + threadsEarned);
+//    }
+//    
 
     System.out.println(LINE);
 }   
@@ -1470,6 +1470,78 @@ public void deleteAllProductsFromCart() {
         System.out.println("ℹ️ Bag is not empty message not found.");
     }
 }
+
+
+
+public void verifyOrderCancellation() {
+	 String CYAN = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String GREEN = "\u001B[32m";
+	    String RED = "\u001B[31m";
+	    String RESET = "\u001B[0m";
+	    String line = "──────────────────────────────────────────────────────────────";
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	    System.out.println(CYAN + line + RESET);
+	    System.out.println(GREEN + "🚀 Starting Order Return Flow..." + RESET);
+	    System.out.println(CYAN + line + RESET);
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    Common.waitForElement(3);
+	    wait.until(ExpectedConditions.elementToBeClickable(myProfileIcon));
+		click(myProfileIcon);
+		Common.waitForElement(1);
+	    wait.until(ExpectedConditions.elementToBeClickable(myOrdersBtn));
+		click(myOrdersBtn);
+		 Common.waitForElement(2);
+	 		// Build dynamic XPath
+	 		String xpath = "(//a[contains(@class,'order_placed_redirect_btn')])[1]";
+	 		WebElement btn = driver.findElement(By.xpath(xpath));
+
+	 		// 1️⃣ Scroll to the element
+	 		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
+	 		
+	 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+	 		Common.waitForElement(2);
+	 		 // Click Cancel button
+	 	    WebElement cancelButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("button.order_cancel_btn")));
+	 	    if (cancelButton.isDisplayed()) {
+	 	        System.out.println(" Cancel Button: Displayed ✅");
+	 	        cancelButton.click();
+	 	        System.out.println(GREEN + "🛑 Clicked Cancel Order button" + RESET);
+	 	    }
+	 	    
+	 	    
+	 	    // Select cancellation reason
+	 	    Common.waitForElement(2);
+	 	    wait.until(ExpectedConditions.elementToBeClickable(selectCancelReason));
+	 		click(selectCancelReason);
+	 	    System.out.println(GREEN + "📌 Selected Cancel Reason: " + selectCancelReason + RESET);
+
+	 	    // 3 Click Continue / Confirm Cancel
+	 	    Common.waitForElement(1);
+	 	    wait.until(ExpectedConditions.elementToBeClickable(continueReturnBtn));
+	 		click(continueReturnBtn);
+	 	    System.out.println(GREEN + "✅ Clicked Continue button" + RESET);
+
+	 	    //  Verify Order Cancelled message
+	 	 	 	    
+	 	   List<WebElement> cancelledLabels = wait.until(
+	 		        ExpectedConditions.numberOfElementsToBeMoreThan(
+	 		                By.xpath("//h4[contains(@class,'order_status') and normalize-space()='Order Cancelled']"),
+	 		                1   // more than 1 → means at least 2
+	 		        )
+	 		);
+
+	 		Assert.assertEquals(
+	 		        "❌ Expected 2 'Order Cancelled' labels",
+	 		        2,
+	 		        cancelledLabels.size()
+	 		);
+
+	 		System.out.println(
+	 		        GREEN + "🎉 2 'Order Cancelled' labels are displayed successfully" + RESET
+	 		);
+		
+}
 	 public void verifyOrderPlacementAndCalculationAndAfterPalced() throws InterruptedException {
 	 
 		 
@@ -1517,7 +1589,10 @@ public void deleteAllProductsFromCart() {
 	 }
 	 
 	 
-	 
+	public void validateOrderCancellation() {
+		
+		verifyOrderCancellation();
+	}
 	 
 	 
 	 

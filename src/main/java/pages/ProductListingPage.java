@@ -576,6 +576,7 @@ Thread.sleep(2000);
 	    
 	    String GREEN = "\u001B[32m";
 	    String RED   = "\u001B[31m";
+	    String BLUE   = "\u001B[34m";
 	    String CYAN  = "\u001B[36m";
 	    String RESET = "\u001B[0m";
 	    String line = "──────────────────────────────────────────────────────────────";
@@ -616,14 +617,45 @@ Thread.sleep(2000);
 	    System.out.println("   Name: " + productName);
 	    System.out.println("   Price: " + productPrice);
 	    System.out.println("   Discount: " + productDiscount);
-
+	    Common.waitForElement(2);
 	    // ✅ Click wishlist icon
 	    WebElement wishBtn = productCard.findElement(
 	            By.xpath(".//div[contains(@class,'product_list_wishlist_icon')]")
 	    );
+	 // Check current wishlist state
+	    String classBefore = wishBtn.getAttribute("class");
 
-	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", wishBtn);
-	    System.out.println(GREEN + "❤️ Product added to wishlist" + RESET);
+	    System.out.println(CYAN + "💡 Wishlist class before: " + classBefore + RESET);
+
+	    // ❤️ If already wish-listed → do nothing
+	    if (classBefore.contains("liked")) {
+
+	        System.out.println(
+	                GREEN + "❤️ Product already in wishlist. Skipping click." + RESET
+	        );
+
+	    } else {
+
+	        System.out.println(
+	                BLUE + "🤍 Product not in wishlist → Clicking..." + RESET
+	        );
+
+	        ((JavascriptExecutor) driver)
+	                .executeScript("arguments[0].click();", wishBtn);
+
+	        // Wait until liked class appears
+	      
+	        wait.until(driver ->
+	                wishBtn.getAttribute("class").contains("liked")
+	        );
+
+	        System.out.println(
+	                GREEN + "❤️ Product successfully added to wishlist" + RESET
+	        );
+	    }
+//
+//	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", wishBtn);
+//	    System.out.println(GREEN + "❤️ Product added to wishlist" + RESET);
 
 	    // ✅ Open Wishlist page
 	    WebElement wishlistIcon = wait.until(
@@ -631,6 +663,7 @@ Thread.sleep(2000);
 	                    By.xpath("//a[contains(@class,'wishlist-icon')]")
 	            )
 	    );
+	    
 	    wishlistIcon.click();
 Thread.sleep(2000);
 	    // ✅ Verify product in wishlist
@@ -653,6 +686,7 @@ Thread.sleep(2000);
 	    Assert.assertEquals(productDiscount, wishDiscount);
 
 	    System.out.println(GREEN + "✅ Wishlist validation successful!" + RESET);
+	    
 	}
 
 

@@ -116,8 +116,8 @@ public final class LoginPage extends LoginObjRepository {
         type(loginNumber, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Number"));
         Common.waitForElement(1);
         click(sendotp);
-        Common.waitForElement(2);
-      type(enterotp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
+        Common.waitForElement(40);
+ //     type(enterotp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
         click(verifyotp);
         Common.waitForElement(3); // small buffer
 
@@ -733,6 +733,8 @@ public final class LoginPage extends LoginObjRepository {
     //TC_01
     public void validateLoginNegativeCredantial() {
     	homeLaunch();
+    	
+    	handleAccessCodeIfPresentFast();
     	
     	verifyLogOut();
     	

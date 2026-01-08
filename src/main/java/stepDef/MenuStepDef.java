@@ -49,6 +49,11 @@ public void user_clicks_on_boss_lady_menu_all_suggestions() {
 }
 
 
+@Given("User  Mouse hover  on shop all category,Collections and Styles.")
+public void user_mouse_hover_on_shop_all_category_collections_and_styles() {
+	menu.validateMouseHoverAllCategories_CollectionAndStle();
+}
+
 
 
 
