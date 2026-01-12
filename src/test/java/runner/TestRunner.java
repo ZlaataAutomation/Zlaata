@@ -16,7 +16,7 @@ features = {"src/test/resources/features"},
 glue = "stepDef",	
 monochrome = true,	
 dryRun = false,
-tags="@TC_UI_Zlaata_Menus_05"
+tags="@TC_UI_Zlaata_FS_15"
 
 )
 

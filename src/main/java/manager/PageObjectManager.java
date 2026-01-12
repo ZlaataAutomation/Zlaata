@@ -28,6 +28,7 @@ public class PageObjectManager {
     private SearchSectionPage search;
     private CouponPage coupon;
     private AdminPanelPage admin;
+    private AllBrokenLinkPage link;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -108,5 +109,9 @@ public class PageObjectManager {
     
 	}
 	
+	public AllBrokenLinkPage getAllBrokenLinkPage() {
+        return (link == null) ? link = new AllBrokenLinkPage(driver) : link;
+    
+	}
 	
 }

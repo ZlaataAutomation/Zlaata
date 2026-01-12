@@ -1102,12 +1102,18 @@ public void saleMenu() {
 	    String CYAN   = "\u001B[36m";
 	    String PURPLE = "\u001B[35m";
 
-	    By shopMenuBy   = By.xpath("//span[normalize-space()='Shop']");
+	    By shopMenuBy = By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']");
 	    By categoriesBy = By.xpath("//div[contains(@class,'nav_drop_down_box_category')]//ul/li/a");
-	    By productCardBy = By.xpath("//div[contains(@class,'product_list_cards_list')]//div[contains(@class,'prod_card')]");
+	    By productCardBy = By.xpath("//div[contains(@class,'product_list_cards_list ')]");
 
 	    System.out.println(CYAN + "🔍 Verifying Product Hover Image Functionality (Shop)" + RESET);
+	    // Hover Shop
+	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+	    actions.moveToElement(shopMenu).pause(Duration.ofMillis(800)).perform();
 
+	    List<WebElement> categories = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(categoriesBy)
+	    );
 	    // ❌ Track failed categories
 	    List<String> failedCategories = new ArrayList<>();
 
@@ -1117,12 +1123,11 @@ public void saleMenu() {
 
 	    for (int c = 0; c < categoryCount; c++) {
 
-	        // 🔁 Re-hover Shop menu every loop
-	        WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+	    	Common.waitForElement(1);
+	        shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
 	        actions.moveToElement(shopMenu).pause(Duration.ofMillis(700)).perform();
 
-	        // 🔁 Re-fetch categories (AVOID STALE)
-	        List<WebElement> categories = wait.until(
+	        categories = wait.until(
 	                ExpectedConditions.visibilityOfAllElementsLocatedBy(categoriesBy)
 	        );
 
@@ -1130,7 +1135,7 @@ public void saleMenu() {
 	        String categoryName = category.getText().trim();
 
 	        System.out.println(PURPLE + "\n📂 CATEGORY: " + categoryName + RESET);
-
+	        Common.waitForElement(1);
 	        category.click();
 	        Common.waitForElement(2);
 

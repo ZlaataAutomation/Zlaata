@@ -385,7 +385,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		            ExpectedConditions.visibilityOfElementLocated(couponInput)
 		    );
 		    searchBox.click();
-		    searchBox.sendKeys("TESTMODE");
+		    searchBox.sendKeys("TEST");
 
 
 		    // Click Apply
@@ -1480,6 +1480,10 @@ public void verifyOrderCancellation() {
 	    String RED = "\u001B[31m";
 	    String RESET = "\u001B[0m";
 	    String line = "──────────────────────────────────────────────────────────────";
+		driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
+		
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    System.out.println(CYAN + line + RESET);
 	    System.out.println(GREEN + "🚀 Starting Order Return Flow..." + RESET);
@@ -1502,7 +1506,7 @@ public void verifyOrderCancellation() {
 	 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
 	 		Common.waitForElement(2);
 	 		 // Click Cancel button
-	 	    WebElement cancelButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("button.order_cancel_btn")));
+	 	    WebElement cancelButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(@class,'order_cancel_btn btn___1')]")));
 	 	    if (cancelButton.isDisplayed()) {
 	 	        System.out.println(" Cancel Button: Displayed ✅");
 	 	        cancelButton.click();
@@ -1523,7 +1527,7 @@ public void verifyOrderCancellation() {
 	 	    System.out.println(GREEN + "✅ Clicked Continue button" + RESET);
 
 	 	    //  Verify Order Cancelled message
-	 	 	 	    
+	 	   Common.waitForElement(2);
 	 	   List<WebElement> cancelledLabels = wait.until(
 	 		        ExpectedConditions.numberOfElementsToBeMoreThan(
 	 		                By.xpath("//h4[contains(@class,'order_status') and normalize-space()='Order Cancelled']"),

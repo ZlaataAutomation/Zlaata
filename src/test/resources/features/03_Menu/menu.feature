@@ -56,7 +56,8 @@ Feature: This is Menu feature
       | TD_ID                  |
       | TD_UI_Zlaata_Menus_04 |
       
-      
+         @Sanity
+         @Menu
         @TC_UI_Zlaata_Menus_05
   Scenario Outline: TC_UI_Zlaata_Menus_05 |Verify that the user is able to Mouse hover any all category in the "Shop" dropdown.|"<TD_ID>"
      

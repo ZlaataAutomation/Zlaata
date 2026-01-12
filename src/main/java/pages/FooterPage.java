@@ -1,5 +1,11 @@
 package pages;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.net.URI;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -10,11 +16,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import manager.FileReaderManager;
 import objectRepo.FooterObjRepo;
 import utils.Common;
 
@@ -25,6 +35,1320 @@ public  final class FooterPage  extends FooterObjRepo{
 		PageFactory.initElements(this.driver, this);
 	}
 
+//TC-01	
+	public void verifyAboutUsLink() {
+
+		  driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    try {
+
+	        scrollUsingJSWindow();
+	        Common.waitForElement(1);
+
+	        String beforeClickUrl = driver.getCurrentUrl();
+	        System.out.println("🔗 URL before clicking About Us: " + beforeClickUrl);
+
+	        WebElement aboutUsLink = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[normalize-space()='About Us']")
+	                )
+	        );
+	        aboutUsLink.click();
+
+	        Common.waitForElement(2);
+
+	        wait.until(ExpectedConditions.not(
+	                ExpectedConditions.urlToBe(beforeClickUrl)
+	        ));
+
+	        String actualUrl = driver.getCurrentUrl();
+	        System.out.println("🔗 URL after clicking About Us: " + actualUrl);
+
+	        Assert.assertTrue(
+	                "❌ URL does not contain /about-us",
+	                actualUrl.contains("/about-us")
+	        );
+	        
+	        URI baseUri = URI.create(beforeClickUrl);
+	        String expectedUrl = baseUri.getScheme() + "://" + baseUri.getHost() + "/about-us";
+
+	        Assert.assertEquals(
+	                "❌ About Us URL mismatch",
+	                expectedUrl,
+	                actualUrl
+	        );
+
+	        WebElement heading = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("(//div[contains(@class,'about_us_heading')]/p)[1]")
+	                )
+	        );
+
+	        String actualHeading = heading.getText().trim();
+	        String expectedHeading = "Our Story";
+	        System.out.println("🔗 Excpected About Us Heading: " + expectedHeading);
+
+	        Assert.assertEquals(
+	                "❌ About Us heading mismatch",
+	                expectedHeading,
+	                actualHeading
+	        );
+
+	        System.out.println("✅ About Us page verified successfully");
+
+	    } catch (Exception e) {
+	        System.out.println("❌ About Us verification failed: " + e.getMessage());
+	        Assert.fail("About Us validation failed");
+	    }
+	}
+	
+	//TC-02		
+	public void verifyBlogs() {
+
+		  driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	    Actions actions = new Actions(driver);
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+        scrollUsingJSWindow();
+        Common.waitForElement(1);
+	    List<String> failedCategories = new ArrayList<>();
+
+	    try {
+	        String beforeClickUrl = driver.getCurrentUrl();
+	        URI baseUri = URI.create(beforeClickUrl);
+	        String baseSiteUrl = baseUri.getScheme() + "://" + baseUri.getHost();
+
+	        WebElement blogsLink = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[normalize-space()='Blogs']"))
+	        );
+
+	        blogsLink.click();
+	        Common.waitForElement(2);
+	        wait.until(ExpectedConditions.urlContains("/blogs"));
+
+	        String expectedBlogsUrl = baseSiteUrl + "/blogs/";
+	        String actualBlogsUrl = driver.getCurrentUrl();
+
+	        Assert.assertEquals(
+	                "❌ Blogs URL mismatch",
+	                expectedBlogsUrl,
+	                actualBlogsUrl
+	        );
+
+	        System.out.println(GREEN + "✅ Blogs page loaded successfully" + RESET);
+
+	        List<WebElement> blogCategories = wait.until(
+	                ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                        By.xpath("//ul[@id='ast-hf-menu-1']/li/a"))
+	        );
+
+	        Assert.assertTrue(
+	                "❌ Blog categories not displayed",
+	                blogCategories.size() > 0
+	        );
+
+	        System.out.println(CYAN + "📂 Total Blog Categories: " + blogCategories.size() + RESET);
+
+	        for (int i = 0; i < blogCategories.size(); i++) {
+
+	            blogCategories = wait.until(
+	                    ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                            By.xpath("//ul[@id='ast-hf-menu-1']/li/a"))
+	            );
+
+	            WebElement category = blogCategories.get(i);
+	            String categoryName = category.getText().trim();
+
+	            System.out.println(YELLOW + "👉 Clicking category: " + categoryName + RESET);
+
+	            category.click();
+	            Common.waitForElement(2);
+
+	            if (categoryName.equalsIgnoreCase("Home")) {
+
+	                if (!driver.getCurrentUrl().equals(expectedBlogsUrl)) {
+	                    failedCategories.add("Home");
+	                    System.out.println(RED + "❌ Home did not stay on Blogs page" + RESET);
+	                } else {
+	                    System.out.println(GREEN + "✅ Home stayed on Blogs page" + RESET);
+	                }
+
+	            }
+	            else if (categoryName.equalsIgnoreCase("Shop")) {
+
+	                wait.until(ExpectedConditions.urlToBe(baseSiteUrl + "/"));
+
+	                String currentUrl = driver.getCurrentUrl();
+	                if (!currentUrl.equals(baseSiteUrl + "/")) {
+	                    failedCategories.add("Shop");
+	                    System.out.println(RED + "❌ Shop did not redirect to home page" + RESET);
+	                } else {
+	                    System.out.println(GREEN + "✅ Shop redirected to home page" + RESET);
+	                }
+
+	                driver.get(expectedBlogsUrl);
+	                wait.until(ExpectedConditions.urlToBe(expectedBlogsUrl));
+	            }
+	            else {
+	                try {
+	                    WebElement heading = wait.until(
+	                            ExpectedConditions.visibilityOfElementLocated(
+	                                    By.xpath("//h3[contains(text(),'Category:')]"))
+	                    );
+
+	                    String headingText = heading.getText().trim().toUpperCase();
+	                    String expectedHeading = ("Category: " + categoryName).toUpperCase();
+
+	                    if (!headingText.equals(expectedHeading)) {
+	                        failedCategories.add(categoryName);
+	                        System.out.println(
+	                                RED + "❌ Heading mismatch | Expected: "
+	                                        + expectedHeading + " | Actual: " + headingText + RESET);
+	                    } else {
+	                        System.out.println(GREEN + "✅ Heading verified: " + headingText + RESET);
+	                    }
+
+	                } catch (Exception e) {
+	                    failedCategories.add(categoryName);
+	                    System.out.println(RED + "❌ Heading not found for " + categoryName + RESET);
+	                }
+	            }
+	        }
+
+	        if (!failedCategories.isEmpty()) {
+	            Assert.fail(
+	                    "❌ Blog category validation failed for: "
+	                            + String.join(", ", failedCategories)
+	            );
+	        }
+
+	        System.out.println(GREEN + "\n🎉 All Blogs categories validated successfully!" + RESET);
+
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Blogs verification failed: " + e.getMessage() + RESET);
+	        Assert.fail("Blogs verification failed");
+	    }
+	}
+
+//TC-03
+	public void verifyPopShopLink() {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    try {
+
+	        scrollUsingJSWindow();
+	        Common.waitForElement(1);
+
+	        String beforeClickUrl = driver.getCurrentUrl();
+	        System.out.println(CYAN + "🔗 URL before clicking Pop Shop: "
+	                + beforeClickUrl + RESET);
+
+	        WebElement popShopLink = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[normalize-space()='Pop shop']")
+	                )
+	        );
+	        popShopLink.click();
+
+	        Common.waitForElement(2);
+
+	        wait.until(ExpectedConditions.not(
+	                ExpectedConditions.urlToBe(beforeClickUrl)
+	        ));
+
+	        String actualUrl = driver.getCurrentUrl();
+	        System.out.println(CYAN + "🔗 URL after clicking Pop Shop: "
+	                + actualUrl + RESET);
+
+	        Assert.assertTrue(
+	                "URL does not contain /pop-shop",
+	                actualUrl.contains("/pop-shop")
+	        );
+
+	        URI baseUri = URI.create(beforeClickUrl);
+	        String expectedUrl =
+	                baseUri.getScheme() + "://" + baseUri.getHost() + "/pop-shop";
+
+	        Assert.assertEquals(
+	                "Pop Shop URL mismatch",
+	                expectedUrl,
+	                actualUrl
+	        );
+
+	        System.out.println(GREEN + "✅ Pop Shop URL verified successfully" + RESET);
+
+	        WebElement banner = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//div[contains(@class,'expo_header_banner')]//img")
+	                )
+	        );
+
+	        Assert.assertTrue(
+	                "Pop Shop banner image not displayed",
+	                banner.isDisplayed()
+	        );
+
+	        String bannerSrc = banner.getAttribute("src");
+
+	        Assert.assertTrue(
+	                "Pop Shop banner image is broken",
+	                bannerSrc != null && !bannerSrc.contains("placeholder-img")
+	        );
+
+	        System.out.println(GREEN + "✅ Pop Shop banner displayed successfully" + RESET);
+	        System.out.println(GREEN + "🎉 Pop Shop page verified successfully" + RESET);
+
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Pop Shop verification failed: "
+	                + e.getMessage() + RESET);
+	        Assert.fail("Pop Shop validation failed");
+	    }
+	}
+
+//TC-04
+	public void verifyTermsAndConditionsLink() {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    try {
+
+	        scrollUsingJSWindow();
+	        Common.waitForElement(1);
+
+ 	        String beforeClickUrl = driver.getCurrentUrl();
+	        System.out.println(CYAN + "🔗 URL before clicking Terms & Conditions: "
+	                + beforeClickUrl + RESET);
+
+ 	        WebElement termsLink = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[normalize-space()='Terms & Conditions']")
+	                )
+	        );
+	        termsLink.click();
+
+	        Common.waitForElement(2);
+
+	        wait.until(ExpectedConditions.not(
+	                ExpectedConditions.urlToBe(beforeClickUrl)
+	        ));
+
+ 	        String actualUrl = driver.getCurrentUrl();
+	        System.out.println(CYAN + "🔗 URL after clicking Terms & Conditions: "
+	                + actualUrl + RESET);
+
+ 	        Assert.assertTrue(
+	                "❌ URL does not contain /policy/terms-and-condition",
+	                actualUrl.contains("/policy/terms-and-condition")
+	        );
+
+	        URI baseUri = URI.create(beforeClickUrl);
+	        String expectedUrl =
+	                baseUri.getScheme() + "://" + baseUri.getHost()
+	                        + "/policy/terms-and-condition";
+
+	        Assert.assertEquals(
+	                "❌ Terms & Conditions URL mismatch",
+	                expectedUrl,
+	                actualUrl
+	        );
+
+	        System.out.println(GREEN + "✅ Terms & Conditions URL verified" + RESET);
+
+ 	        WebElement heading = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//div[contains(@class,'privacy__policy__title')]")
+	                )
+	        );
+
+	        String actualHeading = heading.getText().trim();
+	        String expectedHeading = "TERMS & CONDITIONS";
+
+	        System.out.println(CYAN + "🔍 Expected Heading: "
+	                + expectedHeading + RESET);
+
+	        Assert.assertEquals(
+	                "❌ Terms & Conditions heading mismatch",
+	                expectedHeading,
+	                actualHeading
+	        );
+
+	        System.out.println(GREEN + "✅ Terms & Conditions heading verified" + RESET);
+	        System.out.println(GREEN + "🎉 Terms & Conditions page verified successfully" + RESET);
+
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Terms & Conditions verification failed: "
+	                + e.getMessage() + RESET);
+	        Assert.fail("Terms & Conditions validation failed");
+	    }
+	}
+
+//TC-05
+	public void verifyPrivacyPolicyLink() {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    try {
+
+	        scrollUsingJSWindow();
+	        Common.waitForElement(1);
+
+ 	        String beforeClickUrl = driver.getCurrentUrl();
+	        System.out.println(CYAN + "🔗 URL before clicking Privacy Policy: "
+	                + beforeClickUrl + RESET);
+
+ 	        WebElement privacyPolicyLink = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[normalize-space()='Privacy Policy']")
+	                )
+	        );
+	        privacyPolicyLink.click();
+
+	        Common.waitForElement(2);
+
+	        wait.until(ExpectedConditions.not(
+	                ExpectedConditions.urlToBe(beforeClickUrl)
+	        ));
+
+ 	        String actualUrl = driver.getCurrentUrl();
+	        System.out.println(CYAN + "🔗 URL after clicking Privacy Policy: "
+	                + actualUrl + RESET);
+
+ 	        Assert.assertTrue(
+	                "❌ URL does not contain /policy/privacy-policy",
+	                actualUrl.contains("/policy/privacy-policy")
+	        );
+
+	        URI baseUri = URI.create(beforeClickUrl);
+	        String expectedUrl =
+	                baseUri.getScheme() + "://" + baseUri.getHost()
+	                        + "/policy/privacy-policy";
+
+	        Assert.assertEquals(
+	                "❌ Privacy Policy URL mismatch",
+	                expectedUrl,
+	                actualUrl
+	        );
+
+	        System.out.println(GREEN + "✅ Privacy Policy URL verified" + RESET);
+
+ 	        WebElement heading = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//div[contains(@class,'privacy__policy__title')]")
+	                )
+	        );
+
+	        String actualHeading = heading.getText().trim();
+	        String expectedHeading = "PRIVACY POLICY";
+
+	        System.out.println(CYAN + "🔍 Expected Heading: "
+	                + expectedHeading + RESET);
+
+	        Assert.assertEquals(
+	                "❌ Privacy Policy heading mismatch",
+	                expectedHeading,
+	                actualHeading
+	        );
+
+	        System.out.println(GREEN + "✅ Privacy Policy heading verified" + RESET);
+	        System.out.println(GREEN + "🎉 Privacy Policy page verified successfully" + RESET);
+
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Privacy Policy verification failed: "
+	                + e.getMessage() + RESET);
+	        Assert.fail("Privacy Policy validation failed");
+	    }
+	}
+
+//Tc-06
+	
+	public void verifyRaiseQueryContactUsLink() {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    try {
+
+	        scrollUsingJSWindow();
+	        Common.waitForElement(1);
+
+ 	        String beforeClickUrl = driver.getCurrentUrl();
+	        System.out.println(CYAN + "🔗 URL before clicking Raise a query: "
+	                + beforeClickUrl + RESET);
+
+ 	        WebElement raiseQueryLink = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[normalize-space()='Raise a query']")
+	                )
+	        );
+	        raiseQueryLink.click();
+
+	        Common.waitForElement(2);
+
+	        wait.until(ExpectedConditions.not(
+	                ExpectedConditions.urlToBe(beforeClickUrl)
+	        ));
+
+ 	        String actualUrl = driver.getCurrentUrl();
+	        System.out.println(CYAN + "🔗 URL after clicking Raise a query: "
+	                + actualUrl + RESET);
+
+ 	        assertTrue(
+	                "❌ URL does not contain /contact-us",
+	                actualUrl.contains("/contact-us")
+	        );
+
+	        URI baseUri = URI.create(beforeClickUrl);
+	        String expectedUrl =
+	                baseUri.getScheme() + "://" + baseUri.getHost() + "/contact-us";
+
+	        assertEquals(
+	                "❌ Contact Us URL mismatch",
+	                expectedUrl,
+	                actualUrl
+	        );
+
+	        System.out.println(GREEN + "✅ Contact Us URL verified" + RESET);
+
+ 	        WebElement contactWrapper = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//div[contains(@class,'contact__us__wrpr')]")
+	                )
+	        );
+
+	        assertTrue(
+	                "❌ Contact Us wrapper not displayed",
+	                contactWrapper.isDisplayed()
+	        );
+
+	        System.out.println(GREEN + "✅ Contact Us section displayed" + RESET);
+
+ 	        WebElement getInTouch = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("(//h3[normalize-space()='GET IN TOUCH'])[2]")
+	                )
+	        );
+
+	        WebElement contactTitle = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//h4[normalize-space()='Contact']")
+	                )
+	        );
+
+	        assertEquals("GET IN TOUCH", getInTouch.getText().trim());
+	        assertEquals("Contact", contactTitle.getText().trim());
+
+	        System.out.println(GREEN + "✅ Headings verified" + RESET);
+
+ 	        assertTrue(
+	                "❌ Phone number not visible",
+	                driver.findElement(By.xpath("//span[contains(@class,'ph__no')]"))
+	                        .isDisplayed()
+	        );
+
+	        assertTrue(
+	                "❌ Email ID not visible",
+	                driver.findElement(By.xpath("//span[contains(@class,'gm__id')]"))
+	                        .isDisplayed()
+	        );
+
+	        assertTrue(
+	                "❌ Address not visible",
+	                driver.findElement(By.xpath("//div[contains(@class,'address__title')]"))
+	                        .isDisplayed()
+	        );
+
+	        System.out.println(GREEN + "✅ Contact details verified" + RESET);
+
+ 	        WebElement contactForm = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//form[@id='contact_us_frm']")
+	                )
+	        );
+
+	        assertTrue(
+	                "❌ Contact form not displayed",
+	                contactForm.isDisplayed()
+	        );
+
+	        System.out.println(GREEN + "✅ Contact form displayed" + RESET);
+
+	        System.out.println(GREEN + "🎉 Raise a query (Contact Us) page verified successfully" + RESET);
+
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Contact Us verification failed: "
+	                + e.getMessage() + RESET);
+	        fail("Contact Us validation failed");
+	    }
+	}
+
+	
+//TC-07
+public void verifyFaqLink() {
+
+    String GREEN  = "\u001B[32m";
+    String RED    = "\u001B[31m";
+    String CYAN   = "\u001B[36m";
+    String YELLOW = "\u001B[33m";
+    String RESET  = "\u001B[0m";
+
+    driver.get(FileReaderManager.getInstance()
+            .getConfigReader()
+            .getApplicationUrl());
+
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+    try {
+
+        scrollUsingJSWindow();
+        Common.waitForElement(1);
+
+         String beforeClickUrl = driver.getCurrentUrl();
+        System.out.println(CYAN + "🔗 URL before clicking FAQ: "
+                + beforeClickUrl + RESET);
+
+         WebElement faqLink = wait.until(
+                ExpectedConditions.elementToBeClickable(
+                        By.xpath("//div[@class='foot_nav']//a[contains(text(),'FAQ')]")
+                )
+        );
+        faqLink.click();
+
+        Common.waitForElement(2);
+
+        wait.until(ExpectedConditions.not(
+                ExpectedConditions.urlToBe(beforeClickUrl)
+        ));
+
+         String faqUrl = driver.getCurrentUrl();
+        System.out.println(CYAN + "🔗 URL after click: " + faqUrl + RESET);
+
+        assertTrue(
+                "❌ URL does not contain /faq",
+                faqUrl.contains("/faq")
+        );
+
+        System.out.println(GREEN + "✅ FAQ URL verified" + RESET);
+
+         WebElement faqHeading = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//h3[contains(@class,'faq_heading')]")
+                )
+        );
+
+        assertEquals(
+                "❌ FAQ heading mismatch",
+                "faq",
+                faqHeading.getText().trim().toLowerCase()
+        );
+
+        System.out.println(GREEN + "✅ FAQ heading displayed" + RESET);
+
+         WebElement writeToUsBtn = wait.until(
+                ExpectedConditions.elementToBeClickable(
+                        By.xpath("//a[contains(@class,'contact_us_btn')]")
+                )
+        );
+
+        writeToUsBtn.click();
+        Common.waitForElement(2);
+
+         String contactUrl = driver.getCurrentUrl();
+        System.out.println(CYAN + "🔗 URL after clicking Write to us: "
+                + contactUrl + RESET);
+
+        assertTrue(
+                "❌ Write to us did not redirect to /contact-us",
+                contactUrl.contains("/contact-us")
+        );
+
+        System.out.println(GREEN + "✅ Redirected to Contact Us page" + RESET);
+
+        System.out.println(
+                GREEN + "🎉 FAQ → Write to Us → Contact Us flow verified successfully"
+                        + RESET
+        );
+
+    } catch (Exception e) {
+        System.out.println(
+                RED + "❌ FAQ verification failed: "
+                        + e.getMessage() + RESET
+        );
+        fail("FAQ → Write to Us flow validation failed");
+    }
+}
+
+//TC-08
+public void verifyShippingAndCancellationPolicyLink() {
+
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+     String RESET = "\u001B[0m";
+    String GREEN = "\u001B[32m";
+    String RED   = "\u001B[31m";
+    String CYAN  = "\u001B[36m";
+    driver.get(FileReaderManager.getInstance()
+            .getConfigReader()
+            .getApplicationUrl());
+    try {
+
+        scrollUsingJSWindow();
+        Common.waitForElement(1);
+
+         String beforeClickUrl = driver.getCurrentUrl();
+        System.out.println(CYAN + "🔗 URL before click: " + beforeClickUrl + RESET);
+
+         WebElement policyLink = wait.until(
+                ExpectedConditions.elementToBeClickable(
+                        By.xpath("//a[@href='/policy/shipping-cancellation']")
+                )
+        );
+        policyLink.click();
+
+        Common.waitForElement(2);
+
+         wait.until(ExpectedConditions.not(
+                ExpectedConditions.urlToBe(beforeClickUrl)
+        ));
+
+        String actualUrl = driver.getCurrentUrl();
+        System.out.println(CYAN + "🔗 URL after click: " + actualUrl + RESET);
+
+         URI baseUri = URI.create(beforeClickUrl);
+        String expectedUrl =
+                baseUri.getScheme() + "://" + baseUri.getHost() + "/policy/shipping-cancellation";
+
+         Assert.assertEquals(
+                "❌ Shipping & Cancellation Policy URL mismatch",
+                expectedUrl,
+                actualUrl
+        );
+
+         WebElement heading = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//div[contains(@class,'privacy__policy__title')]")
+                )
+        );
+
+        String actualHeading = heading.getText().trim();
+        String expectedHeading = "SHIPPING & CANCELLATION POLICY";
+
+        Assert.assertEquals(
+                "❌ Shipping & Cancellation heading mismatch",
+                expectedHeading,
+                actualHeading
+        );
+
+        System.out.println(GREEN + "✅ Shipping & Cancellation Policy page verified successfully" + RESET);
+
+    } catch (Exception e) {
+        System.out.println(RED + "❌ Shipping & Cancellation Policy verification failed: " + e.getMessage() + RESET);
+        Assert.fail("Shipping & Cancellation Policy validation failed");
+    }
+}
+
+//TC-09
+public void verifyReturnExchangeReplacementPolicyLink() {
+
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+     String RESET = "\u001B[0m";
+    String GREEN = "\u001B[32m";
+    String RED   = "\u001B[31m";
+    String CYAN  = "\u001B[36m";
+    driver.get(FileReaderManager.getInstance()
+            .getConfigReader()
+            .getApplicationUrl());
+    try {
+
+        scrollUsingJSWindow();
+        Common.waitForElement(1);
+
+         String beforeClickUrl = driver.getCurrentUrl();
+        System.out.println(CYAN + "🔗 URL before click: " + beforeClickUrl + RESET);
+
+         WebElement policyLink = wait.until(
+                ExpectedConditions.elementToBeClickable(
+                        By.xpath("//a[@href='/policy/return-exchange-replacement']")
+                )
+        );
+        policyLink.click();
+
+        Common.waitForElement(2);
+
+         wait.until(ExpectedConditions.not(
+                ExpectedConditions.urlToBe(beforeClickUrl)
+        ));
+
+        String actualUrl = driver.getCurrentUrl();
+        System.out.println(CYAN + "🔗 URL after click: " + actualUrl + RESET);
+
+         URI baseUri = URI.create(beforeClickUrl);
+        String expectedUrl =
+                baseUri.getScheme() + "://" + baseUri.getHost()
+                        + "/policy/return-exchange-replacement";
+
+         Assert.assertEquals(
+                "❌ Return, Exchange & Replacement Policy URL mismatch",
+                expectedUrl,
+                actualUrl
+        );
+
+         WebElement heading = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//div[contains(@class,'privacy__policy__title')]")
+                )
+        );
+
+        String actualHeading = heading.getText().trim();
+        String expectedHeading = "RETURN, EXCHANGE & REPLACEMENT POLICY";
+
+        Assert.assertEquals(
+                "❌ Return, Exchange & Replacement heading mismatch",
+                expectedHeading,
+                actualHeading
+        );
+
+        System.out.println(
+                GREEN + "✅ Return, Exchange & Replacement Policy page verified successfully" + RESET
+        );
+
+    } catch (Exception e) {
+        System.out.println(
+                RED + "❌ Return, Exchange & Replacement Policy verification failed: "
+                        + e.getMessage() + RESET
+        );
+        Assert.fail("Return, Exchange & Replacement Policy validation failed");
+    }
+}
+//TC-10
+public void verifyFooterContactUsDetails() {
+
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+     String RESET = "\u001B[0m";
+    String GREEN = "\u001B[32m";
+    String RED   = "\u001B[31m";
+    String CYAN  = "\u001B[36m";
+    driver.get(FileReaderManager.getInstance()
+            .getConfigReader()
+            .getApplicationUrl());
+    try {
+
+        scrollUsingJSWindow();
+        Common.waitForElement(1);
+
+        System.out.println(CYAN + "🔍 Verifying Footer Contact Us details" + RESET);
+
+         WebElement contactFooter = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//div[contains(@class,'foot_nav')]//a[contains(@href,'wa.me')]/ancestor::div[contains(@class,'foot_nav')]")
+                )
+        );
+
+         WebElement timeText = contactFooter.findElement(By.xpath(".//p[contains(text(),'Mon')]"));
+        String actualTime = timeText.getText().trim();
+        String expectedTime = "Mon - Sat : 9:30 AM To 6:30 PM";
+
+        Assert.assertEquals("❌ Working time mismatch", expectedTime, actualTime);
+        System.out.println(GREEN + "✅ Time verified" + RESET);
+
+         WebElement mobileLink = contactFooter.findElement(
+                By.xpath(".//a[contains(@href,'wa.me')]")
+        );
+
+        Assert.assertEquals(
+                "❌ Mobile number text mismatch",
+                "+91 7305380625",
+                mobileLink.getText().trim()
+        );
+
+        Assert.assertTrue(
+                "❌ Mobile link not clickable",
+                mobileLink.isDisplayed() && mobileLink.isEnabled()
+        );
+
+        System.out.println(GREEN + "✅ Mobile number verified & clickable" + RESET);
+
+         WebElement emailLink = contactFooter.findElement(
+                By.xpath(".//a[starts-with(@href,'mailto')]")
+        );
+
+        Assert.assertEquals(
+                "❌ Email mismatch",
+                "support@zlaata.com",
+                emailLink.getText().trim()
+        );
+
+        Assert.assertTrue(
+                "❌ Email link not clickable",
+                emailLink.isDisplayed() && emailLink.isEnabled()
+        );
+
+        System.out.println(GREEN + "✅ Email verified & clickable" + RESET);
+
+         WebElement addressText = contactFooter.findElement(
+                By.xpath(".//p[(contains(text(),'ZLAATA FASHION'))]")
+        );
+
+        String actualAddress = addressText.getText().trim().replaceAll("\\s+", " ");
+        String expectedAddress =
+                "ZLAATA FASHION, PPR Complex, NO.1/70, Medavakkam Main Rd, " +
+                "Vaithiyalingam Nagar, Nanmangalam, Chennai, Tamil Nadu 600117";
+
+        Assert.assertEquals("❌ Address mismatch", expectedAddress, actualAddress);
+
+        System.out.println(GREEN + "✅ Address verified" + RESET);
+
+        System.out.println(
+                GREEN + "🎉 Footer Contact Us details verified successfully!" + RESET
+        );
+
+    } catch (Exception e) {
+        System.out.println(
+                RED + "❌ Footer Contact Us verification failed: "
+                        + e.getMessage() + RESET
+        );
+        Assert.fail("Footer Contact Us validation failed");
+    }
+}
+
+//TC-11
+public void verifyFooterTrackOrderValidation() {
+
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+    // 🎨 Console colors
+    String RESET = "\u001B[0m";
+    String GREEN = "\u001B[32m";
+    String RED   = "\u001B[31m";
+    String CYAN  = "\u001B[36m";
+    driver.get(FileReaderManager.getInstance()
+            .getConfigReader()
+            .getApplicationUrl());
+    try {
+
+        scrollUsingJSWindow();
+        Common.waitForElement(1);
+
+        System.out.println(CYAN + "🔍 Verifying Footer Track Order validation" + RESET);
+
+        // ---------------- LOCATORS ----------------
+        WebElement trackButton = wait.until(
+                ExpectedConditions.elementToBeClickable(
+                        By.cssSelector("button.footer-track-btn")
+                )
+        );
+
+        WebElement trackInput = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.id("track_order_input_footer")
+                )
+        );
+
+        By errorMsgLocator = By.cssSelector(
+                "p.track_order_error_msg.active"
+        );
+
+        String expectedErrorMsg =
+                "Tracking ID not found. Please check and enter a valid Tracking ID.";
+
+        // ---------------- FIRST CLICK (EMPTY INPUT) ----------------
+        trackButton.click();
+        Common.waitForElement(2);
+        WebElement errorMsg1 = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(errorMsgLocator)
+        );
+
+        Assert.assertEquals(
+                "❌ Error message mismatch on empty Track click",
+                expectedErrorMsg,
+                errorMsg1.getText().trim()
+        );
+
+        System.out.println(GREEN + "✅ Error message displayed on empty Track click" + RESET);
+
+        // ---------------- ENTER INVALID TRACK ID ----------------
+        trackInput.clear();
+        trackInput.sendKeys("ABC123");   // invalid / random value
+        Common.waitForElement(1);
+
+        // ---------------- SECOND CLICK ----------------
+        trackButton.click();
+        Common.waitForElement(2);
+
+        WebElement errorMsg2 = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(errorMsgLocator)
+        );
+
+        Assert.assertEquals(
+                "❌ Error message mismatch after entering Track ID",
+                expectedErrorMsg,
+                errorMsg2.getText().trim()
+        );
+
+        System.out.println(GREEN + "✅ Same error message displayed after invalid Track ID" + RESET);
+
+        System.out.println(
+                GREEN + "🎉 Footer Track Order validation verified successfully!" + RESET
+        );
+
+    } catch (Exception e) {
+        System.out.println(
+                RED + "❌ Footer Track Order verification failed: "
+                        + e.getMessage() + RESET
+        );
+        Assert.fail("Footer Track Order validation failed");
+    }
+}
+
+//TC-12
+public void socialMediaFooter() {
+
+    driver.get(FileReaderManager.getInstance()
+            .getConfigReader()
+            .getApplicationUrl());
+    Common.waitForElement(2);
+
+    Actions actions = new Actions(driver);
+    actions.sendKeys(Keys.END).perform();
+    Common.waitForElement(1);
+    scrollUsingJSWindow();
+    Common.waitForElement(1);
+    JavascriptExecutor js = (JavascriptExecutor) driver;
+
+    List<WebElement> footerLinks = driver.findElements(By.xpath("//a[@class='social_link_card']"));
+    System.out.println("Total footer links: " + footerLinks.size());
+
+    for (int i = 0; i < footerLinks.size(); i++) {
+
+        WebElement link = footerLinks.get(i);
+        String linkText = link.getText();
+        String linkUrl = link.getAttribute("href");
+
+        System.out.println("Verifying link " + (i + 1) + ": " + linkText);
+
+        // ✅ VALIDATION 1
+        Assert.assertNotNull("❌ Social link href is NULL", linkUrl);
+        Assert.assertFalse("❌ Social link href is EMPTY", linkUrl.trim().isEmpty());
+
+        js.executeScript("arguments[0].scrollIntoView({block: 'center'});", link);
+        Common.waitForElement(1);
+
+        if (linkUrl.startsWith("mailto:") || linkUrl.startsWith("tel:")) {
+            System.out.println("Skipping mail/tel link");
+            continue;
+        }
+
+        try {
+            String originalWindowHandle = driver.getWindowHandle();
+            js.executeScript("window.open(arguments[0], '_blank');", linkUrl);
+            Common.waitForElement(2);
+
+            // ✅ VALIDATION 2
+            Assert.assertTrue(
+                    "❌ New tab did not open",
+                    driver.getWindowHandles().size() > 1
+            );
+
+            ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
+            driver.switchTo().window(tabs.get(1));
+
+            // ✅ VALIDATION 3
+            Assert.assertFalse(
+                    "❌ Page title is EMPTY",
+                    driver.getTitle().trim().isEmpty()
+            );
+
+            Assert.assertFalse(
+                    "❌ Current URL is EMPTY",
+                    driver.getCurrentUrl().trim().isEmpty()
+            );
+
+            System.out.println("--------------------------------------------------------------");
+            System.out.println("Page title: " + driver.getTitle());
+            System.out.println("Page URL  : " + driver.getCurrentUrl());
+            System.out.println("--------------------------------------------------------------");
+
+            driver.close();
+            driver.switchTo().window(originalWindowHandle);
+
+        } catch (Exception e) {
+            Assert.fail("❌ Error verifying social link: " + e.getMessage());
+        }
+
+        Common.waitForElement(1);
+    }
+}
+
+//TC-13
+
+    public void verifyPaymentMethods() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.get(FileReaderManager.getInstance()
+                .getConfigReader()
+                .getApplicationUrl());
+        Common.waitForElement(1);
+        scrollUsingJSWindow();
+        Common.waitForElement(2);
+        try {
+             List<WebElement> paymentCards = wait.until(
+                    ExpectedConditions.presenceOfAllElementsLocatedBy(
+                            By.cssSelector("div.footer_payment_method_card")
+                    )
+            );
+
+            Assert.assertTrue("❌ No payment method cards found", paymentCards.size() > 0);
+            System.out.println("✅ Total payment method cards found: " + paymentCards.size());
+
+            for (int i = 0; i < paymentCards.size(); i++) {
+                WebElement card = paymentCards.get(i);
+
+                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", card);
+
+                 wait.until(ExpectedConditions.visibilityOf(card));
+
+                 Assert.assertTrue("❌ Payment card " + (i + 1) + " is not visible", card.isDisplayed());
+
+                 WebElement img = card.findElement(By.tagName("img"));
+                String src = img.getAttribute("src");
+                String alt = img.getAttribute("alt");
+
+                Assert.assertTrue("❌ Payment card " + (i + 1) + " image src is empty", src != null && !src.isEmpty());
+                Assert.assertTrue("❌ Payment card " + (i + 1) + " alt text is empty", alt != null && !alt.isEmpty());
+
+                System.out.println("✅ Payment card " + (i + 1) + " → Image: " + alt + " | Src: " + src);
+            }
+
+            System.out.println("🎉 All payment method cards verified successfully!");
+
+        } catch (TimeoutException e) {
+            System.out.println("❌ Payment method cards not found or not visible.");
+            Assert.fail("Payment method verification failed");
+        } catch (Exception e) {
+            System.out.println("❌ Unexpected error: " + e.getMessage());
+            Assert.fail("Payment method verification failed due to unexpected error");
+        }
+    }
+
+//TC-14
+    public void verifyCopyRights() {
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.get(FileReaderManager.getInstance()
+                .getConfigReader()
+                .getApplicationUrl());
+        Common.waitForElement(1);
+        scrollUsingJSWindow();
+        Common.waitForElement(2);
+        try {
+             new Actions(driver).sendKeys(Keys.END).perform();
+            Common.waitForElement(1);
+
+             WebElement copyRightElement = wait.until(
+                    ExpectedConditions.visibilityOf(footerSectionEmailID)
+            );
+
+            Assert.assertTrue(
+                    "❌ Copyright text is not displayed",
+                    copyRightElement.isDisplayed()
+            );
+
+            String actualText = copyRightElement.getText().trim();
+            String expectedText = "Copyright 2025 @ zlaata";
+
+            System.out.println("🔍 Copyright Text Found: " + actualText);
+
+            Assert.assertEquals(
+                    "❌ Copyright text mismatch",
+                    expectedText,
+                    actualText
+            );
+
+            System.out.println("✅ Copyright text verified successfully");
+
+        } catch (TimeoutException e) {
+            Assert.fail("❌ Copyright text not found in footer");
+        } catch (Exception e) {
+            Assert.fail("❌ Error verifying copyright: " + e.getMessage());
+        }
+    }
+//TC-15
+    
+    public void verifyFooterSubscribeValidations() {
+
+         driver.get(FileReaderManager.getInstance()
+                 .getConfigReader()
+                 .getApplicationUrl());
+         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+         WebElement newsletterSection = wait.until(
+                 ExpectedConditions.visibilityOfElementLocated(
+                         By.cssSelector("div.newsletter_container")
+                 )
+         );
+
+         JavascriptExecutor js = (JavascriptExecutor) driver;
+
+         // Scroll directly to newsletter (no bottom scroll)
+         js.executeScript("arguments[0].scrollIntoView({block:'center'});", newsletterSection);
+
+         Common.waitForElement(1);
+
+        String GREEN = "\u001B[32m";
+        String RED   = "\u001B[31m";
+        String RESET = "\u001B[0m";
+
+        WebElement emailInput = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.id("subscribeletter"))
+        );
+
+        WebElement subscribeBtn = driver.findElement(
+                By.id("subscribeletterbtn")
+        );
+
+        WebElement errorMsg = driver.findElement(
+                By.cssSelector("p.error-message-footer")
+        );
+
+  
+        emailInput.clear();
+        emailInput.sendKeys("invalidemail");
+        subscribeBtn.click();
+        Common.waitForElement(2);
+
+        wait.until(ExpectedConditions.visibilityOf(errorMsg));
+
+        String invalidMsg = errorMsg.getText().trim();
+        String expectedInvalidMsg = "Please enter a valid email address.";
+
+        Assert.assertEquals(
+                "❌ Invalid email validation failed",
+                expectedInvalidMsg,
+                invalidMsg
+        );
+
+        System.out.println(GREEN + "✅ Invalid email error verified" + RESET);
+
+        String randomEmail ="test" + System.currentTimeMillis() + "@gmail.com";
+
+        emailInput.clear();
+        emailInput.sendKeys(randomEmail);
+        subscribeBtn.click();
+
+        WebElement successMsg = wait.until(
+                ExpectedConditions.visibilityOf(mailValidationMessage)
+        );
+
+        String actualSuccessMsg = successMsg.getText().trim();
+        String expectedSuccessMsg = "Successfully Subscribed";
+
+        Assert.assertEquals(
+                "❌ Subscription success message mismatch",
+                expectedSuccessMsg,
+                actualSuccessMsg
+        );
+
+        System.out.println(GREEN + "✅ Successfully subscribed with new email" + RESET);
+
+        Common.waitForElement(1);
+        emailInput.clear();
+        emailInput.sendKeys(randomEmail);
+        subscribeBtn.click();
+        Common.waitForElement(2);
+        wait.until(ExpectedConditions.visibilityOf(errorMsg));
+
+        String alreadySubMsg = errorMsg.getText().trim();
+        String expectedAlreadySubMsg = "You have already Subscribed";
+
+        Assert.assertEquals(
+                "❌ Already subscribed message mismatch",
+                expectedAlreadySubMsg,
+                alreadySubMsg
+        );
+
+        System.out.println(GREEN + "✅ Already subscribed validation verified" + RESET);
+    }
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 	public void footerShopAllLinks() {
@@ -125,7 +1449,7 @@ public  final class FooterPage  extends FooterObjRepo{
 	
 	public void paymentMethods() {
 	    try {
-	        WebElement paymentLabel = driver.findElement(By.xpath("//div[@class='vv_footer_payment_methods]"));
+	        WebElement paymentLabel = driver.findElement(By.xpath("//div[@class='footer_payment_method_card]"));
 
 	        // Scroll into view
 	        JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -150,6 +1474,9 @@ public  final class FooterPage  extends FooterObjRepo{
 
 	
 	public void socialMedia() {
+		driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
 	    Common.waitForElement(2);
 
 	    Actions actions = new Actions(driver);
@@ -158,7 +1485,7 @@ public  final class FooterPage  extends FooterObjRepo{
 
 	    JavascriptExecutor js = (JavascriptExecutor) driver;
 
-	    List<WebElement> footerLinks = driver.findElements(By.xpath("//a[@class='vv_social_link_card']"));
+	    List<WebElement> footerLinks = driver.findElements(By.xpath("//a[@class='social_link_card']"));
 	    System.out.println("Total footer links: " + footerLinks.size());
 
 	    for (int i = 0; i < footerLinks.size(); i++) {
@@ -230,6 +1557,7 @@ public  final class FooterPage  extends FooterObjRepo{
 		click(mailId);
 		Common.waitForElement(1);
 		RandomMailId();
+		
 		click(subScribeBtn);
 		Common.waitForElement(2);
 		String actualMessage = mailValidationMessage.getText();
