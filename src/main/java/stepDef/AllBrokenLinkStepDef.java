@@ -18,7 +18,7 @@ public class AllBrokenLinkStepDef {
 
 		@Given("all application links and URLs are validated for broken links")
 		public void all_application_links_and_ur_ls_are_validated_for_broken_links() {
-			link.verifyAllApplicationLinksForReal404Fast();
+			link.ValidateAllLinkMethods();
 		}
 
 
