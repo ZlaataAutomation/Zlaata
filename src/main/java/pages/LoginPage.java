@@ -734,8 +734,6 @@ public final class LoginPage extends LoginObjRepository {
     public void validateLoginNegativeCredantial() {
     	homeLaunch();
     	
-    	handleAccessCodeIfPresentFast();
-    	
     	verifyLogOut();
     	
     	verifyEmptyField();
