@@ -376,10 +376,50 @@ public class AllBrokenLinkPage extends AllBrokenLinkObjRepo{
 	    }
 	}
 
+	 public void handleAccessCodeIfPresentFast() {
 
+	        try {
+	            List<WebElement> accessCodeInput = driver.findElements(
+	                    By.xpath("//input[@id='security_code']")
+	            );
+
+	            // 🔹 Instant check – if not present, skip
+	            if (accessCodeInput.isEmpty()) {
+	                return;
+	            }
+
+	            WebElement input = accessCodeInput.get(0);
+
+	            if (input.isDisplayed()) {
+
+	                String accessCode = FileReaderManager.getInstance()
+	                        .getJsonReader()
+	                        .getValueFromJson("Access");
+
+	                // Type access code
+	                input.clear();
+	                input.sendKeys(accessCode);
+
+	                // Click submit
+	                WebElement submitBtn = driver.findElement(
+	                        By.xpath("//form[contains(@action,'accessCheckProcess')]//button")
+	                );
+
+	                ((JavascriptExecutor) driver)
+	                        .executeScript("arguments[0].click();", submitBtn);
+	                
+	                System.out.println("⚡ Access code entered (fast path)");
+	            }
+
+	        } catch (Exception e) {
+	            // swallow – fast skip mode
+	        }
+	    }
 	
 	
 	public void ValidateAllLinkMethods() {
+		
+		handleAccessCodeIfPresentFast();
 		
 		verifyAllLinksAndUrls();
 		

@@ -385,7 +385,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		            ExpectedConditions.visibilityOfElementLocated(couponInput)
 		    );
 		    searchBox.click();
-		    searchBox.sendKeys("TEST");
+		    searchBox.sendKeys("TESTMODE");
 
 
 		    // Click Apply
