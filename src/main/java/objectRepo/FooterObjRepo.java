@@ -56,5 +56,13 @@ public abstract class FooterObjRepo extends BasePage {
 	@FindBy(xpath ="//div[@class='vv_footer_payment_methods  ']")
 	protected WebElement paymentlabel;
 	
+	@FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	   protected WebElement zlaataIndiaShopButton;
+	
+	@FindBy(xpath = "//a[normalize-space()='Loyalty Points']")
+	protected WebElement threadLink;
+	
+	@FindBy(xpath = "//a[normalize-space()='Gift Card']")
+	protected WebElement giftCard;
 
 }

@@ -491,106 +491,190 @@ public final class CheckoutPage extends CheckOutPageObjRepo{
 			throw e1;
 		}
 	}
+//	public void addRandomProduct() {
+//		  String GREEN = "\u001B[32m";
+//		    String RED   = "\u001B[31m";
+//		    String CYAN  = "\u001B[36m";
+//		    String RESET = "\u001B[0m";
+//		    String line = "──────────────────────────────────────────────────────────────";
+//		    System.out.println(CYAN + line + RESET);
+//	    // Launch home
+//	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//	    
+//	    click(zlaataIndiaShopButton);
+//	    
+//		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//		 // Hover and open category
+//		    Actions actions = new Actions(driver);
+//		    actions.moveToElement(shopMenu).perform();
+//		    actions.moveToElement(randomcategory).click().perform();
+//
+//		    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+//
+//		    // 🔹 Wait for product card
+//		    WebElement productCard = wait.until(
+//		            ExpectedConditions.visibilityOfElementLocated(
+//		                    By.xpath("(//div[@class='prod_listing_card'])")
+//		            )
+//		    );
+//		    
+//
+//		    Collections.shuffle(products);
+//		    products.get(0).click();
+//		    Common.waitForElement(2);
+//		    
+//		    WebElement addToBagBtn = productCard.findElement(
+//		            By.xpath(".//button[contains(@class,'prod_add_to_cart')]")
+//		    );
+//		    ((JavascriptExecutor) driver)
+//            .executeScript("arguments[0].scrollIntoView({block:'center'});", addToBagBtn);
+//    ((JavascriptExecutor) driver)
+//            .executeScript("arguments[0].click();", addToBagBtn);
+//    Common.waitForElement(2);
+//    System.out.println(GREEN + "✅ PLP Add to Bag clicked" + RESET);
+//    // 🔹 Click Add to Bag in popup
+//    WebElement popupAddBtn = wait.until(
+//            ExpectedConditions.elementToBeClickable(
+//                    By.xpath("//button[contains(@class,'add_bag_prod_buy_now_btn')]")
+//            )
+//    );
+//    popupAddBtn.click();
+//
+//    System.out.println(GREEN + "✅ Product added to cart" + RESET);
+//    Common.waitForElement(2);
+//    
+//    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,0)");
+//    Common.waitForElement(2);
+//    // 🔹 Open cart
+//    WebElement cartIcon = wait.until(
+//            ExpectedConditions.elementToBeClickable(
+//                    By.xpath("//button[contains(@class,'header_cta_btn Cls_cart_btn ')]")
+//            )
+//    );
+//    cartIcon.click();
+//	}
+	
 	public void addRandomProduct() {
-		  String GREEN = "\u001B[32m";
-		    String RED   = "\u001B[31m";
-		    String CYAN  = "\u001B[36m";
-		    String RESET = "\u001B[0m";
-		    String line = "──────────────────────────────────────────────────────────────";
-		    System.out.println(CYAN + line + RESET);
-	    // Launch home
-	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-		 // Hover and open category
-		    Actions actions = new Actions(driver);
-		    actions.moveToElement(shopMenu).perform();
-		    actions.moveToElement(randomcategory).click().perform();
 
-		    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+	    String GREEN = "\u001B[32m";
+	    String CYAN  = "\u001B[36m";
+	    String RESET = "\u001B[0m";
 
-		    // 🔹 Wait for product card
-		    WebElement productCard = wait.until(
-		            ExpectedConditions.visibilityOfElementLocated(
-		                    By.xpath("(//div[contains(@class,'product_list_cards_list')])")
-		            )
-		    );
-		    WebElement addToBagBtn = productCard.findElement(
-		            By.xpath(".//div[contains(@class,'product_list_add_to_cart')]")
-		    );
-		    ((JavascriptExecutor) driver)
-            .executeScript("arguments[0].scrollIntoView({block:'center'});", addToBagBtn);
-    ((JavascriptExecutor) driver)
-            .executeScript("arguments[0].click();", addToBagBtn);
-    Common.waitForElement(2);
-    System.out.println(GREEN + "✅ PLP Add to Bag clicked" + RESET);
-    // 🔹 Click Add to Bag in popup
-    WebElement popupAddBtn = wait.until(
-            ExpectedConditions.elementToBeClickable(
-                    By.xpath("//button[contains(@class,'add_bag_prod_buy_now_btn')]")
-            )
-    );
-    popupAddBtn.click();
+	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
-    System.out.println(GREEN + "✅ Product added to cart" + RESET);
-    Common.waitForElement(2);
-    // 🔹 Open cart
-    WebElement cartIcon = wait.until(
-            ExpectedConditions.elementToBeClickable(
-                    By.xpath("//a[contains(@class,'Cls_cart_btn')]")
-            )
-    );
-    cartIcon.click();
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader().getApplicationUrl());
+
+	    click(zlaataIndiaShopButton);
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // Hover shop and open category
+	    Actions actions = new Actions(driver);
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(randomcategory).click().perform();
+	    
+	    Common.waitForElement(5);
+
+	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+
+	    // 🔹 Get all product cards
+	    List<WebElement> products = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                    By.xpath("//div[@class='prod_listing_card']")
+	            )
+	    );
+
+	    // Shuffle products
+	    Collections.shuffle(products);
+
+	    // Select random product
+	    WebElement product = products.get(0);
+
+	    // Find Add to Bag button
+	    WebElement addToBagBtn = product.findElement(
+	            By.xpath(".//button[contains(@class,'prod_add_to_cart')]")
+	    );
+
+	    // Scroll to button
+	    ((JavascriptExecutor) driver)
+	            .executeScript("arguments[0].scrollIntoView({block:'center'});", addToBagBtn);
+
+	    // Click Add to Bag
+	    ((JavascriptExecutor) driver)
+	            .executeScript("arguments[0].click();", addToBagBtn);
+
+	    System.out.println(GREEN + "✅ PLP Add to Bag clicked" + RESET);
+
+	    // Wait for popup
+	    WebElement popupAddBtn = wait.until(
+	            ExpectedConditions.elementToBeClickable(
+	                    By.xpath("//button[contains(@class,'add_bag_prod_buy_now_btn')]")
+	            )
+	    );
+
+	    popupAddBtn.click();
+
+	    System.out.println(GREEN + "✅ Product added to cart" + RESET);
+
+	    Common.waitForElement(2);
+
+	    // Scroll to top
+	    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,0)");
+
+	    Common.waitForElement(2);
+
+	    // Open cart
+	    WebElement cartIcon = wait.until(
+	            ExpectedConditions.elementToBeClickable(
+	                    By.xpath("//button[contains(@class,'Cls_cart_btn')]")
+	            )
+	    );
+
+	    cartIcon.click();
 	}
 	public void itemCountCartPage() {
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-	    // Open home
 	    driver.get(FileReaderManager.getInstance()
 	            .getConfigReader().getApplicationUrl());
 
-	    // Open Cart
 	    click(bagIcon);
 	    Common.waitForElement(2);
 
-	    // ---------------- CHECK IF ITEM COUNT EXISTS ----------------
 	    List<WebElement> itemCountElements = driver.findElements(
 	            By.xpath("//span[contains(@class,'Cls_bag_items_count')]"));
 
-	    if (itemCountElements.isEmpty()
-	            || itemCountElements.get(0).getText().trim().equals("0")) {
+	    if (itemCountElements.isEmpty() ||
+	            itemCountElements.get(0).getText().replaceAll("[^0-9]", "").equals("0")) {
 
 	        System.out.println("🛒 Cart empty → Adding product");
 
-	        // Add product
 	        addRandomProduct();
 	        Common.waitForElement(3);
 
-	        // Open cart again
-	        click(bagIcon);
-	        Common.waitForElement(2);
+	        // Scroll to top after adding product
+	       
+	        // Click cart icon
+//	        click(bagIcon);
+//	        Common.waitForElement(2);
 	    }
 
-	    // ---------------- VERIFY ITEM COUNT ----------------
 	    WebElement itemCountEle = wait.until(
 	            ExpectedConditions.visibilityOfElementLocated(
 	                    By.xpath("//span[contains(@class,'Cls_bag_items_count')]"))
 	    );
 
-	    String itemCount = itemCountEle.getText().trim();
+	    String itemCountText = itemCountEle.getText().trim();
+	    String itemCount = itemCountText.replaceAll("[^0-9]", "");
 
 	    System.out.println("✅ Cart Item Count: " + itemCount);
 
-	    // Assertions
-	    Assert.assertFalse(
-	            "❌ Item count is empty",
-	            itemCount.isEmpty()
-	    );
+	    Assert.assertFalse("❌ Item count is empty", itemCount.isEmpty());
 
-	    Assert.assertTrue(
-	            "❌ Item count should be greater than 0",
-	            Integer.parseInt(itemCount) > 0
-	    );
+	    Assert.assertTrue("❌ Item count should be greater than 0",
+	            Integer.parseInt(itemCount) > 0);
 
 	    System.out.println("🎉 Cart item count validation successful");
 	}

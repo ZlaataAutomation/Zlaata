@@ -8,7 +8,7 @@ import basePage.BasePage;
 
 public abstract class CheckOutPageObjRepo extends BasePage {
 
-	@FindBy(xpath ="//a[contains(@class,'Cls_cart_btn')]")
+	@FindBy(xpath ="//button[contains(@class,'Cls_cart_btn')]")
 	protected WebElement bagIcon;
 
 	@FindBy(xpath ="//div[@class='bag_inner_wrap Cls_bag_items_unavailable ']//div[@class='bag_closeup_btn']")
@@ -17,14 +17,22 @@ public abstract class CheckOutPageObjRepo extends BasePage {
 	@FindBy(xpath ="//button[.='Buy Now']")
 	protected WebElement buyNowButton;
 
-	@FindBy(xpath = "//li[@class='navigation_menu_list nav_menu_dropdown shop']")
+	@FindBy(xpath = "//div[@class='header_nav_item has_dropdown']")
 	protected WebElement shopMenu;
 
-	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ALL')]")
-	protected WebElement category;
 
-	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DRESSES')]")
-	protected WebElement randomcategory;
+//	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ALL')]")
+//	protected WebElement category;
+
+	
+	@FindBy(xpath = "//a[normalize-space()='All']")
+	protected WebElement category;
+	
+//	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DRESSES')]")
+//	protected WebElement randomcategory;
+	
+	@FindBy(xpath = "//a[normalize-space()='dresses']")
+	protected WebElement  randomcategory;
 	
 	@FindBy(xpath = "//button[@class='add_bag_prod_buy_now_btn btn___2  Cls_CartList ClsProductListSizes']")
 	protected WebElement addToCart;
@@ -172,6 +180,10 @@ public abstract class CheckOutPageObjRepo extends BasePage {
 	
 	@FindBy(xpath ="//*[@class='swiper-button-prev cart_suggestion_recently_viewed_prev']" )
 	protected WebElement recentlyViewedBackwardArrow;
+	
+	
+	@FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	   protected WebElement zlaataIndiaShopButton;
 	
 
 }

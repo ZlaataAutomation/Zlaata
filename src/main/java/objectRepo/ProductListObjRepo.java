@@ -10,20 +10,30 @@ import basePage.BasePage;
 
 public abstract  class ProductListObjRepo extends BasePage {
 	
-	@FindBy(xpath = "//span[@class='navigation_menu_txt'][normalize-space()='Shop']")
+//	@FindBy(xpath = "//span[@class='navigation_menu_txt'][normalize-space()='Shop']")
+//	protected WebElement shopMenu;
+	
+	
+	@FindBy(xpath = "//div[@class='header_nav_item has_dropdown']")
 	protected WebElement shopMenu;
 	
-	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//ul/li/a[translate(normalize-space(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = 'ALL']")
+//	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//ul/li/a[translate(normalize-space(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = 'ALL']")
+//	protected WebElement category;
+	
+	
+	@FindBy(xpath = "//a[normalize-space()='All']")
 	protected WebElement category;
 	
 	@FindBy(xpath = "//a[contains(@class,'bread_crumb_link')]")
 	protected WebElement homeCrumbLink;
 	
-	@FindBy(xpath = "//div[contains(@class,'home_banner_container')]")
+//	@FindBy(xpath = "//div[contains(@class,'home_banner_container')]")
+//	protected WebElement banners;
+	
+	@FindBy(xpath = "//section[@data-section='zi_home_page_banner']//img[contains(@class,'hero-banner-img')]")
 	protected WebElement banners;
 	
-	
-	@FindBy(xpath = "//h3[@class='prod_list_topic']")
+	@FindBy(xpath = "//h2[@class='prod_listing_topic']")
 	protected WebElement shopPageHead;
 	
 	@FindBy(xpath = "//div[@class='pagi_count_wrap']")
@@ -97,7 +107,8 @@ public abstract  class ProductListObjRepo extends BasePage {
 	protected WebElement closeShowFilter;
 	
 	
-	
+	 @FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	   protected WebElement zlaataIndiaShopButton;
 	
 	
 	

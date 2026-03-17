@@ -5,16 +5,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -46,6 +50,8 @@ public final class ProductListingPage extends ProductListObjRepo {
 		    System.out.println(CYAN + line + RESET);
 	    // Launch home
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    
+	    click(zlaataIndiaShopButton);
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
@@ -61,7 +67,7 @@ public final class ProductListingPage extends ProductListObjRepo {
 	    System.out.println(YELLOW + "👉 Clicked Home breadcrumb" + RESET);
 
 	    // ✅ Verify URL
-	    String expectedUrl = "https://www.zlaata.com/";
+	    String expectedUrl = "https://www.zlaata.com/zlaata-india";
 	    wait.until(ExpectedConditions.urlToBe(expectedUrl));
 
 	    String actualUrl = driver.getCurrentUrl();
@@ -98,6 +104,9 @@ public final class ProductListingPage extends ProductListObjRepo {
 	    System.out.println(CYAN + line + RESET);
     // Launch home
     driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+    
+    click(zlaataIndiaShopButton);
+    
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
 	    System.out.println(CYAN + "🔍 Navigating to Product Listing Page..." + RESET);
@@ -132,6 +141,8 @@ Thread.sleep(2000);
 	    System.out.println(CYAN + line + RESET);
     // Launch home
     driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+    
+    click(zlaataIndiaShopButton);
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
 	    System.out.println(CYAN + "🔍 Navigating to Product Listing Page..." + RESET);
@@ -177,7 +188,7 @@ Thread.sleep(2000);
 	    String line = "──────────────────────────────────────────────────────────────";
 	    System.out.println(CYAN + line + RESET);
 	 // Launch home
-	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
 		    System.out.println(CYAN + "🔍 Navigating to Product Listing Page..." + RESET);
@@ -238,6 +249,8 @@ Thread.sleep(2000);
 	    String RESET = "\u001B[0m";
 
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    
+	    click(zlaataIndiaShopButton);
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -570,163 +583,795 @@ Thread.sleep(2000);
 
 
 
+//
+//	public void wishListIcon() throws InterruptedException {
+//
+//	    
+//	    String GREEN = "\u001B[32m";
+//	    String RED   = "\u001B[31m";
+//	    String BLUE   = "\u001B[34m";
+//	    String CYAN  = "\u001B[36m";
+//	    String RESET = "\u001B[0m";
+//	    String line = "──────────────────────────────────────────────────────────────";
+//	    System.out.println(CYAN + line + RESET);
+//    // Launch home
+//    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//    
+//    click(filterClearAll);
+//	   
+//    // Hover and open category
+//    Actions actions = new Actions(driver);
+//    actions.moveToElement(shopMenu).perform();
+//    actions.moveToElement(category).click().perform();
+//
+//    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+//    Common.waitForElement(3);
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//
+//	    // ✅ Pick first product
+//	    WebElement productCard = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//div[@class='product_list_cards_list ']")
+//	            )
+//	    );
+//
+//	    // ✅ Capture product details
+//	    String productName = productCard.findElement(
+//	            By.xpath(".//h2[@class='product_list_cards_heading']")
+//	    ).getText();
+//
+//	    String productPrice = productCard.findElement(
+//	            By.xpath(".//span[@class='prod_current_price']")
+//	    ).getText();
+//
+//	    String productDiscount = productCard.findElement(
+//	            By.xpath(".//span[@class='prod_discount_percentage']")
+//	    ).getText();
+//
+//	    System.out.println(CYAN + "📌 Selected Product:" + RESET);
+//	    System.out.println("   Name: " + productName);
+//	    System.out.println("   Price: " + productPrice);
+//	    System.out.println("   Discount: " + productDiscount);
+//	    Common.waitForElement(2);
+//	    // ✅ Click wishlist icon
+//	    WebElement wishBtn = productCard.findElement(
+//	            By.xpath(".//div[contains(@class,'product_list_wishlist_icon')]")
+//	    );
+//	 // Check current wishlist state
+//	    String classBefore = wishBtn.getAttribute("class");
+//
+//	    System.out.println(CYAN + "💡 Wishlist class before: " + classBefore + RESET);
+//
+//	    // ❤️ If already wish-listed → do nothing
+//	    if (classBefore.contains("liked")) {
+//
+//	        System.out.println(
+//	                GREEN + "❤️ Product already in wishlist. Skipping click." + RESET
+//	        );
+//
+//	    } else {
+//
+//	        System.out.println(
+//	                BLUE + "🤍 Product not in wishlist → Clicking..." + RESET
+//	        );
+//
+//	        ((JavascriptExecutor) driver)
+//	                .executeScript("arguments[0].click();", wishBtn);
+//
+//	        // Wait until liked class appears
+//	      
+//	        wait.until(driver ->
+//	                wishBtn.getAttribute("class").contains("liked")
+//	        );
+//
+//	        System.out.println(
+//	                GREEN + "❤️ Product successfully added to wishlist" + RESET
+//	        );
+//	    }
+////
+////	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", wishBtn);
+////	    System.out.println(GREEN + "❤️ Product added to wishlist" + RESET);
+//
+//	    // ✅ Open Wishlist page
+//	    WebElement wishlistIcon = wait.until(
+//	            ExpectedConditions.elementToBeClickable(
+//	                    By.xpath("//a[contains(@class,'wishlist-icon')]")
+//	            )
+//	    );
+//	    
+//	    wishlistIcon.click();
+//Thread.sleep(2000);
+//	    // ✅ Verify product in wishlist
+//	    WebElement wishProduct = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//h2[text()='" + productName + "']")
+//	            )
+//	    );
+//
+//	    String wishPrice = driver.findElement(
+//	            By.xpath("//h2[text()='" + productName + "']/following::span[@class='prod_current_price'][1]")
+//	    ).getText();
+//
+//	    String wishDiscount = driver.findElement(
+//	            By.xpath("//h2[text()='" + productName + "']/following::span[@class='prod_discount_percentage'][1]")
+//	    ).getText();
+//
+//	    // ✅ Assertions
+//	    Assert.assertEquals(productPrice, wishPrice);
+//	    Assert.assertEquals(productDiscount, wishDiscount);
+//
+//	    System.out.println(GREEN + "✅ Wishlist validation successful!" + RESET);
+//	    
+//	}
 
+
+//
+//	public void wishListIcon() throws InterruptedException {
+//
+//	    String GREEN = "\u001B[32m";
+//	    String RED   = "\u001B[31m";
+//	    String BLUE  = "\u001B[34m";
+//	    String CYAN  = "\u001B[36m";
+//	    String RESET = "\u001B[0m";
+//	    String line = "────────────────────────────────────────────";
+//
+//	    System.out.println(CYAN + line + RESET);
+//
+//	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//
+//	    click(zlaataIndiaShopButton);
+//
+//	    // Hover shop menu
+//	    Actions actions = new Actions(driver);
+//	    actions.moveToElement(shopMenu).perform();
+//	    actions.moveToElement(category).click().perform();
+//
+//	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+//
+//	    // Wait for products
+//	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+//	            By.xpath("//div[contains(@class,'prod_listing_card')]")
+//	    ));
+//
+//	    // Get all products
+//	    List<WebElement> products = driver.findElements(
+//	            By.xpath("//div[contains(@class,'prod_listing_card')]")
+//	    );
+//
+//	    System.out.println(CYAN + "Total Products on page: " + products.size() + RESET);
+//
+//	    List<String> alreadyInWishlist = new ArrayList<>();
+//	    List<WebElement> notInWishlist = new ArrayList<>();
+//
+//	    // Separate products based on wishlist status
+//	    for (WebElement product : products) {
+//	        WebElement wishBtn = product.findElement(
+//	                By.xpath(".//button[contains(@class,'product_wishlist_icon')]")
+//	        );
+//	        String classAttr = wishBtn.getAttribute("class");
+//	        String productName = product.findElement(
+//	                By.xpath(".//a[contains(@class,'product_list_name')]")
+//	        ).getText().trim();
+//
+//	        if (classAttr.contains("is-liked") || classAttr.contains("liked")) {
+//	            alreadyInWishlist.add(productName);
+//	        } else {
+//	            notInWishlist.add(product);
+//	        }
+//	    }
+//
+//	    System.out.println(GREEN + "✅ Products already in wishlist (" + alreadyInWishlist.size() + "):" + RESET);
+//	    alreadyInWishlist.forEach(System.out::println);
+//
+//	    System.out.println(BLUE + "🟡 Products not in wishlist (" + notInWishlist.size() + "):" + RESET);
+//	    notInWishlist.forEach(p -> {
+//	        try {
+//	            System.out.println(p.findElement(By.xpath(".//a[contains(@class,'product_list_name')]")).getText().trim());
+//	        } catch (NoSuchElementException ignored) {}
+//	    });
+//
+//	    if (notInWishlist.isEmpty()) {
+//	        System.out.println(GREEN + "All products already in wishlist. No product needs to be added." + RESET);
+//	        return; // Stop execution
+//	    }
+//
+//	    // Add first available product to wishlist
+//	    WebElement productCard = notInWishlist.get(0);
+//
+//	    String productName = productCard.findElement(
+//	            By.xpath(".//a[contains(@class,'product_list_name')]")
+//	    ).getText().trim();
+//
+//	    String productActualPrice;
+//	    try{
+//	        productActualPrice = productCard.findElement(
+//	                By.xpath(".//s[contains(@class,'product_actual_price')]")
+//	        ).getText().trim();
+//	    } catch(Exception e){
+//	        productActualPrice = "No Discount";
+//	    }
+//
+//	    String productOfferPrice;
+//	    try{
+//	        productOfferPrice = productCard.findElement(
+//	                By.xpath(".//span[contains(@class,'product_discounted_price')]")
+//	        ).getText().trim();
+//	    } catch(Exception e){
+//	        productOfferPrice = "No Price";
+//	    }
+//
+//	    String productURL = productCard.findElement(
+//	            By.xpath(".//a[contains(@class,'product_list_name')]")
+//	    ).getAttribute("href");
+//
+//	    // Click wishlist icon
+//	    WebElement wishBtn = productCard.findElement(
+//	            By.xpath(".//button[@aria-label='Add to wishlist']")
+//	    );
+//
+//	    String classBefore = wishBtn.getAttribute("class");
+//
+//	    if (classBefore.contains("liked")) {
+//	        System.out.println(GREEN + "❤️ Product already in wishlist" + RESET);
+//	    } else {
+//	        System.out.println(BLUE + "🤍 Adding product to wishlist..." + RESET);
+//	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", wishBtn);
+//	        wait.until(driver -> wishBtn.getAttribute("class").contains("liked"));
+//	        System.out.println(GREEN + "❤️ Product added to wishlist" + RESET);
+//	    }
+//
+//	    // Print newly added product details
+//	    System.out.println(CYAN + "📌 Newly Added Product Details:" + RESET);
+//	    System.out.println("   Name        : " + productName);
+//	    System.out.println("   Actual Price: " + productActualPrice);
+//	    System.out.println("   Offer Price : " + productOfferPrice);
+//	    System.out.println("   Product URL : " + productURL);
+//
+//	    // Open wishlist page
+//	    WebElement wishlistIcon = wait.until(
+//	            ExpectedConditions.elementToBeClickable(
+//	                    By.xpath("//button[contains(@class,'wishlist-icon')]")
+//	            )
+//	    );
+//	    wishlistIcon.click();
+//
+//	    // Wait for wishlist page
+//	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+//	            By.xpath("//div[contains(@class,'prod_listing_card')]")
+//	    ));
+//
+//	    List<WebElement> wishlistProducts = driver.findElements(
+//	            By.xpath("//div[contains(@class,'prod_listing_card')]")
+//	    );
+//
+//	    boolean productFound = false;
+//
+//	    System.out.println(CYAN + "🛒 Verifying Newly Added Product in Wishlist:" + RESET);
+//
+//	    for(WebElement product : wishlistProducts){
+//	        String wishName = product.findElement(
+//	                By.xpath(".//a[contains(@class,'product_list_name')]")
+//	        ).getText().trim();
+//
+//	        if(wishName.equals(productName)){
+//	            productFound = true;
+//
+//	            String wishActualPrice;
+//	            try{
+//	                wishActualPrice = product.findElement(
+//	                        By.xpath(".//s[contains(@class,'product_actual_price')]")
+//	                ).getText().trim();
+//	            }catch(Exception e){
+//	                wishActualPrice = "No Discount";
+//	            }
+//
+//	            String wishPrice;
+//	            try{
+//	                wishPrice = product.findElement(
+//	                        By.xpath(".//span[contains(@class,'product_discounted_price')]")
+//	                ).getText().trim();
+//	            }catch(Exception e){
+//	                wishPrice = "No Price";
+//	            }
+//
+//	            String wishURL = product.findElement(
+//	                    By.xpath(".//a[contains(@class,'product_list_name')]")
+//	            ).getAttribute("href");
+//
+//	            System.out.println("-----------------------------------");
+//	            System.out.println("Product Name  : " + wishName);
+//	            System.out.println("Actual Price  : " + wishActualPrice);
+//	            System.out.println("Offer Price   : " + wishPrice);
+//	            System.out.println("Product URL   : " + wishURL);
+//
+//	            break;
+//	        }
+//	    }
+//
+//	    Assert.assertTrue("Wishlist validation failed. Product not found.", productFound);
+//	    System.out.println(GREEN + "✅ Added product verified successfully in Wishlist!" + RESET);
+//	}
+	
+	
+	
 	public void wishListIcon() throws InterruptedException {
 
-	    
 	    String GREEN = "\u001B[32m";
 	    String RED   = "\u001B[31m";
-	    String BLUE   = "\u001B[34m";
+	    String BLUE  = "\u001B[34m";
 	    String CYAN  = "\u001B[36m";
 	    String RESET = "\u001B[0m";
-	    String line = "──────────────────────────────────────────────────────────────";
-	    System.out.println(CYAN + line + RESET);
-    // Launch home
-    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-	   
-    // Hover and open category
-    Actions actions = new Actions(driver);
-    actions.moveToElement(shopMenu).perform();
-    actions.moveToElement(category).click().perform();
+	    String line = "────────────────────────────────────────────";
 
-    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
-    Common.waitForElement(3);
+	    System.out.println(CYAN + line + RESET);
+
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-	    // ✅ Pick first product
-	    WebElement productCard = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//div[@class='product_list_cards_list ']")
-	            )
-	    );
+	    click(zlaataIndiaShopButton);
 
-	    // ✅ Capture product details
-	    String productName = productCard.findElement(
-	            By.xpath(".//h2[@class='product_list_cards_heading']")
-	    ).getText();
-
-	    String productPrice = productCard.findElement(
-	            By.xpath(".//span[@class='prod_current_price']")
-	    ).getText();
-
-	    String productDiscount = productCard.findElement(
-	            By.xpath(".//span[@class='prod_discount_percentage']")
-	    ).getText();
-
-	    System.out.println(CYAN + "📌 Selected Product:" + RESET);
-	    System.out.println("   Name: " + productName);
-	    System.out.println("   Price: " + productPrice);
-	    System.out.println("   Discount: " + productDiscount);
-	    Common.waitForElement(2);
-	    // ✅ Click wishlist icon
-	    WebElement wishBtn = productCard.findElement(
-	            By.xpath(".//div[contains(@class,'product_list_wishlist_icon')]")
-	    );
-	 // Check current wishlist state
-	    String classBefore = wishBtn.getAttribute("class");
-
-	    System.out.println(CYAN + "💡 Wishlist class before: " + classBefore + RESET);
-
-	    // ❤️ If already wish-listed → do nothing
-	    if (classBefore.contains("liked")) {
-
-	        System.out.println(
-	                GREEN + "❤️ Product already in wishlist. Skipping click." + RESET
-	        );
-
-	    } else {
-
-	        System.out.println(
-	                BLUE + "🤍 Product not in wishlist → Clicking..." + RESET
-	        );
-
-	        ((JavascriptExecutor) driver)
-	                .executeScript("arguments[0].click();", wishBtn);
-
-	        // Wait until liked class appears
-	      
-	        wait.until(driver ->
-	                wishBtn.getAttribute("class").contains("liked")
-	        );
-
-	        System.out.println(
-	                GREEN + "❤️ Product successfully added to wishlist" + RESET
-	        );
-	    }
-//
-//	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", wishBtn);
-//	    System.out.println(GREEN + "❤️ Product added to wishlist" + RESET);
-
-	    // ✅ Open Wishlist page
-	    WebElement wishlistIcon = wait.until(
-	            ExpectedConditions.elementToBeClickable(
-	                    By.xpath("//a[contains(@class,'wishlist-icon')]")
-	            )
-	    );
-	    
-	    wishlistIcon.click();
-Thread.sleep(2000);
-	    // ✅ Verify product in wishlist
-	    WebElement wishProduct = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//h2[text()='" + productName + "']")
-	            )
-	    );
-
-	    String wishPrice = driver.findElement(
-	            By.xpath("//h2[text()='" + productName + "']/following::span[@class='prod_current_price'][1]")
-	    ).getText();
-
-	    String wishDiscount = driver.findElement(
-	            By.xpath("//h2[text()='" + productName + "']/following::span[@class='prod_discount_percentage'][1]")
-	    ).getText();
-
-	    // ✅ Assertions
-	    Assert.assertEquals(productPrice, wishPrice);
-	    Assert.assertEquals(productDiscount, wishDiscount);
-
-	    System.out.println(GREEN + "✅ Wishlist validation successful!" + RESET);
-	    
-	}
-
-
-	public void addToCart() throws InterruptedException {
-
-	    
-	    String GREEN = "\u001B[32m";
-	    String RED   = "\u001B[31m";
-	    String CYAN  = "\u001B[36m";
-	    String RESET = "\u001B[0m";
-	    String line = "──────────────────────────────────────────────────────────────";
-	    System.out.println(CYAN + line + RESET);
-    // Launch home
-    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-	 // Hover and open category
+	    // Hover shop menu
 	    Actions actions = new Actions(driver);
 	    actions.moveToElement(shopMenu).perform();
 	    actions.moveToElement(category).click().perform();
 
 	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
 
-	    // 🔹 Wait for product card
-	    WebElement productCard = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("(//div[contains(@class,'product_list_cards_list')])[1]")
+	    // Wait for products
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//div[contains(@class,'prod_listing_card')]")
+	    ));
+
+	    // Get all products
+	    List<WebElement> products = driver.findElements(
+	            By.xpath("//div[contains(@class,'prod_listing_card')]")
+	    );
+
+	    System.out.println(CYAN + "Total Products on page: " + products.size() + RESET);
+
+	    List<String> alreadyInWishlist = new ArrayList<>();
+	    List<WebElement> notInWishlist = new ArrayList<>();
+
+	    // Separate products based on wishlist status
+	    for (WebElement product : products) {
+	        try {
+	            WebElement wishBtn = product.findElement(
+	                    By.xpath(".//button[contains(@class,'product_wishlist_icon')]")
+	            );
+	            String classAttr = wishBtn.getAttribute("class");
+	            String productName = product.findElement(
+	                    By.xpath(".//a[contains(@class,'product_list_name')]")
+	            ).getText().trim();
+
+	            if (classAttr.contains("is-liked") || classAttr.contains("liked")) {
+	                alreadyInWishlist.add(productName);
+	            } else {
+	                notInWishlist.add(product);
+	            }
+	        } catch (StaleElementReferenceException e) {
+	            // Refetch the product if DOM changed
+	            product = driver.findElements(By.xpath("//div[contains(@class,'prod_listing_card')]"))
+	                    .get(products.indexOf(product));
+	        }
+	    }
+
+	    System.out.println(GREEN + "✅ Products already in wishlist (" + alreadyInWishlist.size() + "):" + RESET);
+	    alreadyInWishlist.forEach(System.out::println);
+
+	    System.out.println(BLUE + "🟡 Products not in wishlist (" + notInWishlist.size() + "):" + RESET);
+	    notInWishlist.forEach(p -> {
+	        try {
+	            System.out.println(p.findElement(By.xpath(".//a[contains(@class,'product_list_name')]")).getText().trim());
+	        } catch (NoSuchElementException | StaleElementReferenceException ignored) {}
+	    });
+
+	    if (notInWishlist.isEmpty()) {
+	        System.out.println(GREEN + "All products already in wishlist. No product needs to be added." + RESET);
+	        return; // Stop execution
+	    }
+
+	    // Add first available product to wishlist
+	    WebElement productCard = notInWishlist.get(0);
+
+	    String productName;
+	    String productActualPrice;
+	    String productOfferPrice;
+	    String productURL;
+
+	    // Refetch productCard to avoid stale element
+	    productCard = driver.findElements(By.xpath("//div[contains(@class,'prod_listing_card')]"))
+	            .get(products.indexOf(productCard));
+
+	    productName = productCard.findElement(By.xpath(".//a[contains(@class,'product_list_name')]")).getText().trim();
+
+	    try{
+	        productActualPrice = productCard.findElement(
+	                By.xpath(".//s[contains(@class,'product_actual_price')]")
+	        ).getText().trim();
+	    }catch(Exception e){
+	        productActualPrice = "No Discount";
+	    }
+
+	    try{
+	        productOfferPrice = productCard.findElement(
+	                By.xpath(".//span[contains(@class,'product_discounted_price')]")
+	        ).getText().trim();
+	    }catch(Exception e){
+	        productOfferPrice = "No Price";
+	    }
+
+	    productURL = productCard.findElement(
+	            By.xpath(".//a[contains(@class,'product_list_name')]")
+	    ).getAttribute("href");
+
+	    // Click wishlist icon
+	    WebElement wishBtn = productCard.findElement(
+	            By.xpath(".//button[@aria-label='Add to wishlist']")
+	    );
+
+	    String classBefore = wishBtn.getAttribute("class");
+
+	    if (classBefore.contains("liked")) {
+	        System.out.println(GREEN + "❤️ Product already in wishlist" + RESET);
+	    } else {
+	        System.out.println(BLUE + "🤍 Adding product to wishlist..." + RESET);
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", wishBtn);
+	        wait.until(d -> wishBtn.getAttribute("class").contains("liked"));
+	        System.out.println(GREEN + "❤️ Product added to wishlist" + RESET);
+	    }
+
+	    System.out.println(CYAN + "📌 Newly Added Product Details:" + RESET);
+	    System.out.println("   Name        : " + productName);
+	    System.out.println("   Actual Price: " + productActualPrice);
+	    System.out.println("   Offer Price : " + productOfferPrice);
+	    System.out.println("   Product URL : " + productURL);
+
+	    // Open wishlist page
+	    WebElement wishlistIcon = wait.until(
+	            ExpectedConditions.elementToBeClickable(
+	                    By.xpath("//button[contains(@class,'wishlist-icon')]")
+	            )
+	    );
+	    wishlistIcon.click();
+
+	    // Refetch wishlist products to avoid stale elements
+	    List<WebElement> wishlistProducts = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                    By.xpath("//div[contains(@class,'prod_listing_card')]")
 	            )
 	    );
 
+	    boolean productFound = false;
+	    System.out.println(CYAN + "🛒 Verifying Newly Added Product in Wishlist:" + RESET);
+
+	    for(int i = 0; i < wishlistProducts.size(); i++){
+	        WebElement product = wishlistProducts.get(i);
+	        try {
+	            String wishName = product.findElement(
+	                    By.xpath(".//a[contains(@class,'product_list_name')]")
+	            ).getText().trim();
+
+	            if(wishName.equals(productName)){
+	                productFound = true;
+
+	                String wishActualPrice;
+	                try{
+	                    wishActualPrice = product.findElement(
+	                            By.xpath(".//s[contains(@class,'product_actual_price')]")
+	                    ).getText().trim();
+	                }catch(Exception e){
+	                    wishActualPrice = "No Discount";
+	                }
+
+	                String wishPrice;
+	                try{
+	                    wishPrice = product.findElement(
+	                            By.xpath(".//span[contains(@class,'product_discounted_price')]")
+	                    ).getText().trim();
+	                }catch(Exception e){
+	                    wishPrice = "No Price";
+	                }
+
+	                String wishURL = product.findElement(
+	                        By.xpath(".//a[contains(@class,'product_list_name')]")
+	                ).getAttribute("href");
+
+	                System.out.println("-----------------------------------");
+	                System.out.println("Product Name  : " + wishName);
+	                System.out.println("Actual Price  : " + wishActualPrice);
+	                System.out.println("Offer Price   : " + wishPrice);
+	                System.out.println("Product URL   : " + wishURL);
+	                break;
+	            }
+	        } catch (StaleElementReferenceException e) {
+	            // Refetch product list and retry
+	            wishlistProducts = driver.findElements(By.xpath("//div[contains(@class,'prod_listing_card')]"));
+	            i--; // Retry current index
+	        }
+	    }
+
+	    Assert.assertTrue("Wishlist validation failed. Product not found.", productFound);
+	    System.out.println(GREEN + "✅ Added product verified successfully in Wishlist!" + RESET);
+	}
+//	public void addToCart() throws InterruptedException {
+//
+//	    
+//	    String GREEN = "\u001B[32m";
+//	    String RED   = "\u001B[31m";
+//	    String CYAN  = "\u001B[36m";
+//	    String RESET = "\u001B[0m";
+//	    String line = "──────────────────────────────────────────────────────────────";
+//	    System.out.println(CYAN + line + RESET);
+//    // Launch home
+//    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//	 // Hover and open category
+//	    Actions actions = new Actions(driver);
+//	    actions.moveToElement(shopMenu).perform();
+//	    actions.moveToElement(category).click().perform();
+//
+//	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+//
+//	    // 🔹 Wait for product card
+//	    WebElement productCard = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("(//div[contains(@class,'product_list_cards_list')])[1]")
+//	            )
+//	    );
+//
+//	    // 🔹 Capture product details
+//	    String productName = productCard.findElement(
+//	            By.xpath(".//h2[@class='product_list_cards_heading']")
+//	    ).getText();
+//
+//	    String productPrice = productCard.findElement(
+//	            By.xpath(".//span[@class='prod_current_price']")
+//	    ).getText();
+//
+//	    String productDiscount = productCard.findElement(
+//	            By.xpath(".//span[@class='prod_discount_percentage']")
+//	    ).getText();
+//
+//	    System.out.println(CYAN + "🛍 Selected Product" + RESET);
+//	    System.out.println("   Name     : " + productName);
+//	    System.out.println("   Price    : " + productPrice);
+//	    System.out.println("   Discount : " + productDiscount);
+//
+//	    // 🔹 Click Add to Bag (PLP)
+//	    WebElement addToBagBtn = productCard.findElement(
+//	            By.xpath(".//div[contains(@class,'product_list_add_to_cart')]")
+//	    );
+//
+//	    ((JavascriptExecutor) driver)
+//	            .executeScript("arguments[0].scrollIntoView({block:'center'});", addToBagBtn);
+//	    ((JavascriptExecutor) driver)
+//	            .executeScript("arguments[0].click();", addToBagBtn);
+//	    Common.waitForElement(2);
+//	    System.out.println(GREEN + "✅ PLP Add to Bag clicked" + RESET);
+//
+//	    // 🔹 Capture popup product name
+//	    WebElement popupName = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//h4[@class='prod_name']")
+//	            )
+//	    );
+//
+//	    String popupProductName = popupName.getText().trim();
+//	    System.out.println(GREEN + "🧾 Popup Product: " + popupProductName + RESET);
+//	    Common.waitForElement(2);
+//	    // 🔹 Click Add to Bag in popup
+//	    WebElement popupAddBtn = wait.until(
+//	            ExpectedConditions.elementToBeClickable(
+//	                    By.xpath("//button[contains(@class,'add_bag_prod_buy_now_btn')]")
+//	            )
+//	    );
+//	    popupAddBtn.click();
+//
+//	    System.out.println(GREEN + "✅ Product added to cart" + RESET);
+//	    Common.waitForElement(2);
+//	    // 🔹 Open cart
+//	    WebElement cartIcon = wait.until(
+//	            ExpectedConditions.elementToBeClickable(
+//	                    By.xpath("//a[contains(@class,'Cls_cart_btn')]")
+//	            )
+//	    );
+//	    cartIcon.click();
+//
+//	    // 🔹 Verify product in cart
+//	    WebElement cartProduct = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//a[contains(@class,'cp_name') and contains(text(),'" + popupProductName + "')]")
+//	            )
+//	    );
+//	    Common.waitForElement(2);
+//	    String cartPrice = cartProduct.findElement(
+//	            By.xpath("./ancestor::div[contains(@class,'cart_prod_card')]//div[@class='cp_current_price']")
+//	    ).getText();
+//
+//	    String cartDiscount = cartProduct.findElement(
+//	            By.xpath("./ancestor::div[contains(@class,'cart_prod_card')]//div[@class='cp_discount_percentage']")
+//	    ).getText();
+//
+//	    // ✅ Assertions
+//	    Assert.assertEquals(cartPrice, productPrice);
+//	    Assert.assertEquals(cartDiscount, productDiscount);
+//
+//	    System.out.println(GREEN + "✅ Cart validation successful!" + RESET);
+//	}
+	
+	
+//	public void addToCart() throws InterruptedException {
+//	    
+//	    String GREEN = "\u001B[32m";
+//	    String RED   = "\u001B[31m";
+//	    String CYAN  = "\u001B[36m";
+//	    String RESET = "\u001B[0m";
+//	    String line = "──────────────────────────────────────────────────────────────";
+//	    System.out.println(CYAN + line + RESET);
+//
+//	    // Launch home
+//	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//
+//	    click(zlaataIndiaShopButton);
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//
+//	    // Hover and open category
+//	    Actions actions = new Actions(driver);
+//	    actions.moveToElement(shopMenu).perform();
+//	    actions.moveToElement(category).click().perform();
+//
+//	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+//
+//	    // 🔹 Wait for product card
+//	    WebElement productCard = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//div[@class='prod_listing_card']")
+//	            )
+//	    );
+//
+//	    // 🔹 Capture product details
+//	    String productName = productCard.findElement(
+//	            By.xpath(".//a[@class='product_list_name']")
+//	    ).getText();
+//
+//	    String productPrice = productCard.findElement(
+//	            By.xpath(".//span[@class='product_discounted_price']")
+//	    ).getText();
+//
+//	    String productDiscount = productCard.findElement(
+//	            By.xpath(".//span[@class='product_discounted_percentage']")
+//	    ).getText();
+//
+//	    System.out.println(CYAN + "🛍 Selected Product" + RESET);
+//	    System.out.println("   Name     : " + productName);
+//	    System.out.println("   Price    : " + productPrice);
+//	    System.out.println("   Discount : " + productDiscount);
+//
+//	    // 🔹 Click Add to Bag (PLP)
+//	    WebElement addToBagBtn = productCard.findElement(
+//	            By.xpath("//button[@class='prod_add_to_cart ClsSingleCart']")
+//	    );
+//
+//	    ((JavascriptExecutor) driver)
+//	            .executeScript("arguments[0].scrollIntoView({block:'center'});", addToBagBtn);
+//	    ((JavascriptExecutor) driver)
+//	            .executeScript("arguments[0].click();", addToBagBtn);
+//	    Common.waitForElement(2);
+//	    System.out.println(GREEN + "✅ PLP Add to Bag clicked" + RESET);
+//
+//	    // 🔹 Capture popup product name
+//	    WebElement popupName = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//h4[@class='prod_name']")
+//	            )
+//	    );
+//
+//	    String popupProductName = popupName.getText().trim();
+//	    System.out.println(GREEN + "🧾 Popup Product: " + popupProductName + RESET);
+//	    Common.waitForElement(2);
+//	    
+//	    
+//	  
+//	    // 🔹 Click Add to Bag in popup
+//	    WebElement popupAddBtn = wait.until(
+//	            ExpectedConditions.elementToBeClickable(
+//	                    By.xpath("//button[contains(@class,'add_bag_prod_buy_now_btn')]")
+//	            )
+//	    );
+//	    popupAddBtn.click();
+//
+//	    System.out.println(GREEN + "✅ Product added to cart" + RESET);
+//	    Common.waitForElement(2);
+//
+//	    // 🔹 Scroll to top and click cart
+//	    WebElement cartIcon = wait.until(
+//	            ExpectedConditions.elementToBeClickable(
+//	                    By.xpath("//button[@title='Cart']")
+//	            )
+//	    );
+//	    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'start'});", cartIcon);
+//	    Common.waitForElement(1);
+//	    cartIcon.click();
+//
+//	    // 🔹 Verify product in cart
+//	    WebElement cartProduct = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//a[contains(@class,'cp_name') and contains(text(),'" + popupProductName + "')]")
+//	            )
+//	    );
+//	    Common.waitForElement(2);
+//
+//	    String cartPrice = cartProduct.findElement(
+//	            By.xpath("./ancestor::div[contains(@class,'cart_prod_card')]//div[@class='cp_current_price']")
+//	    ).getText();
+//
+//	    String cartDiscount = cartProduct.findElement(
+//	            By.xpath("./ancestor::div[contains(@class,'cart_prod_card')]//div[@class='cp_discount_percentage']")
+//	    ).getText();
+//
+//	    // ✅ Assertions
+//	    Assert.assertEquals(cartPrice, productPrice);
+//	    Assert.assertEquals(cartDiscount, productDiscount);
+//
+//	    System.out.println(GREEN + "✅ Cart validation successful!" + RESET);
+//	}
+//	
+	
+	
+	
+	
+	public void addToCart() throws InterruptedException {
+
+	    String GREEN = "\u001B[32m";
+	    String RED   = "\u001B[31m";
+	    String CYAN  = "\u001B[36m";
+	    String RESET = "\u001B[0m";
+	    String line = "──────────────────────────────────────────────────────────────";
+	    System.out.println(CYAN + line + RESET);
+
+	    // Launch home
+	    
+	    deleteAllProductsFromCart();	  
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // Hover and open category
+	    Actions actions = new Actions(driver);
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(category).click().perform();
+
+	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+
+	    // Wait for product card
+	    WebElement productCard = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//div[@class='prod_listing_card']")
+	            )
+	    );
+
+	    // Check if product is out of stock
+	    List<WebElement> stockLabels = productCard.findElements(
+	            By.xpath(".//span[contains(@class,'prod_listing_hurry') and contains(text(),'Out of Stock')]")
+	    );
+
+	    if (!stockLabels.isEmpty()) {
+	        System.out.println(RED + "❌ Product is Out of Stock. Skipping Add to Cart." + RESET);
+	        return; // Stop this method or continue with another product
+	    }
+
 	    // 🔹 Capture product details
 	    String productName = productCard.findElement(
-	            By.xpath(".//h2[@class='product_list_cards_heading']")
+	            By.xpath(".//a[@class='product_list_name']")
 	    ).getText();
 
 	    String productPrice = productCard.findElement(
-	            By.xpath(".//span[@class='prod_current_price']")
+	            By.xpath(".//span[@class='product_discounted_price']")
 	    ).getText();
 
 	    String productDiscount = productCard.findElement(
-	            By.xpath(".//span[@class='prod_discount_percentage']")
+	            By.xpath(".//span[@class='product_discounted_percentage']")
 	    ).getText();
 
 	    System.out.println(CYAN + "🛍 Selected Product" + RESET);
@@ -736,7 +1381,7 @@ Thread.sleep(2000);
 
 	    // 🔹 Click Add to Bag (PLP)
 	    WebElement addToBagBtn = productCard.findElement(
-	            By.xpath(".//div[contains(@class,'product_list_add_to_cart')]")
+	            By.xpath("//button[@class='prod_add_to_cart ClsSingleCart']")
 	    );
 
 	    ((JavascriptExecutor) driver)
@@ -756,6 +1401,7 @@ Thread.sleep(2000);
 	    String popupProductName = popupName.getText().trim();
 	    System.out.println(GREEN + "🧾 Popup Product: " + popupProductName + RESET);
 	    Common.waitForElement(2);
+
 	    // 🔹 Click Add to Bag in popup
 	    WebElement popupAddBtn = wait.until(
 	            ExpectedConditions.elementToBeClickable(
@@ -766,11 +1412,15 @@ Thread.sleep(2000);
 
 	    System.out.println(GREEN + "✅ Product added to cart" + RESET);
 	    Common.waitForElement(2);
-	    // 🔹 Open cart
+
+	 // 🔹 Scroll to top before clicking cart
+	    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, 0);"); // Scroll to top
+	    Common.waitForElement(1); // small wait
+
 	    WebElement cartIcon = wait.until(
-	            ExpectedConditions.elementToBeClickable(
-	                    By.xpath("//a[contains(@class,'Cls_cart_btn')]")
-	            )
+	        ExpectedConditions.elementToBeClickable(
+	            By.xpath("//button[@title='Cart']")
+	        )
 	    );
 	    cartIcon.click();
 
@@ -781,6 +1431,7 @@ Thread.sleep(2000);
 	            )
 	    );
 	    Common.waitForElement(2);
+
 	    String cartPrice = cartProduct.findElement(
 	            By.xpath("./ancestor::div[contains(@class,'cart_prod_card')]//div[@class='cp_current_price']")
 	    ).getText();
@@ -800,17 +1451,66 @@ Thread.sleep(2000);
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public void deleteAllProductsFromCart() {
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    // Open cart
+	    WebElement cartBtn = wait.until(
+	            ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='header_cta_btn Cls_cart_btn ']"))
+	    );
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cartBtn);
+	    cartBtn.click();
+	    Common.waitForElement(1);
+
+	    // Check if cart is already empty
+	    try {
+	        if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	            System.out.println("🛍️ Cart already empty. No delete action needed.");
+	            return;
+	        }
+	    } catch (NoSuchElementException ignored) {}
+
+	    // Loop to delete all products
+	    while (true) {
+	        List<WebElement> deleteBtns = driver.findElements(By.xpath("//div[@title='Delete']"));
+
+	        if (deleteBtns.isEmpty()) {
+	            System.out.println("✅ No more products to delete.");
+	            break;
+	        }
+
+	        for (WebElement deleteBtn : deleteBtns) {
+	            try {
+	                // Scroll the element into view slightly above the button to avoid sticky header
+	                ((JavascriptExecutor) driver).executeScript(
+	                        "arguments[0].scrollIntoView({block:'center', inline:'center'});", deleteBtn);
+
+	                // Use JavaScript click to bypass interception
+	                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", deleteBtn);
+
+	                System.out.println("🗑️ Product deleted");
+	                Common.waitForElement(1);
+
+	            } catch (StaleElementReferenceException | ElementClickInterceptedException e) {
+	                System.out.println("⚠️ Delete button not clickable, retrying...");
+	                break; // Exit for-loop to refresh list
+	            }
+	        }
+	    }
+
+	    // Final confirmation
+	    try {
+	        if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	            System.out.println("🛍️ Cart is empty, Continue Shopping displayed.");
+	        }
+	    } catch (NoSuchElementException e) {
+	        System.out.println("ℹ️ Bag is not empty message not found.");
+	    }
+	}
 	
 	
 	

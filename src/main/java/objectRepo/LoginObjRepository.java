@@ -25,7 +25,7 @@ public abstract class LoginObjRepository extends BasePage {
 //	protected WebElement profile;
 	
 	
-	@FindBy(xpath = "//div[contains(@class,'account_icon_btn') and @title='User Icon']")
+	@FindBy(xpath = "//button[contains(@class,'account_icon_btn')]")
 	protected WebElement profile;
 	
 	@FindBy(id = "userNumber")

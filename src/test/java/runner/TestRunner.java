@@ -16,7 +16,8 @@ features = {"src/test/resources/features"},
 glue = "stepDef",	
 monochrome = true,	
 dryRun = false,
-tags="@TC_UI_Zlaata_PDP_19"
+tags="@Sanity"
+
 
 )
 
@@ -29,6 +30,7 @@ public class TestRunner {
         System.setProperty("webdriver.chrome.logfile", "NUL");
         System.setProperty("webdriver.chrome.verboseLogging", "false");
 	}
+	
 
 
         

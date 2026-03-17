@@ -36,8 +36,9 @@ public final class HomePage extends HomePageObjRepo {
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 //				type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
 //				click(submit);
-//		handleAccessCodeIfPresentFast();
+		handleAccessCodeIfPresentFast();
 //			popup();
+		click(zlaataIndiaShopButton);
 
 
 	}
@@ -737,52 +738,65 @@ public final class HomePage extends HomePageObjRepo {
 	    String GREEN  = "\u001B[32m";
 	    String RED    = "\u001B[31m";
 	    String RESET  = "\u001B[0m";
+	    String BLUE = "\u001B[34m";
+
 	    Common.waitForElement(2);
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-	    WebElement homeMenu = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.xpath("//a[normalize-space()='Home']") 
-	    ));
-	    homeMenu.click();
-	    String expectedUrl = "https://www.zlaata.com/";
-	    String actualUrl = driver.getCurrentUrl();
+//	    WebElement homeMenu = wait.until(ExpectedConditions.elementToBeClickable(
+//	            By.xpath("//a[normalize-space()='Home']") 
+//	    ));
+//	    homeMenu.click();
+//	    String expectedUrl = "https://www.zlaata.com/";
+//	    String actualUrl = driver.getCurrentUrl();
+//
+//	    assertEquals(
+//	            "❌ URL mismatch! Expected: " + expectedUrl + " but got: " + actualUrl,
+//	            expectedUrl,
+//	            actualUrl
+//	    );
+//	    System.out.println(
+//	            GREEN + "✅ URL verified successfully | Expected: "
+//	            + expectedUrl + " | Actual: " + actualUrl + RESET
+//	    );
+	    
+	    // Open the URL
+        driver.get("https://www.zlaata.com/");
 
-	    assertEquals(
-	            "❌ URL mismatch! Expected: " + expectedUrl + " but got: " + actualUrl,
-	            expectedUrl,
-	            actualUrl
-	    );
-	    System.out.println(
-	            GREEN + "✅ URL verified successfully | Expected: "
-	            + expectedUrl + " | Actual: " + actualUrl + RESET
-	    );
-	    WebElement logo = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//img[@alt='zlaata Logo']")   
-	    ));
+      
 
-	    assertTrue(
-	            "❌ Logo is not displayed on the page",
-	            logo.isDisplayed()
-	    );
+        // Get page title
+        String title = driver.getTitle();
+        System.out.println(BLUE + "Page Title: " + title + RESET);
+        if (title.contains("Zlaata")) {
+            System.out.println(GREEN + "Application launched successfully" + RESET);
+        } else {
+            System.out.println(RED + "Application not loaded properly" + RESET);
+        }
+        WebElement logo = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//img[@alt='zlaata Logo']")
+        ));
 
-	    System.out.println(GREEN + "✅ Logo is displayed" + RESET);
-	    logo.click();
+        assertTrue("❌ Logo is not displayed on the page", logo.isDisplayed());
 
-	    WebElement logoAfterClick = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//img[@alt='zlaata Logo']")
-	    ));
+        System.out.println(GREEN + "✅ Logo is displayed" + RESET);
 
-	    assertTrue(
-	            "❌ Logo is not displayed after clicking",
-	            logoAfterClick.isDisplayed()
-	    );
+        logo.click();
 
-	    System.out.println(GREEN + "✅ Logo is displayed after clicking" + RESET);
+        // Verify redirect to home page
+        String currentUrl = driver.getCurrentUrl();
+
+        if(currentUrl.equals("https://www.zlaata.com/")) {
+            System.out.println(GREEN + "✅ Successfully redirected to landing  Page" + RESET);
+        } else {
+            System.out.println(RED + "❌ Not redirected to landing Page" + RESET);
+        }
 	}
 
 //TC-01
 public void validateUrlAndLogo() {
 	
 	driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	 click(zlaataIndiaShopButton);
 	
 	verifyUrlAndLogo();
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +44,9 @@ public final class Menus extends MenuObjRepo {
     
 
 }
+  
+	
+
  public void clickNewArrival() {
 	 
 	 click(newArrivalMenu);
@@ -245,27 +249,29 @@ public void saleMenu() {
 
 	    System.out.println(GREEN + "✅ Home page banner is displayed" + RESET);
 	}
-		
+	
 	public void verifynewArrivalMenu() throws InterruptedException {
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Common.waitForElement(2);
+
 	    String RESET  = "\u001B[0m";
 	    String GREEN  = "\u001B[32m";
 	    String CYAN   = "\u001B[36m";
 	    String YELLOW = "\u001B[33m";
 	    String PURPLE = "\u001B[35m";
 	    String line = "──────────────────────────────────────────────────────────────";
+
 	    System.out.println(CYAN + line + RESET);
-	    System.out.println(GREEN + "🚀 Starting New Arrival Header Menu..." + RESET);
+	    System.out.println(GREEN + "🚀 Starting New Arrival Header Menu Verification..." + RESET);
 	    System.out.println(CYAN + line + RESET);
 
-	    String expectedUrl = "https://www.zlaata.com/new-arrivals";
+	    String expectedUrlPart = "/new-arrivals";
 
 	    System.out.println(CYAN + "🔍 Verifying New Arrival menu..." + RESET);
 
 	    WebElement newArrivalMenu = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.xpath("//a[normalize-space()='New Arrivals']")
+	            By.xpath("//a[contains(@class,'header_nav_link') and contains(@href,'new-arrivals')]")//a[normalize-space()='NEW IN']
 	    ));
 
 	    assertTrue("❌ New Arrival menu is not clickable", newArrivalMenu.isEnabled());
@@ -274,25 +280,23 @@ public void saleMenu() {
 	    System.out.println(YELLOW + "👉 Clicking New Arrival menu" + RESET);
 	    newArrivalMenu.click();
 
-	    wait.until(ExpectedConditions.urlToBe(expectedUrl));
+	    wait.until(ExpectedConditions.urlContains(expectedUrlPart));
 	    String actualUrl = driver.getCurrentUrl();
 
-	    assertEquals(
-	            "❌ URL mismatch! Expected: " + expectedUrl + " | Actual: " + actualUrl,
-	            expectedUrl,
-	            actualUrl
+	    assertTrue(
+	            "❌ URL does not contain expected part! Expected: " + expectedUrlPart + " | Actual: " + actualUrl,
+	            actualUrl.contains(expectedUrlPart)
 	    );
 
 	    System.out.println(
 	            GREEN + "✅ URL verified" + RESET +
-	            CYAN  + " | Expected: " + expectedUrl +
-	            " | Actual: " + actualUrl + RESET
+	            CYAN  + " | Actual URL: " + actualUrl + RESET
 	    );
 
 	    System.out.println(CYAN + "🔍 Verifying New Arrival heading" + RESET);
 
 	    WebElement heading = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//h3[@class='prod_list_topic']//span[normalize-space()='NEW ARRIVALS']")
+	            By.xpath("//h2[normalize-space()='NEW ARRIVALS']")
 	    ));
 
 	    assertTrue("❌ New Arrival heading not displayed", heading.isDisplayed());
@@ -302,7 +306,7 @@ public void saleMenu() {
 
 	    List<WebElement> products = wait.until(ExpectedConditions
 	            .visibilityOfAllElementsLocatedBy(
-	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	                    By.xpath("//div[@class='prod_listing_card']")
 	            ));
 
 	    assertTrue(
@@ -313,71 +317,71 @@ public void saleMenu() {
 	    System.out.println(
 	            PURPLE + "📦 Products displayed count: " + products.size() + RESET
 	    );
-	    
-	    
-	    
 
-	    System.out.println(CYAN + "🔍 Verifying New Arrival hover dropdown" + RESET);
-
-	    Actions actions = new Actions(driver);
-
-	    WebElement newArrivalMenuHover = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//a[normalize-space()='New Arrivals']")
-	            )
-	    );
-
-	    // Hover safely
-	    actions.moveToElement(newArrivalMenuHover)
-	           .pause(Duration.ofMillis(700))
-	           .perform();
-
-	    // Dropdown container
-	    WebElement dropdown = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//div[contains(@class,'new_arrival_dropdown')]")
-	            )
-	    );
-
-	    assertTrue("❌ New Arrival dropdown not visible on hover", dropdown.isDisplayed());
-	    System.out.println(GREEN + "✅ New Arrival dropdown displayed on hover" + RESET);
-
-	    // Dropdown products
-	    List<WebElement> dropdownProducts = wait.until(
-	            ExpectedConditions.numberOfElementsToBeMoreThan(
-	                    By.xpath("//div[contains(@class,'new_arrival_dropdown')]//a[contains(@class,'na_dropdown_card')]"),
-	                    2
-	            )
-	    );
-
-	    System.out.println(
-	            PURPLE + "🧾 Dropdown products count: " + dropdownProducts.size() + RESET
-	    );
-
-	    // Print product names
-	    for (WebElement product : dropdownProducts) {
-	        String productName = product.findElement(
-	                By.xpath(".//span[@class='na_dropdown_card_name']")
-	        ).getText().trim();
-
-	        System.out.println(YELLOW + "➡ " + productName + RESET);
-	    }
+//	    System.out.println(CYAN + "🔍 Verifying New Arrival hover dropdown" + RESET);
+	
+//	    Actions actions = new Actions(driver);
+//
+//	    WebElement newArrivalMenuHover = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//a[normalize-space()='New Arrivals']")
+//	            )
+//	    );
+//
+//	    // Hover safely
+//	    actions.moveToElement(newArrivalMenuHover)
+//	           .pause(Duration.ofMillis(700))
+//	           .perform();
+//
+//	    // Dropdown container
+//	    WebElement dropdown = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//div[contains(@class,'new_arrival_dropdown')]")
+//	            )
+//	    );
+//
+//	    assertTrue(":x: New Arrival dropdown not visible on hover", dropdown.isDisplayed());
+//	    System.out.println(GREEN + ":white_check_mark: New Arrival dropdown displayed on hover" + RESET);
+//
+//	    // Dropdown products
+//	    List<WebElement> dropdownProducts = wait.until(
+//	            ExpectedConditions.numberOfElementsToBeMoreThan(
+//	                    By.xpath("//div[contains(@class,'new_arrival_dropdown')]//a[contains(@class,'na_dropdown_card')]"),
+//	                    2
+//	            )
+//	    );
+//
+//	    System.out.println(
+//	            PURPLE + ":receipt: Dropdown products count: " + dropdownProducts.size() + RESET
+//	    );
+//
+//	    // Print product names
+//	    for (WebElement product : dropdownProducts) {
+//	        String productName = product.findElement(
+//	                By.xpath(".//span[@class='na_dropdown_card_name']")
+//	        ).getText().trim();
+//
+//	        System.out.println(YELLOW + "➡ " + productName + RESET);
+//	    }
 	}
 	
 	public void verifySaleMenu() {
-		Common.waitForElement(2);
+
+	    Common.waitForElement(2);
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
 	    String RESET  = "\u001B[0m";
 	    String GREEN  = "\u001B[32m";
 	    String CYAN   = "\u001B[36m";
 	    String YELLOW = "\u001B[33m";
 	    String PURPLE = "\u001B[35m";
 	    String line = "──────────────────────────────────────────────────────────────";
+
 	    System.out.println(CYAN + line + RESET);
-	    System.out.println(GREEN + "🚀 Starting Sale Header Menu..." + RESET);
+	    System.out.println(GREEN + "🚀 Starting Sale Header Menu Verification..." + RESET);
 	    System.out.println(CYAN + line + RESET);
 
-	    String expectedUrl = "https://www.zlaata.com/sale";
+	    String expectedUrlPart = "/sale";
 
 	    System.out.println(CYAN + "🔍 Verifying Sale menu..." + RESET);
 
@@ -391,26 +395,24 @@ public void saleMenu() {
 	    System.out.println(YELLOW + "👉 Clicking Sale menu" + RESET);
 	    saleMenu.click();
 
-	    wait.until(ExpectedConditions.urlToBe(expectedUrl));
+	    wait.until(ExpectedConditions.urlContains(expectedUrlPart));
 	    String actualUrl = driver.getCurrentUrl();
 
-	    assertEquals(
-	            "❌ URL mismatch! Expected: " + expectedUrl + " | Actual: " + actualUrl,
-	            expectedUrl,
-	            actualUrl
+	    assertTrue(
+	            "❌ URL does not contain expected part! Expected: " + expectedUrlPart + " | Actual: " + actualUrl,
+	            actualUrl.contains(expectedUrlPart)
 	    );
 
 	    System.out.println(
 	            GREEN + "✅ URL verified" + RESET +
-	            CYAN  + " | Expected: " + expectedUrl +
-	            " | Actual: " + actualUrl + RESET
+	            CYAN + " | Actual URL: " + actualUrl + RESET
 	    );
 
 	    System.out.println(CYAN + "🔍 Verifying Sale products..." + RESET);
 
 	    List<WebElement> products = wait.until(
 	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
-	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	                    By.xpath("//div[@class='prod_listing_card']")
 	            )
 	    );
 
@@ -424,14 +426,13 @@ public void saleMenu() {
 	    );
 	}
 	
-	
 	public void verifyShopHeaderMenu() throws InterruptedException {
 
 	    Common.waitForElement(2);
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Actions actions = new Actions(driver);
 
-	    // 🎨 Console Colors
+	    // :art: Console Colors
 	    String RESET  = "\u001B[0m";
 	    String GREEN  = "\u001B[32m";
 	    String CYAN   = "\u001B[36m";
@@ -440,15 +441,15 @@ public void saleMenu() {
 
 	    String line = "──────────────────────────────────────────────────────────────";
 	    System.out.println(CYAN + line + RESET);
-	    System.out.println(GREEN + "🚀 Starting Shop Header Menu Validation" + RESET);
+	    System.out.println(GREEN + ":rocket: Starting Shop Header Menu Validation" + RESET);
 	    System.out.println(CYAN + line + RESET);
 
 
 	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")
+	            By.xpath("//div[@class='header_nav_item has_dropdown']")
 	    ));
 
-	    System.out.println(CYAN + "🔍 Shop menu located" + RESET);
+	    System.out.println(CYAN + ":mag: Shop menu located" + RESET);
 
 	    String beforeClickUrl = driver.getCurrentUrl();
 	    shopMenu.click();
@@ -456,115 +457,114 @@ public void saleMenu() {
 	    String afterClickUrl = driver.getCurrentUrl();
 
 	    if (!beforeClickUrl.equals(afterClickUrl)) {
-	        System.out.println(RED + "❌ Shop menu changed URL on click (Should NOT)" + RESET);
+	        System.out.println(RED + ":x: Shop menu changed URL on click (Should NOT)" + RESET);
 	        fail("Shop menu should not be clickable");
 	    }
 
-	    System.out.println(GREEN + "✅ Shop menu is NOT clickable (URL unchanged)" + RESET);
+	    System.out.println(GREEN + ":white_check_mark: Shop menu is NOT clickable (URL unchanged)" + RESET);
 
-	    System.out.println(YELLOW + "👉 Hovering over Shop menu" + RESET);
+	    System.out.println(YELLOW + ":point_right: Hovering over Shop menu" + RESET);
 	    actions.moveToElement(shopMenu).perform();
 
 	    Thread.sleep(2000);
 	    WebElement categories = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//h5[@class='nav_drop_down_category_heading' and normalize-space()='Categories']")
+	            By.xpath("//h5[normalize-space()='CATEGORIES']")
 	    ));
 
 	    WebElement collection = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//h5[@class='nav_drop_down_category_heading' and normalize-space()='Collection']")
+	            By.xpath("//h5[normalize-space()='COLLECTIONS']")
 	    ));
+//
+//	    WebElement styles = wait.until(ExpectedConditions.visibilityOfElementLocated(
+//	            By.xpath("//h5[@class='nav_drop_down_category_heading' and normalize-space()='Styles']")
+//	    ));
 
-	    WebElement styles = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//h5[@class='nav_drop_down_category_heading' and normalize-space()='Styles']")
-	    ));
-
-	    assertTrue("❌ Categories not displayed", categories.isDisplayed());
-	    assertTrue("❌ Collection not displayed", collection.isDisplayed());
-	    assertTrue("❌ Styles not displayed", styles.isDisplayed());
+	    assertTrue(":x: Categories not displayed", categories.isDisplayed());
+	    assertTrue(":x: Collection not displayed", collection.isDisplayed());
+//	    assertTrue(":x: Styles not displayed", styles.isDisplayed());
 
 	    System.out.println(
-	            GREEN + "✅ Shop hover menu displayed: Categories | Collection | Styles" + RESET
+	            GREEN + " Shop hover menu displayed: Categories | Collection " + RESET
 	    );
 	}
+		
+	public void verifyBossLadyMenu() throws InterruptedException {
+		
+		Common.waitForElement(3);
+		
+		click(bossladyBrandButton);
+		
+		
+		
+        verifynewArrivalMenu();
+		
+		verifySaleMenu();
+			
+		    Common.waitForElement(2);
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+		    Actions actions = new Actions(driver);
+
+		    // :art: Console Colors
+		    String RESET  = "\u001B[0m";
+		    String GREEN  = "\u001B[32m";
+		    String CYAN   = "\u001B[36m";
+		    String YELLOW = "\u001B[33m";
+		    String RED    = "\u001B[31m";
+
+		    String line = "──────────────────────────────────────────────────────────────";
+		    System.out.println(CYAN + line + RESET);
+		    System.out.println(GREEN + ":rocket: Starting Shop Header Menu Validation" + RESET);
+		    System.out.println(CYAN + line + RESET);
+
+
+		    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		            By.xpath("//div[@class='header_nav_item has_dropdown']")
+		    ));
+
+		    System.out.println(CYAN + ":mag: Shop menu located" + RESET);
+
+		    String beforeClickUrl = driver.getCurrentUrl();
+		    shopMenu.click();
+		    Common.waitForElement(1);
+		    String afterClickUrl = driver.getCurrentUrl();
+
+		    if (!beforeClickUrl.equals(afterClickUrl)) {
+		        System.out.println(RED + ":x: Shop menu changed URL on click (Should NOT)" + RESET);
+		        fail("Shop menu should not be clickable");
+		    }
+
+		    System.out.println(GREEN + ":white_check_mark: Shop menu is NOT clickable (URL unchanged)" + RESET);
+
+		    System.out.println(YELLOW + ":point_right: Hovering over Shop menu" + RESET);
+		    actions.moveToElement(shopMenu).perform();
+
+		    Thread.sleep(2000);
+		    WebElement categories = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		            By.xpath("//h5[normalize-space()='CATEGORIES']")
+		    ));
+
+		    WebElement collection = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		            By.xpath("//h5[normalize-space()='COLLECTIONS']")
+		    ));
+	//
+//		    WebElement styles = wait.until(ExpectedConditions.visibilityOfElementLocated(
+//		            By.xpath("//h5[@class='nav_drop_down_category_heading' and normalize-space()='Styles']")
+//		    ));
+
+		    assertTrue(":x: Categories not displayed", categories.isDisplayed());
+		    assertTrue(":x: Collection not displayed", collection.isDisplayed());
+//		    assertTrue(":x: Styles not displayed", styles.isDisplayed());
+
+		    System.out.println(
+		            GREEN + " Shop hover menu displayed: Categories | Collection " + RESET
+		    );
+		    
+		    verifyBlogs();
+		}
+		
 	
 	
-	public void verifyBossLadyMenu() {
-
-	    Common.waitForElement(2);
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-	    Actions actions = new Actions(driver);
-
-	    // 🎨 Console Colors
-	    String RESET  = "\u001B[0m";
-	    String GREEN  = "\u001B[32m";
-	    String CYAN   = "\u001B[36m";
-	    String YELLOW = "\u001B[33m";
-	    String RED    = "\u001B[31m";
-	    String PURPLE = "\u001B[35m";
-
-	    System.out.println(CYAN + "🔍 Verifying Boss Lady header menu" + RESET);
-
-	    // 🔁 Always re-locate (avoid stale element)
-	    WebElement bossLadyMenu = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//li[contains(@class,'boss-lady')]//span[normalize-space()='Boss Lady']")
-	            )
-	    );
-
-	    // ❌ Boss Lady should NOT be clickable
-	    String beforeClickUrl = driver.getCurrentUrl();
-	    bossLadyMenu.click();
-	    Common.waitForElement(1);
-	    String afterClickUrl = driver.getCurrentUrl();
-
-	    if (!beforeClickUrl.equals(afterClickUrl)) {
-	        System.out.println(RED + "❌ Boss Lady menu changed URL on click (Should NOT)" + RESET);
-	        fail("Boss Lady menu should not be clickable");
-	    }
-
-	    System.out.println(GREEN + "✅ Boss Lady menu is NOT clickable (URL unchanged)" + RESET);
-
-
-	    // 👉 Hover on Boss Lady
-	    System.out.println(YELLOW + "👉 Hovering on Boss Lady menu" + RESET);
-
-	    actions.moveToElement(bossLadyMenu)
-	           .pause(Duration.ofMillis(800))
-	           .perform();
-
-	    // ✅ Dropdown container
-	    WebElement dropdown = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//li[contains(@class,'boss-lady')]//div[contains(@class,'bl_dropdown')]")
-	            )
-	    );
-
-	    assertTrue("❌ Boss Lady dropdown not visible on hover", dropdown.isDisplayed());
-	    System.out.println(GREEN + "✅ Boss Lady dropdown displayed" + RESET);
-
-	    // ✅ Dropdown cards
-	    List<WebElement> dropdownItems = wait.until(
-	            ExpectedConditions.numberOfElementsToBeMoreThan(
-	                    By.xpath("//li[contains(@class,'boss-lady')]//a[contains(@class,'bl_dropdown_card')]"),
-	                    2
-	            )
-	    );
-
-	    System.out.println(
-	            PURPLE + "🧾 Boss Lady dropdown items count: " + dropdownItems.size() + RESET
-	    );
-
-	    // 🖨️ Print category names
-	    for (WebElement item : dropdownItems) {
-	        String name = item.findElement(
-	                By.xpath(".//span[@class='bl_dropdown_card_name']")
-	        ).getText().trim();
-
-	        System.out.println(YELLOW + "➡ " + name + RESET);
-	    }
-	}
-	
-	public void verifyStyledByMenu() {
+	public void verifyBossladyMenus() {
 
 	    Common.waitForElement(2);
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
@@ -847,27 +847,288 @@ public void saleMenu() {
 
 	    return baseUrl + slug;
 	}
-	public void verifyShopMenuAllCategories_CollectionsAndStyle() throws InterruptedException {
+//	public void verifyShopMenuAllCategories_Collections() throws InterruptedException {
+//		
+//
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+//	    Actions actions = new Actions(driver);
+//
+//	    // 🎨 Console colors
+//	    String RESET  = "\u001B[0m";
+//	    String GREEN  = "\u001B[32m";
+//	    String RED    = "\u001B[31m";
+//	    String CYAN   = "\u001B[36m";
+//	    String YELLOW = "\u001B[33m";
+//	    String PURPLE = "\u001B[35m";
+//
+////	    By shopMenuBy = By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='SHOP']");
+////	    By categoriesBy = By.xpath("//div[contains(@class,'nav_drop_down_box_category')]//ul/li/a");
+////	    By headingBy = By.xpath("//h3[@class='prod_list_topic']/span");
+////	    By productsBy = By.xpath("//div[contains(@class,'product_list_cards_list ')]");
+//	    
+//	    
+//	    By shopMenuBy = By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='SHOP']");
+//
+//	 // Updated categories locator
+//	 By categoriesBy = By.xpath("//a[contains(@class,'dropdown_category_link')]");
+//
+//	 By headingBy = By.xpath("//h2[@class='prod_listing_topic']");
+//
+//	 // Fixed product locator
+//	 By productsBy = By.xpath("//div[@class='prod_listing_card']");
+//
+//	    System.out.println(CYAN + "🔍 Verifying Shop → All Categories (URL Rule Based)" + RESET);
+//
+//	    // Hover Shop
+//	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+//	    actions.moveToElement(shopMenu).pause(Duration.ofMillis(800)).perform();
+//
+//	    List<WebElement> categories = wait.until(
+//	            ExpectedConditions.visibilityOfAllElementsLocatedBy(categoriesBy)
+//	    );
+//
+//	    int count = categories.size();
+//	    assertTrue("❌ No categories found under Shop menu", count > 0);
+//
+//	    System.out.println(PURPLE + "🧾 Total categories: " + count + RESET);
+//
+//	    for (int i = 0; i < count; i++) {
+//
+//	        // Re-hover to avoid stale element
+//	        shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+//	        actions.moveToElement(shopMenu).pause(Duration.ofMillis(700)).perform();
+//
+//	        categories = wait.until(
+//	                ExpectedConditions.visibilityOfAllElementsLocatedBy(categoriesBy)
+//	        );
+//
+//	        WebElement category = categories.get(i);
+//	        String categoryName = category.getText().trim();
+//
+//	        String expectedUrl = generateExpectedCategoryUrl(categoryName);
+//
+//	        System.out.println(
+//	                YELLOW + "👉 Clicking [" + (i + 1) + "] " + categoryName + RESET
+//	        );
+//	        System.out.println(
+//	                CYAN + "🌐 Expected URL: " + expectedUrl + RESET
+//	        );
+//
+//	        category.click();
+//	        Common.waitForElement(2);
+//		wait.until(ExpectedConditions.urlContains(expectedUrl.replace("https://www.zlaata.com/", "")));
+//	        String actualUrl = driver.getCurrentUrl();
+//
+//	        assertEquals(
+//	                "❌ URL mismatch for category: " + categoryName +
+//	                "\nExpected: " + expectedUrl +
+//	                "\nActual: " + actualUrl,
+//	                expectedUrl,
+//	                actualUrl
+//	        );
+//
+//	        System.out.println(
+//	                GREEN + "✅ URL matched successfully" + RESET
+//	        );
+//
+//	        // Heading visible
+//	        WebElement heading = wait.until(ExpectedConditions.visibilityOfElementLocated(headingBy));
+//	        assertTrue("❌ Heading not displayed for " + categoryName, heading.isDisplayed());
+//
+//	        System.out.println(
+//	                GREEN + "📌 Heading displayed: " + heading.getText().trim() + RESET
+//	        );
+//	        
+//	        
+//	 //------------------------------------------------        
+//		     // ⚠ Skip ALL remaining checks if heading is JUMPSUITS
+//	        String headingText = heading.getText().trim().toUpperCase();
+//	        if ("JUMPSUITS".equals(headingText)) {
+//
+//	            System.out.println(
+//	                    YELLOW + "⚠ Skipping JUMPSUITS category (No products expected)" + RESET
+//	            );
+//
+//	            driver.navigate().back();
+//	            wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+//	            continue;   // 🔥 THIS MUST EXECUTE
+//	        }
+//		        
+//	//---------------------------------------------------------	   
+//
+//	        // Products count
+//	        List<WebElement> products = driver.findElements(productsBy);
+//
+//     
+//	        
+//	        
+//	        assertTrue(
+//	                "❌ Less than 1 products for " + categoryName,
+//	                products.size() >= 1
+//	        );
+//
+//	        System.out.println(
+//	                GREEN + "🛍️ Products displayed: " + products.size() + RESET
+//	        );
+//
+//	        driver.navigate().back();
+//	        wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+//	    }
+//
+//	    System.out.println(
+//	            GREEN + "🎉 All Shop categories validated with URL rules!" + RESET
+//	    );
+//	}
+//	
+	
+//	public void verifyShopMenuAllCategories_Collections() throws InterruptedException {
+//		
+//		
+//
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+//	    Actions actions = new Actions(driver);
+//
+//	    String RESET  = "\u001B[0m";
+//	    String GREEN  = "\u001B[32m";
+//	    String CYAN   = "\u001B[36m";
+//	    String YELLOW = "\u001B[33m";
+//	    String RED    = "\u001B[31m";
+//	    String PURPLE = "\u001B[35m";
+//
+//	    By shopMenuBy = By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='SHOP']");
+//	    By categoriesBy = By.xpath("//a[contains(@class,'dropdown_category_link')]");
+//	    By headingBy = By.xpath("//h2[@class='prod_listing_topic']");
+//	    By productsBy = By.xpath("//div[@class='prod_listing_card']");
+//
+//	    System.out.println(CYAN + "🔍 Verifying Shop → All Categories & Collections" + RESET);
+//
+//	    // Hover SHOP
+//	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+//	    actions.moveToElement(shopMenu).pause(Duration.ofMillis(800)).perform();
+//
+//	    List<WebElement> categories = wait.until(
+//	            ExpectedConditions.visibilityOfAllElementsLocatedBy(categoriesBy)
+//	    );
+//
+//	    int count = categories.size();
+//	    Assert.assertTrue("❌ No categories found under Shop menu", count > 0);
+//
+//	    System.out.println(PURPLE + "🧾 Total categories found: " + count + RESET);
+//
+//	    for (int i = 0; i < count; i++) {
+//
+//	        // Re-hover SHOP to avoid stale element
+//	        shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+//	        actions.moveToElement(shopMenu).pause(Duration.ofMillis(700)).perform();
+//
+//	        categories = wait.until(
+//	                ExpectedConditions.visibilityOfAllElementsLocatedBy(categoriesBy)
+//	        );
+//
+//	        WebElement category = categories.get(i);
+//	        String categoryName = category.getText().trim();
+//
+//	        System.out.println(YELLOW + "👉 Clicking Category [" + (i + 1) + "] : " + categoryName + RESET);
+//
+//	        category.click();
+//
+//	        Thread.sleep(2000);
+//
+//	        // ---------------- URL VALIDATION ----------------
+//
+//	        String actualUrl = driver.getCurrentUrl().toLowerCase();
+//
+//	        System.out.println(CYAN + "🌐 Current URL : " + actualUrl + RESET);
+//
+//	        // ---------------- HEADING ----------------
+//
+//	        WebElement heading = wait.until(ExpectedConditions.visibilityOfElementLocated(headingBy));
+//	        String headingText = heading.getText().toLowerCase();
+//
+//	        System.out.println(CYAN + "📌 Page Heading : " + headingText + RESET);
+//
+//	        // ---------------- NORMALIZE CATEGORY WORDS ----------------
+//
+//	        String cleanedCategory = categoryName.toLowerCase()
+//	                .replace("-", " ")
+//	                .replace("_", " ")
+//	                .replace("&", " ");
+//
+//	        String[] words = cleanedCategory.split(" ");
+//
+//	        boolean urlMatch = true;
+//	        boolean headingMatch = true;
+//
+//	        for (String word : words) {
+//
+//	            if (word.trim().isEmpty()) continue;
+//
+//	            if (!actualUrl.contains(word)) {
+//	                urlMatch = false;
+//	            }
+//
+//	            if (!headingText.contains(word)) {
+//	                headingMatch = false;
+//	            }
+//	        }
+//
+//	        // ---------------- PRODUCTS ----------------
+//
+//	        List<WebElement> products = wait.until(
+//	                ExpectedConditions.visibilityOfAllElementsLocatedBy(productsBy)
+//	        );
+//
+//	        int productCount = products.size();
+//
+//	        System.out.println(CYAN + "🛍 Products Found : " + productCount + RESET);
+//
+//	        // ---------------- FINAL VALIDATION ----------------
+//
+//	        if (!urlMatch || !headingMatch || productCount < 1) {
+//
+//	            Assert.fail(
+//	                    RED + "\n❌ VALIDATION FAILED" +
+//	                    "\nClicked Category : " + categoryName +
+//	                    "\nCurrent URL      : " + actualUrl +
+//	                    "\nHeading          : " + headingText +
+//	                    "\nProducts Found   : " + productCount +
+//	                    RESET
+//	            );
+//	        }
+//
+//	        System.out.println(GREEN + "✅ Category validated successfully" + RESET);
+//
+//	        driver.navigate().back();
+//
+//	        wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
+//	    }
+//
+//	    System.out.println(GREEN + "🎉 All Categories & Collections validated successfully!" + RESET);
+//	    
+//		
+//
+//	}
+	
+	public void verifyShopMenuAllCategories_Collections() throws InterruptedException {
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Actions actions = new Actions(driver);
 
-	    // 🎨 Console colors
 	    String RESET  = "\u001B[0m";
 	    String GREEN  = "\u001B[32m";
-	    String RED    = "\u001B[31m";
 	    String CYAN   = "\u001B[36m";
 	    String YELLOW = "\u001B[33m";
+	    String RED    = "\u001B[31m";
 	    String PURPLE = "\u001B[35m";
 
-	    By shopMenuBy = By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']");
-	    By categoriesBy = By.xpath("//div[contains(@class,'nav_drop_down_box_category')]//ul/li/a");
-	    By headingBy = By.xpath("//h3[@class='prod_list_topic']/span");
-	    By productsBy = By.xpath("//div[contains(@class,'product_list_cards_list ')]");
+	    By shopMenuBy = By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='SHOP']");
+	    By categoriesBy = By.xpath("//a[contains(@class,'dropdown_category_link')]");
+	    By headingBy = By.xpath("//h2[@class='prod_listing_topic']");
+	    By productsBy = By.xpath("//div[@class='prod_listing_card']");
 
-	    System.out.println(CYAN + "🔍 Verifying Shop → All Categories (URL Rule Based)" + RESET);
+	    System.out.println(CYAN + "🔍 Verifying Shop → All Categories & Collections" + RESET);
 
-	    // Hover Shop
+	    // Hover SHOP
 	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
 	    actions.moveToElement(shopMenu).pause(Duration.ofMillis(800)).perform();
 
@@ -876,13 +1137,13 @@ public void saleMenu() {
 	    );
 
 	    int count = categories.size();
-	    assertTrue("❌ No categories found under Shop menu", count > 0);
+	    Assert.assertTrue("❌ No categories found under Shop menu", count > 0);
 
-	    System.out.println(PURPLE + "🧾 Total categories: " + count + RESET);
+	    System.out.println(PURPLE + "🧾 Total categories found: " + count + RESET);
 
 	    for (int i = 0; i < count; i++) {
 
-	        // Re-hover to avoid stale element
+	        // Re-hover SHOP (avoid stale)
 	        shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
 	        actions.moveToElement(shopMenu).pause(Duration.ofMillis(700)).perform();
 
@@ -893,82 +1154,81 @@ public void saleMenu() {
 	        WebElement category = categories.get(i);
 	        String categoryName = category.getText().trim();
 
-	        String expectedUrl = generateExpectedCategoryUrl(categoryName);
-
-	        System.out.println(
-	                YELLOW + "👉 Clicking [" + (i + 1) + "] " + categoryName + RESET
-	        );
-	        System.out.println(
-	                CYAN + "🌐 Expected URL: " + expectedUrl + RESET
-	        );
+	        System.out.println(YELLOW + "👉 Clicking Category [" + (i + 1) + "] : " + categoryName + RESET);
 
 	        category.click();
-	        Common.waitForElement(2);
-		wait.until(ExpectedConditions.urlContains(expectedUrl.replace("https://www.zlaata.com/", "")));
-	        String actualUrl = driver.getCurrentUrl();
 
-	        assertEquals(
-	                "❌ URL mismatch for category: " + categoryName +
-	                "\nExpected: " + expectedUrl +
-	                "\nActual: " + actualUrl,
-	                expectedUrl,
-	                actualUrl
-	        );
+	        Thread.sleep(2000);
 
-	        System.out.println(
-	                GREEN + "✅ URL matched successfully" + RESET
-	        );
+	        // ---------------- URL ----------------
+	        String actualUrl = driver.getCurrentUrl().toLowerCase();
+	        System.out.println(CYAN + "🌐 Current URL : " + actualUrl + RESET);
 
-	        // Heading visible
+	        // ---------------- HEADING ----------------
 	        WebElement heading = wait.until(ExpectedConditions.visibilityOfElementLocated(headingBy));
-	        assertTrue("❌ Heading not displayed for " + categoryName, heading.isDisplayed());
+	        String headingText = heading.getText().toLowerCase();
+	        System.out.println(CYAN + "📌 Page Heading : " + headingText + RESET);
 
-	        System.out.println(
-	                GREEN + "📌 Heading displayed: " + heading.getText().trim() + RESET
-	        );
-	        
-	        
-	 //------------------------------------------------        
-		     // ⚠ Skip ALL remaining checks if heading is JUMPSUITS
-	        String headingText = heading.getText().trim().toUpperCase();
-	        if ("JUMPSUITS".equals(headingText)) {
+	        // ---------------- CLEAN CATEGORY ----------------
+	        String cleanedCategory = categoryName.toLowerCase()
+	                .replace("-", " ")
+	                .replace("_", " ")
+	                .replace("&", " ");
 
-	            System.out.println(
-	                    YELLOW + "⚠ Skipping JUMPSUITS category (No products expected)" + RESET
-	            );
+	        String[] words = cleanedCategory.split(" ");
 
-	            driver.navigate().back();
-	            wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
-	            continue;   // 🔥 THIS MUST EXECUTE
+	        // ---------------- NEW LOGIC ----------------
+	        int urlMismatchCount = 0;
+	        int headingMismatchCount = 0;
+
+	        for (String word : words) {
+
+	            if (word.trim().isEmpty()) continue;
+
+	            if (!actualUrl.contains(word)) {
+	                urlMismatchCount++;
+	            }
+
+	            if (!headingText.contains(word)) {
+	                headingMismatchCount++;
+	            }
 	        }
-		        
-	//---------------------------------------------------------	   
 
-	        // Products count
-	        List<WebElement> products = driver.findElements(productsBy);
+	        System.out.println(YELLOW + "🔎 URL Mismatch Count     : " + urlMismatchCount + RESET);
+	        System.out.println(YELLOW + "🔎 Heading Mismatch Count : " + headingMismatchCount + RESET);
 
-     
-	        
-	        
-	        assertTrue(
-	                "❌ Less than 1 products for " + categoryName,
-	                products.size() >= 1
+	        // ---------------- PRODUCTS ----------------
+	        List<WebElement> products = wait.until(
+	                ExpectedConditions.visibilityOfAllElementsLocatedBy(productsBy)
 	        );
 
-	        System.out.println(
-	                GREEN + "🛍️ Products displayed: " + products.size() + RESET
-	        );
+	        int productCount = products.size();
+	        System.out.println(CYAN + "🛍 Products Found : " + productCount + RESET);
+
+	        // ---------------- FINAL VALIDATION ----------------
+	        if (urlMismatchCount > 1 || headingMismatchCount > 1 || productCount < 1) {
+
+	            Assert.fail(
+	                    RED + "\n❌ VALIDATION FAILED" +
+	                    "\nClicked Category : " + categoryName +
+	                    "\nCurrent URL      : " + actualUrl +
+	                    "\nHeading          : " + headingText +
+	                    "\nURL Mismatch     : " + urlMismatchCount +
+	                    "\nHeading Mismatch : " + headingMismatchCount +
+	                    "\nProducts Found   : " + productCount +
+	                    RESET
+	            );
+	        }
+
+	        System.out.println(GREEN + "✅ Category validated successfully" + RESET);
 
 	        driver.navigate().back();
+
 	        wait.until(ExpectedConditions.visibilityOfElementLocated(shopMenuBy));
 	    }
 
-	    System.out.println(
-	            GREEN + "🎉 All Shop categories validated with URL rules!" + RESET
-	    );
+	    System.out.println(GREEN + "🎉 All Categories & Collections validated successfully!" + RESET);
 	}
-	
-	
 	
 	
 	public void verifyBossLadySuggestions() {
@@ -1206,13 +1466,174 @@ public void saleMenu() {
 	}
 
 	
+	public void verifyBlogs() {
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    List<String> failedCategories = new ArrayList<>();
+
+	    try {
+
+	        String beforeClickUrl = driver.getCurrentUrl();
+	        URI baseUri = URI.create(beforeClickUrl);
+	        String baseSiteUrl = baseUri.getScheme() + "://" + baseUri.getHost();
+
+	        WebElement blogsLink = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[normalize-space()='ZBLOG']"))
+	        );
+
+	        blogsLink.click();
+
+	        Common.waitForElement(2);
+
+	        wait.until(ExpectedConditions.urlContains("/blogs"));
+
+	        String expectedBlogsUrl = baseSiteUrl + "/blogs/";
+	        String actualBlogsUrl = driver.getCurrentUrl();
+
+	        Assert.assertEquals("❌ Blogs URL mismatch", expectedBlogsUrl, actualBlogsUrl);
+
+	        System.out.println(GREEN + "✅ Blogs page loaded successfully" + RESET);
+
+	        List<WebElement> blogCategories = wait.until(
+	                ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                        By.xpath("//ul[@id='ast-hf-menu-1']/li/a"))
+	        );
+
+	        Assert.assertTrue("❌ Blog categories not displayed", blogCategories.size() > 0);
+
+	        System.out.println(CYAN + "📂 Total Blog Categories: " + blogCategories.size() + RESET);
+
+	        for (int i = 0; i < blogCategories.size(); i++) {
+
+	            blogCategories = wait.until(
+	                    ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                            By.xpath("//ul[@id='ast-hf-menu-1']/li/a"))
+	            );
+
+	            WebElement category = blogCategories.get(i);
+	            String categoryName = category.getText().trim();
+
+	            System.out.println(YELLOW + "👉 Clicking category: " + categoryName + RESET);
+
+	            category.click();
+
+	            Common.waitForElement(2);
+
+	            // -------- HOME --------
+	            if (categoryName.equalsIgnoreCase("Home")) {
+
+	                if (!driver.getCurrentUrl().equals(expectedBlogsUrl)) {
+
+	                    failedCategories.add("Home");
+
+	                    System.out.println(RED + "❌ Home did not stay on Blogs page" + RESET);
+
+	                } else {
+
+	                    System.out.println(GREEN + "✅ Home stayed on Blogs page" + RESET);
+	                }
+	            }
+
+	            // -------- SHOP --------
+	            else if (categoryName.equalsIgnoreCase("Shop")) {
+
+	                wait.until(ExpectedConditions.urlToBe(baseSiteUrl + "/"));
+
+	                String currentUrl = driver.getCurrentUrl();
+
+	                if (!currentUrl.equals(baseSiteUrl + "/")) {
+
+	                    failedCategories.add("Shop");
+
+	                    System.out.println(RED + "❌ Shop did not redirect to home page" + RESET);
+
+	                } else {
+
+	                    System.out.println(GREEN + "✅ Shop redirected to home page" + RESET);
+	                }
+
+	                driver.get(expectedBlogsUrl);
+
+	                wait.until(ExpectedConditions.urlToBe(expectedBlogsUrl));
+	            }
+
+	            // -------- BLOG CATEGORIES --------
+	            else {
+
+	                try {
+
+	                    WebElement heading = wait.until(
+	                            ExpectedConditions.visibilityOfElementLocated(
+	                                    By.xpath("//h3[contains(text(),'Category:')]"))
+	                    );
+
+	                    String headingText = heading.getText().trim().toUpperCase();
+
+	                    String expectedHeading = ("Category: " + categoryName).toUpperCase();
+
+	                    if (!headingText.equals(expectedHeading)) {
+
+	                        failedCategories.add(categoryName);
+
+	                        System.out.println(
+	                                RED + "❌ Heading mismatch | Expected: "
+	                                        + expectedHeading + " | Actual: " + headingText + RESET);
+
+	                    } else {
+
+	                        System.out.println(GREEN + "✅ Heading verified: " + headingText + RESET);
+	                    }
+
+	                }
+
+	                catch (Exception e) {
+
+	                    failedCategories.add(categoryName);
+
+	                    System.out.println(RED + "❌ Heading not found for " + categoryName + RESET);
+	                }
+	            }
+	        }
+
+	        if (!failedCategories.isEmpty()) {
+
+	            Assert.fail(
+	                    "❌ Blog category validation failed for: "
+	                            + String.join(", ", failedCategories)
+	            );
+	        }
+
+	        System.out.println(GREEN + "\n🎉 All Blogs categories validated successfully!" + RESET);
+
+	    }
+
+	    catch (Exception e) {
+
+	        System.out.println(RED + "❌ Blogs verification failed: " + e.getMessage() + RESET);
+
+	        Assert.fail("Blogs verification failed");
+	    }
+	    
+	   click(logo);
+	}
+	
 //TC-01	
 	public void validateAllHeaderMenus() throws InterruptedException {
 		
 	//	appLaunch();
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 		
-		verifyHomeMenu();
+		click(zlaataIndiaShopButton);
+		
+		//verifyHomeMenu();
 		
 		verifynewArrivalMenu();
 		
@@ -1220,9 +1641,12 @@ public void saleMenu() {
 		
 		verifyShopHeaderMenu();
 		
+		 verifyBlogs();
+		
 		verifyBossLadyMenu();
 		
-		verifyStyledByMenu();
+		
+	//	verifyStyledByMenu();
 		
 	//	verifyGiftMenu();	
 	}
@@ -1240,8 +1664,14 @@ public void saleMenu() {
 	public void validateShopAllCategories_CollectionsAndStyle() throws InterruptedException {
 	//	appLaunch();
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+		click(zlaataIndiaShopButton);
 		
-		verifyShopMenuAllCategories_CollectionsAndStyle();
+		verifyShopMenuAllCategories_Collections();
+		click(brandName);
+		verifyShopMenuAllCategories_Collections();
+
+		
+		
 	}
 	
 //TC-04

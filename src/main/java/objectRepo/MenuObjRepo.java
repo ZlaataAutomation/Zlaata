@@ -72,11 +72,18 @@ public abstract class MenuObjRepo extends BasePage {
 	@FindBy(xpath = "//div[@class='navigation_menu_bar']//a[contains(text(),'Pop-shop')]")
 	protected WebElement popShop;
 	
+	@FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	   protected WebElement zlaataIndiaShopButton;
+
+	@FindBy(xpath = "//a[@href='/boss-lady/']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	protected WebElement bossladyBrandButton;
+	
+	@FindBy(xpath = "//img[@alt='Zlaata Blog']")
+	protected WebElement logo;
 	
 	
-	
-	
-	
+	@FindBy(xpath = "//a[normalize-space()='BOSS LADY']")
+	protected WebElement brandName;
 	
 
 

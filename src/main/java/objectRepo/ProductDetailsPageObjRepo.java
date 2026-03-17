@@ -13,14 +13,21 @@ import basePage.BasePage;
 public abstract class ProductDetailsPageObjRepo extends BasePage
 {
 
-	@FindBy(xpath = "//li[@class='navigation_menu_list nav_menu_dropdown shop']")
+	@FindBy(xpath = "//div[@class='header_nav_item has_dropdown']")
 	protected WebElement shopMenu;
 
-	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ALL')]")
+//	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ALL')]")
+//	protected WebElement category;
+	
+	@FindBy(xpath = "//a[normalize-space()='All']")
 	protected WebElement category;
+	
 
-	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DRESSES')]")
-	protected WebElement randomcategory;
+//	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DRESSES')]")
+//	protected WebElement randomcategory;
+	
+	@FindBy(xpath = "//a[normalize-space()='dresses']")
+	protected WebElement  randomcategory;
 	
 	@FindBy(xpath = "//h2[@class='product_list_cards_heading']")
 	protected  WebElement productListingName;
@@ -78,7 +85,7 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
 	@FindBy(xpath = "//div[@class='prod_color_drop_arrow Cls_prod_color_drop_arrow']")
 	protected WebElement colorDropDown;
 
-	@FindBy(xpath = "//span[@class='size_chart_link Cls_size_chart_link Cls_quickview_sizechart']")
+	@FindBy(xpath = "//a[@class='size_chart_link']")
 	protected WebElement sizeChart;
 
 	@FindBy(xpath = "//button[@class='sc_table_cm_btn bottom_section_btn sizeChartBtn']")
@@ -176,7 +183,7 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
 	@FindBy(xpath = "//div[@class='popup_containers_cls_btn Cls_quickview_cls_btn']")
 	protected WebElement closeTheQuickViewPopup;
 
-	@FindBy(xpath = "//div[@class='prod_describe_drop_arrow']")//list of WebElement
+	@FindBy(xpath = "//div[@class='prod_describe_drop_arrow']")//list of WebElement//div[@class='prod_describe_drop_arrow']
 	protected List <WebElement> clickAllDropDownArrow;
 
 	@FindBy(xpath = "//h5[normalize-space()='Return & Exchange']")
@@ -285,5 +292,9 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
    
    @FindBy(xpath = "//div[@class='snackbar-container  snackbar-pos top-right']")
    protected WebElement reviewSuccessMessage;
+   
+   @FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+   protected WebElement zlaataIndiaShopButton;
+
    
 }
