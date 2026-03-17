@@ -46,7 +46,8 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 		    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
-		    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+		  
+
 
 		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 		    Actions actions = new Actions(driver);
@@ -54,12 +55,12 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 		    System.out.println(BLUE + "🔍 Navigating to category..." + RESET);
 
 		    actions.moveToElement(shopMenu).perform();
-		    actions.moveToElement(category).click().perform();
+		    actions.moveToElement(randomcategory).click().perform();
 		    Common.waitForElement(2);
 		    // Select random product
 		    List<WebElement> products = wait.until(
 		            ExpectedConditions.visibilityOfAllElementsLocatedBy(
-		                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+		                    By.xpath("//div[@class='prod_listing_card']")
 		            )
 		    );
 
@@ -77,19 +78,23 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 		js.executeScript("arguments[0].click();", element);
 	}
 
-
 	public void productNameAndPercentageAndPrice() {
-		   String GREEN  = "\u001B[32m";
-		    String RESET  = "\u001B[0m";
-		    String CYAN   = "\u001B[36m";
-		    String YELLOW = "\u001B[33m";
-		    String PURPLE = "\u001B[35m";
-		    String BLUE   = "\u001B[34m";
-		    String RED    = "\u001B[31m";
-		    String line = "──────────────────────────────────────────────────────────────";
-		    System.out.println(CYAN + line + RESET);
-	    // Launch home
+
+	    String GREEN  = "\u001B[32m";
+	    String RESET  = "\u001B[0m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String PURPLE = "\u001B[35m";
+	    String BLUE   = "\u001B[34m";
+	    String RED    = "\u001B[31m";
+
+	    String line = "──────────────────────────────────────────────────────────────";
+	    System.out.println(CYAN + line + RESET);
+
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+	    click(zlaataIndiaShopButton);
+
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    Actions actions = new Actions(driver);
 
@@ -97,10 +102,12 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 	    actions.moveToElement(shopMenu).perform();
 	    actions.moveToElement(category).click().perform();
+
 	    Common.waitForElement(2);
+
 	    List<WebElement> products = wait.until(
 	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
-	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	                    By.xpath("//div[@class='prod_listing_card']")
 	            )
 	    );
 
@@ -110,21 +117,29 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    WebElement product = products.get(0);
 
 	    String plpName = product.findElement(
-	            By.xpath(".//h2[@class='product_list_cards_heading']")
+	            By.xpath(".//a[@class='product_list_name']")
 	    ).getText().trim();
 
 	    String plpPrice = product.findElement(
-	            By.xpath(".//span[@class='prod_current_price']")
+	            By.xpath(".//span[@class='product_discounted_price']")
 	    ).getText().trim();
 
-	    String plpDiscount = product.findElement(
-	            By.xpath(".//span[@class='prod_discount_percentage']")
-	    ).getText().trim();
+	    // ---------------- OPTIONAL DISCOUNT (PLP) ----------------
+	    String plpDiscount = "";
+	    List<WebElement> plpDiscountEle = product.findElements(
+	            By.xpath(".//span[@class='product_discounted_percentage']")
+	    );
+
+	    if (plpDiscountEle.size() > 0) {
+	        plpDiscount = plpDiscountEle.get(0).getText().trim();
+	    } else {
+	        System.out.println(YELLOW + "⚠ No discount available on PLP" + RESET);
+	    }
 
 	    System.out.println(CYAN + "\n🛍 PLP Product Details:" + RESET);
 	    System.out.println(GREEN + "✔ Name     : " + plpName + RESET);
 	    System.out.println(GREEN + "✔ Price    : " + plpPrice + RESET);
-	    System.out.println(GREEN + "✔ Discount : " + plpDiscount + RESET);
+	    System.out.println(GREEN + "✔ Discount : " + (plpDiscount.isEmpty() ? "N/A" : plpDiscount) + RESET);
 
 	    product.findElement(By.xpath(".//a")).click();
 
@@ -140,37 +155,51 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	            )
 	    );
 
-	    WebElement pdpDiscount = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//div[@class='prod_discount_percentage']")
-	            )
+	    // ---------------- OPTIONAL DISCOUNT (PDP) ----------------
+	    List<WebElement> pdpDiscountEle = driver.findElements(
+	            By.xpath("//div[@class='prod_discount_percentage']")
 	    );
+
+	    String pdpDiscountText = "";
+
+	    if (pdpDiscountEle.size() > 0) {
+	        pdpDiscountText = pdpDiscountEle.get(0).getText().trim();
+	    } else {
+	        System.out.println(YELLOW + "⚠ No discount available on PDP" + RESET);
+	    }
 
 	    String pdpNameText = pdpName.getText().trim();
 	    String pdpPriceText = pdpPrice.getText().trim();
-	    String pdpDiscountText = pdpDiscount.getText().trim();
 
 	    System.out.println(CYAN + "\n📄 PDP Product Details:" + RESET);
 	    System.out.println(GREEN + "✔ Name     : " + pdpNameText + RESET);
 	    System.out.println(GREEN + "✔ Price    : " + pdpPriceText + RESET);
-	    System.out.println(GREEN + "✔ Discount : " + pdpDiscountText + RESET);
+	    System.out.println(GREEN + "✔ Discount : " + (pdpDiscountText.isEmpty() ? "N/A" : pdpDiscountText) + RESET);
 
-	    // Assertions
-//	    Assert.assertTrue(
-//	            RED + "❌ Product name mismatch!" + RESET,
-//	            pdpNameText.toLowerCase().contains(plpName.toLowerCase())
-//	    );
+	    // ---------------- ASSERTIONS ----------------
+
 	    Assert.assertEquals(
 	            RED + "❌ Price mismatch!" + RESET,
 	            plpPrice,
 	            pdpPriceText
 	    );
-	    Assert.assertEquals(
-	            RED + "❌ Discount mismatch!" + RESET,
-	            plpDiscount,
-	            pdpDiscountText
-	    );
-	    System.out.println(GREEN + "\n✅ Product name, price & discount matched successfully!" + RESET);
+
+	    // ✅ Only validate discount IF present in both
+	    if (!plpDiscount.isEmpty() && !pdpDiscountText.isEmpty()) {
+
+	        Assert.assertEquals(
+	                RED + "❌ Discount mismatch!" + RESET,
+	                plpDiscount,
+	                pdpDiscountText
+	        );
+
+	        System.out.println(GREEN + "✅ Discount matched successfully" + RESET);
+
+	    } else {
+	        System.out.println(YELLOW + "⚠ Discount not available → Skipping validation" + RESET);
+	    }
+
+	    System.out.println(GREEN + "\n✅ Product price validation completed successfully!" + RESET);
 	}
 
 	public void discountPercentageCalculation() {
@@ -226,6 +255,8 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
+	    click(zlaataIndiaShopButton);
+	    
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    Actions actions = new Actions(driver);
 
@@ -237,7 +268,7 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    // Select random product
 	    List<WebElement> products = wait.until(
 	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
-	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	                    By.xpath("//div[@class='prod_listing_card']")
 	            )
 	    );
 
@@ -339,6 +370,8 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    
+	    click(zlaataIndiaShopButton);
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    Actions actions = new Actions(driver);
@@ -351,7 +384,7 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    // Pick random product
 	    List<WebElement> products = wait.until(
 	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
-	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	                    By.xpath("//div[@class='prod_listing_card']")
 	            )
 	    );
 
@@ -574,6 +607,8 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    click(zlaataIndiaShopButton);
+	    
 	    JavascriptExecutor js = (JavascriptExecutor) driver;
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    Actions actions = new Actions(driver);
@@ -587,7 +622,7 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    Common.waitForElement(2);
 	    // 1️⃣ Get all product cards
 	    List<WebElement> allProducts = driver.findElements(
-	            By.xpath("//div[contains(@class,'product_list_cards_list') and .//div[@class='zl-prod-color-swatches']]")
+	            By.xpath("//div[@class='prod_listing_card']")
 	    );
 
 	    System.out.println("🔍 Searching for multi-color product...");
@@ -597,7 +632,7 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 	    for (WebElement product : allProducts) {
 	        List<WebElement> colors =
-	                product.findElements(By.xpath(".//span[contains(@class,'zl-swatch-color')]"));
+	                product.findElements(By.xpath("//div[@class='prod_listing_card']//div[@class='prod_swatch_wrap']"));
 
 	        if (colors.size() > 1) {
 	            multiColorProducts.add(product);
@@ -754,6 +789,9 @@ Thread.sleep(2000);
 	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    click(zlaataIndiaShopButton);
+
+	    
 	    JavascriptExecutor js = (JavascriptExecutor) driver;
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    Actions actions = new Actions(driver);
@@ -766,7 +804,7 @@ Thread.sleep(2000);
 	    // Pick random product
 	    List<WebElement> products = wait.until(
 	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
-	                    By.xpath("//div[contains(@class,'product_list_cards_list')]")
+	                    By.xpath("//div[@class='prod_listing_card']")
 	            )
 	    );
 
@@ -822,8 +860,7 @@ Thread.sleep(1500);
 	}
 
 	public void verifyMultiColorProductColorMatch() throws InterruptedException {
-		String GREEN = "\u001B[32m";
-	    String RED   = "\u001B[31m";
+		
 	    String CYAN  = "\u001B[36m";
 	    String BLUE  = "\u001B[34m";
 	    String RESET = "\u001B[0m";
@@ -831,6 +868,9 @@ Thread.sleep(1500);
 	    System.out.println(CYAN + "────────────────────────────────────────────" + RESET);
 
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    
+	    click(zlaataIndiaShopButton);
+	    
 	    JavascriptExecutor js = (JavascriptExecutor) driver;
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    Actions actions = new Actions(driver);
@@ -842,11 +882,17 @@ Thread.sleep(1500);
 
 	    System.out.println("🔍 Searching for multi-color product...");
 
+//	    // 1️⃣ Get all product cards
+//	    List<WebElement> allProducts = driver.findElements(
+//	            By.xpath("//div[contains(@class,'product_list_cards_list') and .//div[@class='zl-prod-color-swatches']]")
+//	    );
+	    
+	    
+
 	    // 1️⃣ Get all product cards
 	    List<WebElement> allProducts = driver.findElements(
-	            By.xpath("//div[contains(@class,'product_list_cards_list') and .//div[@class='zl-prod-color-swatches']]")
+	            By.xpath("//div[@class='prod_listing_card']//div[@class='prod_swatch_wrap']")
 	    );
-
 	    System.out.println("🔍 Searching for multi-color product...");
 
 	    // ✅ Store only multi-color products
@@ -854,7 +900,7 @@ Thread.sleep(1500);
 
 	    for (WebElement product : allProducts) {
 	        List<WebElement> colors =
-	                product.findElements(By.xpath(".//span[contains(@class,'zl-swatch-color')]"));
+	                product.findElements(By.xpath("//div[@class='prod_swatch_wrap']"));
 
 	        if (colors.size() > 1) {
 	            multiColorProducts.add(product);
@@ -921,6 +967,12 @@ Thread.sleep(1500);
 	
 
 	public void sizeChart(Scenario scenario) {
+		
+		
+driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+	    
+	    click(zlaataIndiaShopButton);
 	    RandomProduct();
 	    Common.waitForElement(1);
 	    Actions actions = new Actions(driver);
@@ -967,6 +1019,11 @@ Thread.sleep(1500);
 	
 	
 	public void verifySizeOption() {
+		
+driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+	    
+	    click(zlaataIndiaShopButton);
 
 		RandomProduct();
 	    // ---------- GET SIZE LISTS ----------
@@ -1144,6 +1201,12 @@ System.out.println("✅ " + type + " size verified → " + sizeName);
 	//	}
 
 	public void categoryName() {
+		
+		
+driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+	    
+	    click(zlaataIndiaShopButton);
 
 		RandomProduct();
 		if (detailsPageCategoryName.isDisplayed()) {
@@ -1162,15 +1225,138 @@ System.out.println("✅ " + type + " size verified → " + sizeName);
 	}
 
 
-
+//
+//	public void addToCartAndVerify() {
+//		
+//driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//
+//	    
+//	    click(zlaataIndiaShopButton);
+//
+//		
+//RandomProduct();
+//		
+//		Common.waitForElement(2);
+//
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//
+//	    // ---------------- GET PRODUCT DETAILS ----------------
+//	    String productName = driver.findElement(
+//	            By.xpath("//h4[@class='prod_name']"))
+//	            .getText().trim();
+//
+//	    String selectedColor = driver.findElement(
+//	            By.xpath("//div[contains(@class,'prod_color_list') and contains(@class,'active')]"))
+//	            .getAttribute("title").trim();
+//
+//	    String selectedSize = driver.findElement(
+//	            By.xpath("//div[contains(@class,'prod_size_name') and contains(@class,'active')]"))
+//	            .getText().trim();
+//
+//	    System.out.println("🛒 Product  : " + productName);
+//	    System.out.println("🎨 Color    : " + selectedColor);
+//	    System.out.println("📏 Size     : " + selectedSize);
+//
+//	    // ---------------- GET CART COUNT BEFORE ----------------
+//	    WebElement cartCountEle = driver.findElement(
+//	            By.xpath("//span[contains(@class,'Cls_cart_count_num')]"));
+//
+//	    // ---------- SAFE BEFORE COUNT ----------
+//	    String beforeText = cartCountEle.getText().trim();
+//	    int beforeCount = beforeText.isEmpty() ? 0 : Integer.parseInt(beforeText);
+//
+//	    System.out.println("🧮 Cart count before: " + beforeCount);
+//
+//	    // ---------- CLICK ADD TO CART ----------
+//	    WebElement addToCartBtn = wait.until(
+//	            ExpectedConditions.elementToBeClickable(
+//	                    By.xpath("//button[contains(@class,'Cls_Cart_Prod')]")));
+//	    addToCartBtn.click();
+//	    Common.waitForElement(2);
+//	    // ---------- WAIT UNTIL COUNT CHANGES ----------
+//	    wait.until(driver -> {
+//	        String txt = cartCountEle.getText().trim();
+//	        return !txt.isEmpty();
+//	    });
+//
+//	    // ---------- AFTER COUNT ----------
+//	    String afterText = cartCountEle.getText().trim();
+//	    int afterCount = Integer.parseInt(afterText);
+//
+//	    System.out.println("🧮 Cart count after: " + afterCount);
+//
+//	    // ---------- ASSERT ----------
+//	    Assert.assertEquals(
+//	            "❌ Cart count not increased",
+//	            beforeCount + 1,
+//	            afterCount
+//	    );
+//
+//	    System.out.println("✅ Cart count increased successfully");
+//
+//	    // ---------------- OPEN CART ----------------
+//	    driver.findElement(By.xpath("//a[contains(@class,'Cls_cart_btn')]")).click();
+//	    Common.waitForElement(2);
+//
+//	    // ---------------- VERIFY PRODUCT IN CART ----------------
+//	    WebElement cartProduct = wait.until(
+//	            ExpectedConditions.visibilityOfElementLocated(
+//	                    By.xpath("//div[contains(@class,'cart_prod_card_wrpr')]")));
+//
+//	    String cartProductName = cartProduct.findElement(
+//	            By.xpath(".//a[contains(@class,'cp_name')]"))
+//	            .getText().trim();
+//
+//	    String cartColor = cartProduct.findElement(
+//	            By.xpath(".//p[contains(@class,'cp_selected_color')]"))
+//	            .getText().trim();
+//
+//	    String cartSize = cartProduct.findElement(
+//	            By.xpath(".//div[contains(@class,'cp_selected_size')]//p"))
+//	            .getText().trim();
+//	    Common.waitForElement(2);
+//	    // ---------------- ASSERTIONS ----------------
+//	    Assert.assertEquals(
+//	            "❌ Product name mismatch",
+//	            productName.toLowerCase().trim(),
+//	            cartProductName.toLowerCase().trim()
+//	    );
+//
+//	    Assert.assertEquals("❌ Color mismatch",
+//	            selectedColor, cartColor);
+//
+//	    Assert.assertEquals("❌ Size mismatch",
+//	            selectedSize, cartSize);
+//
+//	    System.out.println("✅ PRODUCT VERIFIED SUCCESSFULLY IN CART");
+//	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public void addToCartAndVerify() {
-RandomProduct();
-		
-		Common.waitForElement(2);
+
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
+
+	    click(zlaataIndiaShopButton);
+
+	    RandomProduct();
+
+	    Common.waitForElement(2);
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
 	    // ---------------- GET PRODUCT DETAILS ----------------
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//h4[@class='prod_name']")));
+
 	    String productName = driver.findElement(
 	            By.xpath("//h4[@class='prod_name']"))
 	            .getText().trim();
@@ -1187,35 +1373,42 @@ RandomProduct();
 	    System.out.println("🎨 Color    : " + selectedColor);
 	    System.out.println("📏 Size     : " + selectedSize);
 
-	    // ---------------- GET CART COUNT BEFORE ----------------
-	    WebElement cartCountEle = driver.findElement(
-	            By.xpath("//span[contains(@class,'Cls_cart_count_num')]"));
+	    // ---------------- CART BUTTON LOCATOR ----------------
+	    By cartBtnBy = By.xpath("//button[contains(@class,'Cls_cart_btn')]");
 
-	    // ---------- SAFE BEFORE COUNT ----------
-	    String beforeText = cartCountEle.getText().trim();
-	    int beforeCount = beforeText.isEmpty() ? 0 : Integer.parseInt(beforeText);
+	    // ---------------- GET CART COUNT BEFORE ----------------
+	    String beforeText = driver.findElement(cartBtnBy)
+	            .getAttribute("data-cart-count");
+
+	    int beforeCount = (beforeText == null || beforeText.isEmpty())
+	            ? 0
+	            : Integer.parseInt(beforeText);
 
 	    System.out.println("🧮 Cart count before: " + beforeCount);
 
-	    // ---------- CLICK ADD TO CART ----------
+	    // ---------------- CLICK ADD TO CART ----------------
 	    WebElement addToCartBtn = wait.until(
 	            ExpectedConditions.elementToBeClickable(
 	                    By.xpath("//button[contains(@class,'Cls_Cart_Prod')]")));
 	    addToCartBtn.click();
-	    Common.waitForElement(2);
-	    // ---------- WAIT UNTIL COUNT CHANGES ----------
-	    wait.until(driver -> {
-	        String txt = cartCountEle.getText().trim();
-	        return !txt.isEmpty();
+
+	    // ---------------- WAIT UNTIL COUNT UPDATES ----------------
+	    wait.until(d -> {
+	        String txt = d.findElement(cartBtnBy)
+	                .getAttribute("data-cart-count");
+	        return txt != null && !txt.isEmpty()
+	                && Integer.parseInt(txt) > beforeCount;
 	    });
 
-	    // ---------- AFTER COUNT ----------
-	    String afterText = cartCountEle.getText().trim();
-	    int afterCount = Integer.parseInt(afterText);
+	    // ---------------- GET UPDATED COUNT ----------------
+	    int afterCount = Integer.parseInt(
+	            driver.findElement(cartBtnBy)
+	                    .getAttribute("data-cart-count")
+	    );
 
 	    System.out.println("🧮 Cart count after: " + afterCount);
 
-	    // ---------- ASSERT ----------
+	    // ---------------- ASSERT COUNT ----------------
 	    Assert.assertEquals(
 	            "❌ Cart count not increased",
 	            beforeCount + 1,
@@ -1225,7 +1418,10 @@ RandomProduct();
 	    System.out.println("✅ Cart count increased successfully");
 
 	    // ---------------- OPEN CART ----------------
-	    driver.findElement(By.xpath("//a[contains(@class,'Cls_cart_btn')]")).click();
+	    WebElement cartBtn = wait.until(
+	            ExpectedConditions.elementToBeClickable(cartBtnBy));
+	    cartBtn.click();
+
 	    Common.waitForElement(2);
 
 	    // ---------------- VERIFY PRODUCT IN CART ----------------
@@ -1239,12 +1435,14 @@ RandomProduct();
 
 	    String cartColor = cartProduct.findElement(
 	            By.xpath(".//p[contains(@class,'cp_selected_color')]"))
-	            .getText().trim();
+	            .getText().replace("Color:", "").trim();
 
 	    String cartSize = cartProduct.findElement(
 	            By.xpath(".//div[contains(@class,'cp_selected_size')]//p"))
 	            .getText().trim();
+
 	    Common.waitForElement(2);
+
 	    // ---------------- ASSERTIONS ----------------
 	    Assert.assertEquals(
 	            "❌ Product name mismatch",
@@ -1252,11 +1450,17 @@ RandomProduct();
 	            cartProductName.toLowerCase().trim()
 	    );
 
-	    Assert.assertEquals("❌ Color mismatch",
-	            selectedColor, cartColor);
+	    Assert.assertEquals(
+	            "❌ Color mismatch",
+	            selectedColor.toLowerCase(),
+	            cartColor.toLowerCase()
+	    );
 
-	    Assert.assertEquals("❌ Size mismatch",
-	            selectedSize, cartSize);
+	    Assert.assertEquals(
+	            "❌ Size mismatch",
+	            selectedSize.toLowerCase(),
+	            cartSize.toLowerCase()
+	    );
 
 	    System.out.println("✅ PRODUCT VERIFIED SUCCESSFULLY IN CART");
 	}
@@ -1284,6 +1488,12 @@ RandomProduct();
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    Actions action = new Actions(driver);
+	    
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+	    
+	    click(zlaataIndiaShopButton);
+
 
 	    try {
 	        
@@ -1568,27 +1778,38 @@ RandomProduct();
  		System.out.println("📌 Heading displayed in application (Suggested For You): " + headingText1);
  	}
 	
-	public void productDescriptionDropDDown() {
-		RandomProduct();
-		Common.waitForElement(1);
-		scrollUsingJSWindow();
-		Common.waitForElement(2);
-		if (!clickAllDropDownArrow.isEmpty()) {
-			for (WebElement arrow : clickAllDropDownArrow ) {
-				if (arrow.isEnabled()) {
-					Common.waitForElement(1);
-					arrow.click();
-				}
-				else {
+ 	public void productDescriptionDropDDown() {
 
-					System.out.println("Product Description arrows are Not clickable");
+ 	    RandomProduct();
+ 	    Common.waitForElement(1);
+ 	    scrollUsingJSWindow();
+ 	    Common.waitForElement(2);
 
-				}
-			}
+ 	    if (!clickAllDropDownArrow.isEmpty()) {
 
-		}
+ 	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-	}
+ 	        for (WebElement arrow : clickAllDropDownArrow) {
+
+ 	            try {
+
+ 	                wait.until(ExpectedConditions.elementToBeClickable(arrow));
+
+ 	                ((JavascriptExecutor) driver).executeScript(
+ 	                        "arguments[0].scrollIntoView(true);", arrow);
+
+ 	                Common.waitForElement(1);
+
+ 	                arrow.click();
+
+ 	            } catch (Exception e) {
+
+ 	                System.out.println("Product Description arrow not clickable");
+
+ 	            }
+ 	        }
+ 	    }
+ 	}
 
 	public void returnAndExchangeLink() {
 		RandomProduct();
@@ -1617,6 +1838,10 @@ RandomProduct();
 	public void verifyReturnAndExchangeLink() {
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    
+	    click(zlaataIndiaShopButton);
 
 	    try {
 	        

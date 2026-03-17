@@ -47,7 +47,7 @@ Feature: This is Footer Section feature
       | TD_ID                |
       | TD_UI_Zlaata_FS_04  |    
       
-     @Sanity
+    @Sanity
   @Footer
 @TC_UI_Zlaata_FS_05
   Scenario Outline: TC_UI_Zlaata_FS_05 |Verify that Privacy Policy Content details and URL are displayed in the footer.| "<TD_ID>"
@@ -58,8 +58,7 @@ Feature: This is Footer Section feature
       | TD_UI_Zlaata_FS_05  |       
       
       
-      @Sanity
-  @Footer
+      
 @TC_UI_Zlaata_FS_06
   Scenario Outline: TC_UI_Zlaata_FS_06 |Verify that Raise a query Content details and URL are displayed in the footer.| "<TD_ID>"
     Given User verifies Raise a query  details are visible in footer
@@ -69,7 +68,6 @@ Feature: This is Footer Section feature
       | TD_UI_Zlaata_FS_06  |         
       
    @Sanity
-  @Footer
 @TC_UI_Zlaata_FS_07
   Scenario Outline: TC_UI_Zlaata_FS_07 |Verify that Faq Content details and URL are displayed in the footer.| "<TD_ID>"
     Given User verifies Faq  details are visible in footer
@@ -78,8 +76,7 @@ Feature: This is Footer Section feature
       | TD_ID                |
       | TD_UI_Zlaata_FS_07  |       
       
-    @Sanity
-  @Footer
+
 @TC_UI_Zlaata_FS_08
   Scenario Outline: TC_UI_Zlaata_FS_08 |Verify that Shipping & Cancellation Policy Content details and URL are displayed in the footer.| "<TD_ID>"
     Given User verifies Shipping & Cancellation Policy  details are visible in footer
@@ -89,8 +86,7 @@ Feature: This is Footer Section feature
       | TD_UI_Zlaata_FS_08  |       
       
      
-    @Sanity
-  @Footer
+   
 @TC_UI_Zlaata_FS_09
   Scenario Outline: TC_UI_Zlaata_FS_09 |Verify that Return, Exchange & Replacement Policy Content details and URL are displayed in the footer.| "<TD_ID>"
     Given User verifies Return, Exchange & Replacement Policy  details are visible in footer
@@ -99,8 +95,7 @@ Feature: This is Footer Section feature
       | TD_ID                |
       | TD_UI_Zlaata_FS_09  |        
       
-    @Sanity
-  @Footer
+
 @TC_UI_Zlaata_FS_10
   Scenario Outline: TC_UI_Zlaata_FS_10 |Verify that Contact Us Content details Time, Mobile, Email and Address are displayed in the footer.| "<TD_ID>"
     Given User verifies Contact Us  details are visible in footer
@@ -159,9 +154,24 @@ Examples:
   | TD_ID               |
   | TD_UI_Zlaata_FS_15  |    
       
-      
-      
-      
+ @Sanity     
+@Footer
+@TC_UI_Zlaata_FS_16
+Scenario Outline: TC_UI_Zlaata_FS_16 | Verify that the Loyalty Points link and URL are displayed correctly in the footer. | "<TD_ID>"
+  Given User verifies that the Loyalty Points link in the footer navigates to the correct page
+
+Examples:
+  | TD_ID              |
+  | TD_UI_Zlaata_FS_16 |
+@Sanity
+@Footer
+@TC_UI_Zlaata_FS_17
+Scenario Outline: TC_UI_Zlaata_FS_17 |Verify that the Gift Card link and URL are displayed correctly in the footer.| "<TD_ID>"
+  Given User verifies that the Gift Card link in the footer redirects to the correct page
+
+Examples:
+  | TD_ID              |
+  | TD_UI_Zlaata_FS_17 |
 
       
 

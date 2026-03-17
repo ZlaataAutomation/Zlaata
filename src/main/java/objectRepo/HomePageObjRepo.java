@@ -153,7 +153,8 @@ public abstract class HomePageObjRepo extends BasePage {
 	protected WebElement partySection;
 	
 	
-	
+	@FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	   protected WebElement zlaataIndiaShopButton;
 	
 	
 }

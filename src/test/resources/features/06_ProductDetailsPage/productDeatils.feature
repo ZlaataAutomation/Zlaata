@@ -9,6 +9,7 @@ Feature: Product Details Page Feature
   #===========================================================================
   
   @PDP
+  @PD
   @Sanity
  @TC_UI_Zlaata_PDP_01
 Scenario Outline: TC_UI_Zlaata_PDP_01 | Verify Product price is displaying on product details page | "<TD_ID>"
@@ -25,6 +26,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_02 | Verify  Discounted Price Calculating on 
     | TD_UI_Zlaata_PDP_02   |
     
      @PDP
+     @PD
   @Sanity
   @TC_UI_Zlaata_PDP_03
 Scenario Outline: TC_UI_Zlaata_PDP_03 | Verify product images are changeable using arrow button | "<TD_ID>"
@@ -34,6 +36,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_03 | Verify product images are changeable usi
     | TD_UI_Zlaata_PDP_03   |
 
  @PDP
+ @PD
   @Sanity
 @TC_UI_Zlaata_PDP_04
 Scenario Outline: TC_UI_Zlaata_PDP_04 | Verify Wishlist Button Functionality on Product details page | "<TD_ID>"
@@ -45,6 +48,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_04 | Verify Wishlist Button Functionality on 
 
 
  @PDP
+ @PD
   @Sanity
 @TC_UI_Zlaata_PDP_05
 Scenario Outline: TC_UI_Zlaata_PDP_05 | Verify Color item Selection Functionality | "<TD_ID>"
@@ -54,6 +58,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_05 | Verify Color item Selection Functionalit
     | TD_UI_Zlaata_PDP_05   |
 
  @PDP
+ @PD
   @Sanity
 @TC_UI_Zlaata_PDP_06
 Scenario Outline: TC_UI_Zlaata_PDP_06 | Verify Color Selection Functionality | "<TD_ID>"
@@ -63,6 +68,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_06 | Verify Color Selection Functionality | "
     | TD_UI_Zlaata_PDP_06   |
 
 @PDP
+@PD
   @Sanity
 @TC_UI_Zlaata_PDP_07
 Scenario Outline: TC_UI_Zlaata_PDP_07 | Verify Color Section Dropdown Arrow | "<TD_ID>"
@@ -80,6 +86,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_08 | Verify Size Chart Availability | "<TD_ID
 
 
 @PDP
+@PD
   @Sanity
 @TC_UI_Zlaata_PDP_09
 Scenario Outline: TC_UI_Zlaata_PDP_09 | Verify Size Selection Functionality | "<TD_ID>"
@@ -90,6 +97,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_09 | Verify Size Selection Functionality | "<
 
 
 @PDP
+@PD
   @Sanity
 @TC_UI_Zlaata_PDP_10
 Scenario Outline: TC_UI_Zlaata_PDP_10 | Verify that the category name is displayed on the Product Details Page | "<TD_ID>"
@@ -99,6 +107,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_10 | Verify that the category name is display
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_10   |
 
+@PD
 @PDP
   @Sanity
 @TC_UI_Zlaata_PDP_11
@@ -109,6 +118,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_11 | Verify "Add to Cart" Button Functionalit
     | TD_UI_Zlaata_PDP_11   |
 
 @PDP
+@PD
   @Sanity
 @TC_UI_Zlaata_PDP_12
 Scenario Outline: TC_UI_Zlaata_PDP_12 | Verify "Buy Now" Button Functionality on Product details page | "<TD_ID>"

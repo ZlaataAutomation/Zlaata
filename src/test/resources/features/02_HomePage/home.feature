@@ -22,22 +22,7 @@ Feature: This is HomePage feature
       | TD_UI_Zlaata_Home_01 |
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+     
     
     @TC_UI_Zlaata_Home_02
   Scenario Outline: TC_UI_Zlaata_Home_02 |Verify if the user is able to click on the forward and backward arrows on the homepage banner.|"<TD_ID>"
@@ -131,7 +116,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_10 |
  
-      
+      @Sanity
        @TC_UI_Zlaata_Home_11
   Scenario Outline: TC_UI_Zlaata_Home_11 |Verify if the user is able to click on the WhatsApp icon on all pages.|"<TD_ID>"
      
@@ -160,3 +145,43 @@ Feature: This is HomePage feature
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Home_13 |
+      
+      
+      
+            @sanity         
+   @TC_UI_Zlaata_Home_14
+Scenario Outline: TC_UI_Zlaata_Home_14 |Verify that the Home Page logo is displayed| "<TD_ID>"
+
+  Given the user verifies that the logo is available on the Home Page
+
+Examples:
+  | TD_ID                  |
+  | TD_UI_Zlaata_Home_14   |
+  
+  	
+   
+ @TC_UI_Zlaata_Home_15
+Scenario Outline: TC_UI_Zlaata_Home_15 |Verify that zlaata India and Boss lady Thread banner is available in the Home Page| "<TD_ID>"
+
+  Given the user verifies that the Thread banner is available on the Home Page for zlaata India  and Boss lady
+
+Examples:
+  | TD_ID                  |
+  | TD_UI_Zlaata_Home_15   |
+ 
+  
+   @sanity
+  @TC_UI_Zlaata_Home_17
+Scenario Outline: TC_UI_Zlaata_Home_17 |Verify that the Monsoon Banner is available| "<TD_ID>"
+
+  Given the user verifies that the Monsoon Banner section is available on the Home Page
+
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_Home_17 |
+  
+  
+  
+
+  
+  

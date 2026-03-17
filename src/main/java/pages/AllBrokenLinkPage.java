@@ -44,6 +44,8 @@ public class AllBrokenLinkPage extends AllBrokenLinkObjRepo{
 	    driver.get(FileReaderManager.getInstance()
 	            .getConfigReader()
 	            .getApplicationUrl());
+	    
+	    click(zlaataIndiaShopButton);
 
 	    System.out.println(CYAN + "🔍 Starting Broken Link Verification..." + RESET);
 	    Common.waitForElement(3);
@@ -419,7 +421,6 @@ public class AllBrokenLinkPage extends AllBrokenLinkObjRepo{
 	
 	public void ValidateAllLinkMethods() {
 		
-		handleAccessCodeIfPresentFast();
 		
 		verifyAllLinksAndUrls();
 		

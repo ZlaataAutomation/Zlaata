@@ -8,6 +8,7 @@ Feature: This is Product Listing Page feature
   #============================================================================
   @List
    @Sanity
+   @PLP
   @TC_UI_Zlaata_PLP_01
   Scenario Outline: TC_UI_Zlaata_PLP_01 |Verify that the "Home" text link on the Product Listing page is clickable.|"<TD_ID>"
      
@@ -19,6 +20,7 @@ Feature: This is Product Listing Page feature
       | TD_UI_Zlaata_PLP_01 |
     
      @List
+     @PLP
     @Sanity
       @TC_UI_Zlaata_PLP_02
   Scenario Outline: TC_UI_Zlaata_PLP_02 |Verify that the heading is available on the Product Listing page.|"<TD_ID>"
@@ -31,6 +33,7 @@ Feature: This is Product Listing Page feature
       | TD_UI_Zlaata_PLP_02 |
     
      @List
+     @PLP
   @Sanity
     @TC_UI_Zlaata_PLP_03
   Scenario Outline: TC_UI_Zlaata_PLP_03 |Verify that pagination functionality is available.|"<TD_ID>"
@@ -44,6 +47,7 @@ Feature: This is Product Listing Page feature
       
        @List
    @Sanity
+   @PLP
       @TC_UI_Zlaata_PLP_04
   Scenario Outline: TC_UI_Zlaata_PLP_04 |Verify that the pagination arrows are clickable.|"<TD_ID>"
      
@@ -57,6 +61,7 @@ Feature: This is Product Listing Page feature
       
        @List
     @Sanity
+    @PLP
       @TC_UI_Zlaata_PLP_05
   Scenario Outline: TC_UI_Zlaata_PLP_05 |Verify that when the user clicks on a page number, the pagination functionality works.|"<TD_ID>"
      
@@ -112,6 +117,7 @@ Feature: This is Product Listing Page feature
       
         @List
   @Sanity
+  @PLP
       @TC_UI_Zlaata_PLP_10
   Scenario Outline: TC_UI_Zlaata_PLP_10 |Verify that the "Wishlist" button is working.|"<TD_ID>"
      
@@ -124,6 +130,7 @@ Feature: This is Product Listing Page feature
       
          @List
   @Sanity
+  @PLP
       @TC_UI_Zlaata_PLP_11
   Scenario Outline: TC_UI_Zlaata_PLP_11 |Verify that the "Add to Cart" button is working.|"<TD_ID>"
      

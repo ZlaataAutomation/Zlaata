@@ -1334,26 +1334,78 @@ String productlistingName;
 public String takeRandomProductFromAll() {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     Actions actions = new Actions(driver);
+    
+    
 
     // Hover on Shop → All
     WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
+            By.xpath("//div[@class='header_nav_item has_dropdown']")));
     actions.moveToElement(shopMenu).perform();
 
     WebElement allButton = wait.until(ExpectedConditions.elementToBeClickable(
-            By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a[translate(normalize-space(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = 'DRESSES']")));
+            By.xpath("//a[normalize-space()='dresses']")));
     allButton.click();
 
-    System.out.println("✅ Clicked on 'All' under Shop menu");
+   Common.waitForElement(5);
+    System.out.println("✅ Clicked on 'Dress' under Shop menu");
 
     // Collect all product cards
     List<WebElement> products = wait.until(ExpectedConditions
-            .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'product_list_cards_list ')]")));
+            .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='prod_listing_card']")));
 
     if (products.isEmpty()) {
         System.out.println("⚠️ No products found on listing page!");
         return null;
     }
+
+//    Random rand = new Random();
+//    int maxAttempts = Math.min(5, products.size());
+//    boolean productFound = false;
+//
+//    for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+//
+//        int randomIndex = rand.nextInt(products.size()) + 1;
+//        System.out.println("🎯 Checking random product index: " + randomIndex);
+//
+//        WebElement productCard = driver.findElement(
+//                By.xpath("(//div[@class='prod_listing_card'])[" + randomIndex + "]"));
+//
+////        String name = productCard.findElement(
+////                By.xpath(".//h2[@class='product_list_cards_heading']"))
+////                .getText().trim();
+//        
+//
+//      String name = productCard.findElement(
+//              By.xpath("//a[contains(@class,'product_list_name')]"))
+//              .getText().trim();
+//        
+//        
+////        List<WebElement> stockLabels = productCard.findElements(
+////                By.xpath(".//h2[contains(@class,'product_list_cards_out_of_stock_heading') and normalize-space()='OUT OF STOCK']"));
+//        
+//        List<WebElement> stockLabels = productCard.findElements(
+//        		By.xpath("//span[contains(@class,'prod_listing_hurry') and contains(text(),'Out of Stock')]"));
+//
+//        boolean isOutOfStock = !stockLabels.isEmpty() && stockLabels.get(0).isDisplayed();
+//
+//        if (isOutOfStock) {
+//            System.out.println("❌ '" + name + "' is OUT OF STOCK. Retrying...");
+//            continue;
+//        }
+//
+//        // Found in-stock product
+//        String  productName = name;
+//
+//        WebElement productNameElement = productCard.findElement(
+//                By.xpath("//a[contains(@class,'product_list_name')]"));
+//
+//     // Fix: JS click to avoid interception
+//        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
+//
+//        productFound = true;
+//        System.out.println("✅ Selected random in-stock product: " + productName);
+//        break;
+//    }
 
     Random rand = new Random();
     int maxAttempts = Math.min(5, products.size());
@@ -1365,14 +1417,14 @@ public String takeRandomProductFromAll() {
         System.out.println("🎯 Checking random product index: " + randomIndex);
 
         WebElement productCard = driver.findElement(
-                By.xpath("(//div[contains(@class,'product_list_cards_list')])[" + randomIndex + "]"));
+                By.xpath("(//div[@class='prod_listing_card'])[" + randomIndex + "]"));
 
         String name = productCard.findElement(
-                By.xpath(".//h2[@class='product_list_cards_heading']"))
+                By.xpath(".//a[contains(@class,'product_list_name')]"))
                 .getText().trim();
 
         List<WebElement> stockLabels = productCard.findElements(
-                By.xpath(".//h2[contains(@class,'product_list_cards_out_of_stock_heading') and normalize-space()='OUT OF STOCK']"));
+                By.xpath(".//span[contains(@class,'prod_listing_hurry') and contains(text(),'Out of Stock')]"));
 
         boolean isOutOfStock = !stockLabels.isEmpty() && stockLabels.get(0).isDisplayed();
 
@@ -1381,20 +1433,15 @@ public String takeRandomProductFromAll() {
             continue;
         }
 
-        // Found in-stock product
-        String  productName = name;
-
         WebElement productNameElement = productCard.findElement(
-                By.xpath(".//h2[@class='product_list_cards_heading']"));
+                By.xpath(".//a[contains(@class,'product_list_name')]"));
 
-     // Fix: JS click to avoid interception
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
 
         productFound = true;
-        System.out.println("✅ Selected random in-stock product: " + productName);
+        System.out.println("✅ Selected random in-stock product: " + name);
         break;
     }
-
     if (!productFound) {
         System.out.println("⚠️ No in-stock product found after trying " + maxAttempts);
         return null;
@@ -1409,6 +1456,9 @@ public String takeRandomProductFromAll() {
     Common.waitForElement(2);
     WebElement addToCart = wait.until(ExpectedConditions.elementToBeClickable(
             By.xpath("(//button[contains(text(),'Add to')])[1]")));
+    
+
+//    
     Common.waitForElement(2);
  // scroll it into center
     ((JavascriptExecutor) driver).executeScript(
@@ -1419,7 +1469,7 @@ public String takeRandomProductFromAll() {
     Common.waitForElement(1);
 
     // Open cart
-    driver.findElement(By.xpath("//a[@class='Cls_cart_btn Cls_redirect_restrict']")).click();
+    driver.findElement(By.xpath("//button[@class='header_cta_btn Cls_cart_btn ']")).click();
     Common.waitForElement(1);
 
     System.out.println("🛒 Add to Cart clicked on PDP for: " + productlistingName);
@@ -1431,8 +1481,9 @@ public void deleteAllProductsFromCart() {
 	driver.get(FileReaderManager.getInstance()
             .getConfigReader()
             .getApplicationUrl());
+	
     // Open cart
-    driver.findElement(By.xpath("//a[@class='Cls_cart_btn Cls_redirect_restrict']")).click();
+    driver.findElement(By.xpath("//button[@class='header_cta_btn Cls_cart_btn ']")).click();
     Common.waitForElement(1);
 
     // ✅ STEP 1: Check if cart is already empty
@@ -1475,9 +1526,8 @@ public void deleteAllProductsFromCart() {
 
 public void verifyOrderCancellation() {
 	 String CYAN = "\u001B[36m";
-	    String YELLOW = "\u001B[33m";
+	  
 	    String GREEN = "\u001B[32m";
-	    String RED = "\u001B[31m";
 	    String RESET = "\u001B[0m";
 	    String line = "──────────────────────────────────────────────────────────────";
 		driver.get(FileReaderManager.getInstance()

@@ -39,6 +39,10 @@ public  final class FooterPage  extends FooterObjRepo{
 	public void verifyAboutUsLink() {
 
 		  driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+		  
+			click(zlaataIndiaShopButton);
+
+		  
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
 	    try {
@@ -107,6 +111,9 @@ public  final class FooterPage  extends FooterObjRepo{
 	public void verifyBlogs() {
 
 		  driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+			click(zlaataIndiaShopButton);
+
+		  
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Actions actions = new Actions(driver);
@@ -250,6 +257,9 @@ public  final class FooterPage  extends FooterObjRepo{
 	    driver.get(FileReaderManager.getInstance()
 	            .getConfigReader()
 	            .getApplicationUrl());
+	    
+		click(zlaataIndiaShopButton);
+
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
@@ -337,6 +347,8 @@ public  final class FooterPage  extends FooterObjRepo{
 	            .getConfigReader()
 	            .getApplicationUrl());
 
+		click(zlaataIndiaShopButton);
+
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
 	    try {
@@ -423,6 +435,9 @@ public  final class FooterPage  extends FooterObjRepo{
 	    driver.get(FileReaderManager.getInstance()
 	            .getConfigReader()
 	            .getApplicationUrl());
+	    
+		click(zlaataIndiaShopButton);
+
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
@@ -511,6 +526,9 @@ public  final class FooterPage  extends FooterObjRepo{
 	    driver.get(FileReaderManager.getInstance()
 	            .getConfigReader()
 	            .getApplicationUrl());
+	    
+		click(zlaataIndiaShopButton);
+
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
@@ -656,7 +674,7 @@ public void verifyFaqLink() {
 
          WebElement faqLink = wait.until(
                 ExpectedConditions.elementToBeClickable(
-                        By.xpath("//div[@class='foot_nav']//a[contains(text(),'FAQ')]")
+                        By.xpath("//a[@href='/faq']")
                 )
         );
         faqLink.click();
@@ -961,93 +979,94 @@ public void verifyFooterContactUsDetails() {
 }
 
 //TC-11
-public void verifyFooterTrackOrderValidation() {
-
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
-    // 🎨 Console colors
-    String RESET = "\u001B[0m";
-    String GREEN = "\u001B[32m";
-    String RED   = "\u001B[31m";
-    String CYAN  = "\u001B[36m";
-    driver.get(FileReaderManager.getInstance()
-            .getConfigReader()
-            .getApplicationUrl());
-    try {
-
-        scrollUsingJSWindow();
-        Common.waitForElement(1);
-
-        System.out.println(CYAN + "🔍 Verifying Footer Track Order validation" + RESET);
-
-        // ---------------- LOCATORS ----------------
-        WebElement trackButton = wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        By.cssSelector("button.footer-track-btn")
-                )
-        );
-
-        WebElement trackInput = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.id("track_order_input_footer")
-                )
-        );
-
-        By errorMsgLocator = By.cssSelector(
-                "p.track_order_error_msg.active"
-        );
-
-        String expectedErrorMsg =
-                "Tracking ID not found. Please check and enter a valid Tracking ID.";
-
-        // ---------------- FIRST CLICK (EMPTY INPUT) ----------------
-        trackButton.click();
-        Common.waitForElement(2);
-        WebElement errorMsg1 = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(errorMsgLocator)
-        );
-
-        Assert.assertEquals(
-                "❌ Error message mismatch on empty Track click",
-                expectedErrorMsg,
-                errorMsg1.getText().trim()
-        );
-
-        System.out.println(GREEN + "✅ Error message displayed on empty Track click" + RESET);
-
-        // ---------------- ENTER INVALID TRACK ID ----------------
-        trackInput.clear();
-        trackInput.sendKeys("ABC123");   // invalid / random value
-        Common.waitForElement(1);
-
-        // ---------------- SECOND CLICK ----------------
-        trackButton.click();
-        Common.waitForElement(2);
-
-        WebElement errorMsg2 = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(errorMsgLocator)
-        );
-
-        Assert.assertEquals(
-                "❌ Error message mismatch after entering Track ID",
-                expectedErrorMsg,
-                errorMsg2.getText().trim()
-        );
-
-        System.out.println(GREEN + "✅ Same error message displayed after invalid Track ID" + RESET);
-
-        System.out.println(
-                GREEN + "🎉 Footer Track Order validation verified successfully!" + RESET
-        );
-
-    } catch (Exception e) {
-        System.out.println(
-                RED + "❌ Footer Track Order verification failed: "
-                        + e.getMessage() + RESET
-        );
-        Assert.fail("Footer Track Order validation failed");
-    }
-}
+	public void verifyFooterTrackOrderValidation() {
+	
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	
+	    // 🎨 Console colors
+	    String RESET = "\u001B[0m";
+	    String GREEN = "\u001B[32m";
+	    String RED   = "\u001B[31m";
+	    String CYAN  = "\u001B[36m";
+	    driver.get(FileReaderManager.getInstance()
+	            .getConfigReader()
+	            .getApplicationUrl());
+	    try {
+	
+	        scrollUsingJSWindow();
+	        Common.waitForElement(1);
+	
+	        System.out.println(CYAN + "🔍 Verifying Footer Track Order validation" + RESET);
+	
+	        // ---------------- LOCATORS ----------------
+	        WebElement trackButton = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.cssSelector(".footer_track_btn")
+	                )
+	        );
+	
+	        WebElement trackInput = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.id("track_order_input_footer")
+	                )
+	        );
+	
+	        By errorMsgLocator = By.id("trackError");
+	
+	        String expectedErrorMsg =
+	                "Please enter your Order ID.";
+	        
+	        String expectedErrorMsg1 =
+	                "Order ID must be 6-19 alphanumeric characters.";
+	
+	        // ---------------- FIRST CLICK (EMPTY INPUT) ----------------
+	        trackButton.click();
+	        Common.waitForElement(2);
+	        WebElement errorMsg1 = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(errorMsgLocator)
+	        );
+	
+	        Assert.assertEquals(
+	                "❌ Error message mismatch on empty Track click",
+	                expectedErrorMsg,
+	                errorMsg1.getText().trim()
+	        );
+	
+	        System.out.println(GREEN + "✅ Error message displayed on empty Track click" + RESET);
+	
+	        // ---------------- ENTER INVALID TRACK ID ----------------
+	        trackInput.clear();
+	        trackInput.sendKeys("ABC123");   // invalid / random value
+	        Common.waitForElement(1);
+	
+	        // ---------------- SECOND CLICK ----------------
+	        trackButton.click();
+	        Common.waitForElement(2);
+	
+	        WebElement errorMsg2 = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(errorMsgLocator)
+	        );
+	
+	        Assert.assertEquals(
+	                "❌ Error message mismatch after entering Track ID",
+	                expectedErrorMsg1,
+	                errorMsg2.getText().trim()
+	        );
+	
+	        System.out.println(GREEN + "✅ Same error message displayed after invalid Track ID" + RESET);
+	
+	        System.out.println(
+	                GREEN + "🎉 Footer Track Order validation verified successfully!" + RESET
+	        );
+	
+	    } catch (Exception e) {
+	        System.out.println(
+	                RED + "❌ Footer Track Order verification failed: "
+	                        + e.getMessage() + RESET
+	        );
+	        Assert.fail("Footer Track Order validation failed");
+	    }
+	}
 
 //TC-12
 public void socialMediaFooter() {
@@ -1064,7 +1083,7 @@ public void socialMediaFooter() {
     Common.waitForElement(1);
     JavascriptExecutor js = (JavascriptExecutor) driver;
 
-    List<WebElement> footerLinks = driver.findElements(By.xpath("//a[@class='social_link_card']"));
+    List<WebElement> footerLinks = driver.findElements(By.xpath("//a[@class='social_media_link']"));
     System.out.println("Total footer links: " + footerLinks.size());
 
     for (int i = 0; i < footerLinks.size(); i++) {
@@ -1141,7 +1160,7 @@ public void socialMediaFooter() {
         try {
              List<WebElement> paymentCards = wait.until(
                     ExpectedConditions.presenceOfAllElementsLocatedBy(
-                            By.cssSelector("div.footer_payment_method_card")
+                            By.xpath("//div[@class='footer_payment_methods']")
                     )
             );
 
@@ -1185,6 +1204,9 @@ public void socialMediaFooter() {
         driver.get(FileReaderManager.getInstance()
                 .getConfigReader()
                 .getApplicationUrl());
+        
+        click(zlaataIndiaShopButton);
+        
         Common.waitForElement(1);
         scrollUsingJSWindow();
         Common.waitForElement(2);
@@ -1202,7 +1224,7 @@ public void socialMediaFooter() {
             );
 
             String actualText = copyRightElement.getText().trim();
-            String expectedText = "Copyright 2025 @ zlaata";
+            String expectedText = "Copyright 2026 @ zlaata";
 
             System.out.println("🔍 Copyright Text Found: " + actualText);
 
@@ -1222,106 +1244,225 @@ public void socialMediaFooter() {
     }
 //TC-15
     
+//    public void verifyFooterSubscribeValidations() {
+//
+//         driver.get(FileReaderManager.getInstance()
+//                 .getConfigReader()
+//                 .getApplicationUrl());
+//         click(zlaataIndiaShopButton);
+//         
+//         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//
+//         WebElement newsletterSection = wait.until(
+//                 ExpectedConditions.visibilityOfElementLocated(
+//                         By.cssSelector("section.newsletter_section")
+//                 )
+//         );
+//
+//         JavascriptExecutor js = (JavascriptExecutor) driver;
+//
+//         // Scroll directly to newsletter (no bottom scroll)
+//         js.executeScript("arguments[0].scrollIntoView({block:'center'});", newsletterSection);
+//
+//         Common.waitForElement(1);
+//
+//        String GREEN = "\u001B[32m";
+//        String RED   = "\u001B[31m";
+//        String RESET = "\u001B[0m";
+//
+//        WebElement emailInput = wait.until(
+//                ExpectedConditions.visibilityOfElementLocated(
+//                        By.id("newsletterInput"))
+//        );
+//
+//        WebElement subscribeBtn = driver.findElement(
+//                By.id("subscribeletterbtn")
+//        );
+//
+//        WebElement errorMsg = driver.findElement(
+//                By.cssSelector("p.error_message_footer")
+//        );
+//
+//  
+//        emailInput.clear();
+//        emailInput.sendKeys("invalidemail");
+//        subscribeBtn.click();
+//        Common.waitForElement(2);
+//
+//        wait.until(ExpectedConditions.visibilityOf(errorMsg));
+//
+//        String invalidMsg = errorMsg.getText().trim();
+//        String expectedInvalidMsg = "Please enter a valid email address.";
+//
+//        Assert.assertEquals(
+//                "❌ Invalid email validation failed",
+//                expectedInvalidMsg,
+//                invalidMsg
+//        );
+//
+//        System.out.println(GREEN + "✅ Invalid email error verified" + RESET);
+//
+//        String randomEmail ="test" + System.currentTimeMillis() + "@gmail.com";
+//
+//        emailInput.clear();
+//        emailInput.sendKeys(randomEmail);
+//        subscribeBtn.click();
+//
+//        WebElement successMsg = wait.until(
+//                ExpectedConditions.visibilityOf(mailValidationMessage)
+//        );
+//
+//        String actualSuccessMsg = successMsg.getText().trim();
+//        String expectedSuccessMsg = "Successfully Subscribed";
+//
+//        Assert.assertEquals(
+//                "❌ Subscription success message mismatch",
+//                expectedSuccessMsg,
+//                actualSuccessMsg
+//        );
+//
+//        System.out.println(GREEN + "✅ Successfully subscribed with new email" + RESET);
+//
+//        Common.waitForElement(1);
+//        emailInput.clear();
+//        emailInput.sendKeys(randomEmail);
+//        subscribeBtn.click();
+//        Common.waitForElement(2);
+//        wait.until(ExpectedConditions.visibilityOf(errorMsg));
+//
+//        String alreadySubMsg = errorMsg.getText().trim();
+//        String expectedAlreadySubMsg = "You have already Subscribed";
+//
+//        Assert.assertEquals(
+//                "❌ Already subscribed message mismatch",
+//                expectedAlreadySubMsg,
+//                alreadySubMsg
+//        );
+//
+//        System.out.println(GREEN + "✅ Already subscribed validation verified" + RESET);
+//    }
+
+	
+	
+	
     public void verifyFooterSubscribeValidations() {
-
-         driver.get(FileReaderManager.getInstance()
-                 .getConfigReader()
-                 .getApplicationUrl());
-         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-         WebElement newsletterSection = wait.until(
-                 ExpectedConditions.visibilityOfElementLocated(
-                         By.cssSelector("div.newsletter_container")
-                 )
-         );
-
-         JavascriptExecutor js = (JavascriptExecutor) driver;
-
-         // Scroll directly to newsletter (no bottom scroll)
-         js.executeScript("arguments[0].scrollIntoView({block:'center'});", newsletterSection);
-
-         Common.waitForElement(1);
 
         String GREEN = "\u001B[32m";
         String RED   = "\u001B[31m";
         String RESET = "\u001B[0m";
 
-        WebElement emailInput = wait.until(
+        driver.get(FileReaderManager.getInstance()
+                .getConfigReader()
+                .getApplicationUrl());
+
+        click(zlaataIndiaShopButton);
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // Wait & scroll to newsletter section
+        WebElement newsletterSection = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(
-                        By.id("subscribeletter"))
+                        By.cssSelector("section.newsletter_section"))
         );
 
-        WebElement subscribeBtn = driver.findElement(
-                By.id("subscribeletterbtn")
-        );
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", newsletterSection);
 
-        WebElement errorMsg = driver.findElement(
-                By.cssSelector("p.error-message-footer")
-        );
+        // Locators (use By instead of WebElement to avoid stale)
+        By emailInputBy = By.id("newsletterInput");
+        By subscribeBtnBy = By.id("subscribeletterbtn");
+        By errorMsgBy = By.cssSelector("p.error_message_footer");
 
-  
+        // -------------------------------
+        // INVALID EMAIL VALIDATION
+        // -------------------------------
+        WebElement emailInput = wait.until(ExpectedConditions.elementToBeClickable(emailInputBy));
         emailInput.clear();
         emailInput.sendKeys("invalidemail");
-        subscribeBtn.click();
-        Common.waitForElement(2);
 
-        wait.until(ExpectedConditions.visibilityOf(errorMsg));
+        driver.findElement(subscribeBtnBy).click();
+
+        WebElement errorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(errorMsgBy));
 
         String invalidMsg = errorMsg.getText().trim();
-        String expectedInvalidMsg = "Please enter a valid email address.";
-
-        Assert.assertEquals(
-                "❌ Invalid email validation failed",
-                expectedInvalidMsg,
-                invalidMsg
-        );
+        Assert.assertEquals("❌ Invalid email validation failed",
+                "Please enter a valid email address.",
+                invalidMsg);
 
         System.out.println(GREEN + "✅ Invalid email error verified" + RESET);
 
-        String randomEmail ="test" + System.currentTimeMillis() + "@gmail.com";
+        // -------------------------------
+        // GENERATE VALID EMAIL (RETRY LOGIC)
+        // -------------------------------
+        int maxRetries = 5;
+        String validEmail = "";
 
+        for (int i = 0; i < maxRetries; i++) {
+
+            emailInput = wait.until(ExpectedConditions.elementToBeClickable(emailInputBy));
+            emailInput.clear();
+
+            String email = generateRandomEmail();
+            System.out.println(GREEN + "Trying Email: " + email + RESET);
+
+            emailInput.sendKeys(email);
+            driver.findElement(subscribeBtnBy).click();
+
+            Common.waitForElement(2);
+
+            List<WebElement> errorList = driver.findElements(errorMsgBy);
+
+            if (!errorList.isEmpty() && errorList.get(0).isDisplayed()) {
+                System.out.println(RED + "❌ Error shown. Retrying..." + RESET);
+            } else {
+                validEmail = email;
+                System.out.println(GREEN + "✅ Valid email found: " + validEmail + RESET);
+                break;
+            }
+        }
+
+        if (validEmail.isEmpty()) {
+            throw new RuntimeException("❌ Failed to generate valid email");
+        }
+
+        // -------------------------------
+        // SUCCESS VALIDATION
+        // -------------------------------
+        emailInput = wait.until(ExpectedConditions.elementToBeClickable(emailInputBy));
         emailInput.clear();
-        emailInput.sendKeys(randomEmail);
-        subscribeBtn.click();
+        emailInput.sendKeys(validEmail);
+
+        driver.findElement(subscribeBtnBy).click();
 
         WebElement successMsg = wait.until(
                 ExpectedConditions.visibilityOf(mailValidationMessage)
         );
 
-        String actualSuccessMsg = successMsg.getText().trim();
-        String expectedSuccessMsg = "Successfully Subscribed";
+        Assert.assertEquals("❌ Subscription success message mismatch",
+                "Successfully Subscribed",
+                successMsg.getText().trim());
 
-        Assert.assertEquals(
-                "❌ Subscription success message mismatch",
-                expectedSuccessMsg,
-                actualSuccessMsg
-        );
+        System.out.println(GREEN + "✅ Successfully subscribed" + RESET);
 
-        System.out.println(GREEN + "✅ Successfully subscribed with new email" + RESET);
-
-        Common.waitForElement(1);
+        // -------------------------------
+        // ALREADY SUBSCRIBED VALIDATION
+        // -------------------------------
+        emailInput = wait.until(ExpectedConditions.elementToBeClickable(emailInputBy));
         emailInput.clear();
-        emailInput.sendKeys(randomEmail);
-        subscribeBtn.click();
-        Common.waitForElement(2);
-        wait.until(ExpectedConditions.visibilityOf(errorMsg));
+        emailInput.sendKeys(validEmail);
 
-        String alreadySubMsg = errorMsg.getText().trim();
-        String expectedAlreadySubMsg = "You have already Subscribed";
+        driver.findElement(subscribeBtnBy).click();
 
-        Assert.assertEquals(
-                "❌ Already subscribed message mismatch",
-                expectedAlreadySubMsg,
-                alreadySubMsg
+        WebElement alreadyMsg = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(errorMsgBy)
         );
+
+        Assert.assertEquals("❌ Already subscribed message mismatch",
+                "You have already Subscribed",
+                alreadyMsg.getText().trim());
 
         System.out.println(GREEN + "✅ Already subscribed validation verified" + RESET);
     }
-
-	
-	
-	
-	
 	
 	
 	
@@ -1578,6 +1719,8 @@ public void socialMediaFooter() {
         System.out.println("\u001B[32m✅ SUCCESS: Validation Message = " + actualMessage + "\u001B[0m");
 	}
 	public void invalidMail() {
+		
+		
 		scrollUsingJSWindow();
 		Common.waitForElement(1);
 		click(mailId);
@@ -1622,10 +1765,51 @@ public void socialMediaFooter() {
 	}
 	
 	
+	public void threadBanner() {
+		
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+
+		scrollUsingJSWindow();
+		Common.waitForElement(1);
+
+		click(threadLink);
+
+		Common.waitForElement(2);
+
+		// Store current URL
+		String currentUrl = driver.getCurrentUrl();
+
+		// Verify URL
+		Assert.assertTrue("❌ Thread page URL mismatch",
+		        currentUrl.contains("my-accounts/my-threads"));
+
+		System.out.println("\u001B[32m✅ Navigated to Threads page: " + currentUrl + "\u001B[0m");
+		
+		}
 	
 	
-	
-	
+	public void giftcardBanner() {
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+
+
+		scrollUsingJSWindow();
+		Common.waitForElement(1);
+		
+		click(giftCard);
+		
+		Common.waitForElement(2);
+
+		// Store current URL
+		String currentUrl = driver.getCurrentUrl();
+		
+		Assert.assertTrue("❌ Gify card  page URL mismatch",
+		        currentUrl.contains("/gift-card"));
+		
+
+		System.out.println("\u001B[32m✅ Navigated to Gift card  page: " + currentUrl + "\u001B[0m");
+
+	}
 	
 	
 	
@@ -1650,18 +1834,18 @@ public void socialMediaFooter() {
 	
 	
 	
-	private static String generateRandomEmail() {
-		String chars = "abcdefghijklmnopqrstuvwxyz1234567890";
-		StringBuilder email = new StringBuilder();
-		Random rnd = new Random();
-		int length = 8;
-
-		for (int i = 0; i < length; i++) {
-			email.append(chars.charAt(rnd.nextInt(chars.length())));
-		}
-
-		return email.toString() + "@example.com";
-	}
+//	private static String generateRandomEmail() {
+//		String chars = "abcdefghijklmnopqrstuvwxyz1234567890";
+//		StringBuilder email = new StringBuilder();
+//		Random rnd = new Random();
+//		int length = 8;
+//
+//		for (int i = 0; i < length; i++) {
+//			email.append(chars.charAt(rnd.nextInt(chars.length())));
+//		}
+//
+//		return email.toString() + "@example.com";
+//	}
 
 
 
@@ -1674,9 +1858,30 @@ public void socialMediaFooter() {
 	
 	
 	
-	
-	
-	
+	private static String lastGeneratedEmail;
+
+	private static String generateRandomEmail() {
+		String prefix = "testing"; // fixed name prefix
+		String digits = "0123";
+		Random rnd = new Random();
+
+		StringBuilder email = new StringBuilder(prefix);
+
+		// Add 4 random digits after the prefix
+		for (int i = 0; i < 4; i++) {
+			email.append(digits.charAt(rnd.nextInt(digits.length())));
+		}
+
+		// Append fixed domain
+		email.append("@gmail.com");
+
+		lastGeneratedEmail = email.toString();
+		return lastGeneratedEmail;
+	}
+
+	public static String getLastGeneratedEmail() {
+		return lastGeneratedEmail;
+	}
 	
 	
 	
