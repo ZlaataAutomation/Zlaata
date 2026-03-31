@@ -58,7 +58,8 @@ Feature: This is Footer Section feature
       | TD_UI_Zlaata_FS_05  |       
       
       
-      
+      @Sanity
+  @Footer
 @TC_UI_Zlaata_FS_06
   Scenario Outline: TC_UI_Zlaata_FS_06 |Verify that Raise a query Content details and URL are displayed in the footer.| "<TD_ID>"
     Given User verifies Raise a query  details are visible in footer
@@ -68,6 +69,7 @@ Feature: This is Footer Section feature
       | TD_UI_Zlaata_FS_06  |         
       
    @Sanity
+     @Footer
 @TC_UI_Zlaata_FS_07
   Scenario Outline: TC_UI_Zlaata_FS_07 |Verify that Faq Content details and URL are displayed in the footer.| "<TD_ID>"
     Given User verifies Faq  details are visible in footer

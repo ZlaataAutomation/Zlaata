@@ -475,7 +475,7 @@ public abstract class SaleOffer50PercentageObjRepo extends BasePage{
  @FindBy(xpath="//button[contains(@class,'order_return_continue_btn')]")
     protected WebElement continueReturnBtn;
 	
-	 @FindBy(xpath="(//div[@title='User Icon'])[1]")
+	 @FindBy(xpath="//button[@title='Account']")
 	    protected WebElement myProfileIcon;
 	 
 	 @FindBy(xpath="(//h2[normalize-space()='My Orders'])[1]")

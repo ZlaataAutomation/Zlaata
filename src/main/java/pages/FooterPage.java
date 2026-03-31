@@ -543,7 +543,7 @@ public  final class FooterPage  extends FooterObjRepo{
 
  	        WebElement raiseQueryLink = wait.until(
 	                ExpectedConditions.elementToBeClickable(
-	                        By.xpath("//a[normalize-space()='Raise a query']")
+	                        By.xpath("//a[normalize-space()='Contact Us']")
 	                )
 	        );
 	        raiseQueryLink.click();
@@ -1394,7 +1394,7 @@ public void socialMediaFooter() {
         // -------------------------------
         // GENERATE VALID EMAIL (RETRY LOGIC)
         // -------------------------------
-        int maxRetries = 5;
+        int maxRetries = 10;
         String validEmail = "";
 
         for (int i = 0; i < maxRetries; i++) {

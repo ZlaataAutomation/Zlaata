@@ -222,7 +222,7 @@ Thread.sleep(2000);
 
 	        // ✅ JS click avoids interception
 	        js.executeScript("arguments[0].click();", nextBtn);
-
+	        Thread.sleep(2000);
 	        // Validate navigation
 	        wait.until(ExpectedConditions.urlContains("page=2"));
 	        String currentUrl = driver.getCurrentUrl();
@@ -283,7 +283,7 @@ Thread.sleep(2000);
 
 	        // Click via JS (avoids header issue)
 	        js.executeScript("arguments[0].click();", page);
-
+	        Thread.sleep(2000);
 	        // Validate URL
 	        wait.until(ExpectedConditions.urlContains("/all"));
 	        String currentUrl = driver.getCurrentUrl();
@@ -292,8 +292,8 @@ Thread.sleep(2000);
 
 	            Assert.assertTrue(
 	                    "❌ Page 1 URL incorrect: " + currentUrl,
-	                    currentUrl.equals("https://www.zlaata.com/all")
-	                    || currentUrl.equals("https://www.zlaata.com/all#")
+	                    currentUrl.equals("https://www.zlaata.com/zlaata-india/all")
+	                    || currentUrl.equals("https://www.zlaata.com/zlaata-india/all#")
 	            );
 
 	            System.out.println(GREEN + "✅ Page 1 loaded correctly → " + currentUrl + RESET);
