@@ -18,7 +18,6 @@ Feature: This is Menu feature
       | TD_ID                  |
       | TD_UI_Zlaata_Menus_01 |
       
-      @Menu
    @TC_UI_Zlaata_Menus_02
   Scenario Outline: TC_UI_Zlaata_Menus_02 |Verify that the user is able to click the "New Arrival" page header menu All Suggestion products.|"<TD_ID>"
      
@@ -43,7 +42,6 @@ Feature: This is Menu feature
       | TD_UI_Zlaata_Menus_03 |   
       
       
-         @Menu
          @TC_UI_Zlaata_Menus_04
   Scenario Outline: TC_UI_Zlaata_Menus_04 |Verify that the user is able to click the "Bss-Lady" header menu All Suggestions.|"<TD_ID>"
      
@@ -54,7 +52,7 @@ Feature: This is Menu feature
       | TD_ID                  |
       | TD_UI_Zlaata_Menus_04 |
       
-         @Menu
+  #       @Menu
         @TC_UI_Zlaata_Menus_05
   Scenario Outline: TC_UI_Zlaata_Menus_05 |Verify that the user is able to Mouse hover any all category in the "Shop" dropdown.|"<TD_ID>"
      

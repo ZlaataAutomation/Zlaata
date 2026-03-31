@@ -101,6 +101,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		int couponDiscount;
 		int cartPageCalcTotalAmount;
 		int cartPageCalcYouSaved;
+		int extraPrepaidDiscount;
 		public void verifyPriceDetailsCalculation() {
 
 		    String GREEN  = "\u001B[32m";
@@ -148,7 +149,9 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		            }
 		        } catch (Exception e) { threadValue = 0; }
 
-		   
+		         extraPrepaidDiscount = safeGet.apply(
+		        	    "(//div[contains(@class,'Cls_cart_extra_prepaid_discount')])[2]"
+		        	);
 
 		        // Coupon discount
 		        couponDiscount = safeGet.apply("//div[@data-coupon_discount]");
@@ -169,6 +172,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		        System.out.println(YELLOW + "Discounted MRP: " + discountedMRP + RESET);
 		        System.out.println(YELLOW + "Express Shipping: " + expressShipping + RESET);
 		        System.out.println(YELLOW + "Thread Value: " + threadValue + RESET);
+		        System.out.println(YELLOW + "Extra Prepaid Discount: " + extraPrepaidDiscount + RESET);
 		        System.out.println(YELLOW + "Coupon Discount: " + couponDiscount + RESET);
 		        System.out.println(LINE);
 		     // UI shown values
@@ -193,7 +197,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 
 		        cartPageCalcTotalAmount =
 		            (discountedMRP + expressShipping)
-		                    - (threadValue + couponDiscount);
+		                    - (threadValue + couponDiscount + extraPrepaidDiscount );
 		        System.out.println(LINE);
 		        System.out.println(
 		        	    "calcSaved = ("
@@ -207,7 +211,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		        	);
 		        // Calculate Saved: (TotalMRP - DiscountedMRP) + coupon + thread 
 		        cartPageCalcYouSaved = (totalMRP - discountedMRP)
-		                + threadValue + couponDiscount;
+		                + threadValue + couponDiscount + extraPrepaidDiscount;
 
 		        System.out.println(CYAN + "🧮 Performing Calculations..." + RESET);
 		        System.out.println(GREEN + "Calculated Saved Amount: " + cartPageCalcYouSaved + RESET);
@@ -476,7 +480,7 @@ public final class OrdersPage extends SaleOffer50PercentageObjRepo{
 		            addressTotalAmountElement.getText().replaceAll("[^0-9]", "").trim()
 		    );
 
-		    int expectedTotalAfterCOD = cartPageCalcTotalAmount + codExtraCharge;
+		    int expectedTotalAfterCOD = cartPageCalcTotalAmount + codExtraCharge + extraPrepaidDiscount ;
 
 		    System.out.println(CYAN + "Expected Total After COD: ₹" + expectedTotalAfterCOD + RESET);
 		    System.out.println(CYAN + "Actual Total After COD: ₹" + addressUiTotalAmount + RESET);
@@ -1538,7 +1542,6 @@ public void verifyOrderCancellation() {
 	    System.out.println(CYAN + line + RESET);
 	    System.out.println(GREEN + "🚀 Starting Order Return Flow..." + RESET);
 	    System.out.println(CYAN + line + RESET);
-	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 	    Common.waitForElement(3);
 	    wait.until(ExpectedConditions.elementToBeClickable(myProfileIcon));
 		click(myProfileIcon);

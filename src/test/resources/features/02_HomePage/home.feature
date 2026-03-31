@@ -10,6 +10,7 @@ Feature: This is HomePage feature
   #============================================================================
   
   @Sanity
+  @Home
   @TC_UI_Zlaata_Home_01
   Scenario Outline: TC_UI_Zlaata_Home_01 |Verify if the user is able to launch URL and click Logo and banner on the homepage banner.|"<TD_ID>"
     
@@ -170,7 +171,6 @@ Examples:
   | TD_UI_Zlaata_Home_15   |
  
   
-   @sanity
   @TC_UI_Zlaata_Home_17
 Scenario Outline: TC_UI_Zlaata_Home_17 |Verify that the Monsoon Banner is available| "<TD_ID>"
 

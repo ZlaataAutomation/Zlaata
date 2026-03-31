@@ -621,32 +621,42 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 	    System.out.println("🔍 Searching for multi-color product...");
 	    Common.waitForElement(2);
 	    // 1️⃣ Get all product cards
-	    List<WebElement> allProducts = driver.findElements(
-	            By.xpath("//div[@class='prod_listing_card']")
-	    );
+	    WebElement product = driver.findElement(
+	    	    By.xpath("(//div[@class='prod_listing_card'][.//span[contains(@class,'prod_swatch_color')][2]]//a[contains(@class,'prod_listing_img')])[1]")
+	    	);
 
-	    System.out.println("🔍 Searching for multi-color product...");
-
-	    // ✅ Store only multi-color products
-	    List<WebElement> multiColorProducts = new ArrayList<>();
-
-	    for (WebElement product : allProducts) {
-	        List<WebElement> colors =
-	                product.findElements(By.xpath("//div[@class='prod_listing_card']//div[@class='prod_swatch_wrap']"));
-
-	        if (colors.size() > 1) {
-	            multiColorProducts.add(product);
-	        }
-	    }
-
-	    if (multiColorProducts.isEmpty()) {
-	        Assert.fail("❌ No multi-color products found");
-	    }
-	    // ✅ VERY IMPORTANT → SHUFFLE
-	    Collections.shuffle(multiColorProducts);
-	    WebElement selectedProduct = multiColorProducts.get(0);
-	    System.out.println("✅ Random multi-color product selected");
-	    multiColorProducts.get(0).click();
+	    	product.click();
+//	    List<WebElement> allProducts = driver.findElements(
+//	            By.xpath("//div[@class='prod_listing_card']")
+//	    );
+//
+//	    System.out.println("🔍 Searching for multi-color product...");
+//
+//	    // ✅ Store only multi-color products
+//	    List<WebElement> multiColorProducts = new ArrayList<>();
+//
+//	    for (WebElement product : allProducts) {
+//	        List<WebElement> colors =
+//	                product.findElements(By.xpath(".//div[contains(@class,'prod_swatch_wrap')]//span[contains(@class,'prod_swatch_color')]"));
+//
+//	        if (colors.size() > 1) {
+//	            multiColorProducts.add(product);
+//	        }
+//	    }
+//
+//	    if (multiColorProducts.isEmpty()) {
+//	        Assert.fail("❌ No multi-color products found");
+//	    }
+//	    // ✅ VERY IMPORTANT → SHUFFLE
+//	    Collections.shuffle(multiColorProducts);
+//	    WebElement selectedProduct = multiColorProducts.get(0);
+//	    System.out.println("✅ Random multi-color product selected");
+//	 // ✅ Click properly (important)
+//	    WebElement productLink = selectedProduct.findElement(
+//	            By.xpath(".//a[contains(@class,'prod_listing_img')]")
+//	    );
+//	    productLink.click();
+	   // multiColorProducts.get(0).click();
 
 	 // ---------------- WAIT FOR PDP ----------------
 	    wait.until(ExpectedConditions.visibilityOfElementLocated(
@@ -882,86 +892,66 @@ Thread.sleep(1500);
 
 	    System.out.println("🔍 Searching for multi-color product...");
 
-//	    // 1️⃣ Get all product cards
-//	    List<WebElement> allProducts = driver.findElements(
-//	            By.xpath("//div[contains(@class,'product_list_cards_list') and .//div[@class='zl-prod-color-swatches']]")
-//	    );
-	    
-	    
+//	    // ✅ STEP 1: Directly pick multi-color product (FAST 🚀)
+	    WebElement selectedProduct = wait.until(ExpectedConditions.presenceOfElementLocated(
+	            By.xpath("(//div[@class='prod_listing_card'][.//span[contains(@class,'prod_swatch_color')][2]])[1]")
+	    ));
 
-	    // 1️⃣ Get all product cards
-	    List<WebElement> allProducts = driver.findElements(
-	            By.xpath("//div[@class='prod_listing_card']//div[@class='prod_swatch_wrap']")
-	    );
-	    System.out.println("🔍 Searching for multi-color product...");
-
-	    // ✅ Store only multi-color products
-	    List<WebElement> multiColorProducts = new ArrayList<>();
-
-	    for (WebElement product : allProducts) {
-	        List<WebElement> colors =
-	                product.findElements(By.xpath("//div[@class='prod_swatch_wrap']"));
-
-	        if (colors.size() > 1) {
-	            multiColorProducts.add(product);
-	        }
-	    }
-
-	    if (multiColorProducts.isEmpty()) {
-	        Assert.fail("❌ No multi-color products found");
-	    }
-	    // ✅ VERY IMPORTANT → SHUFFLE
-	    Collections.shuffle(multiColorProducts);
-	    WebElement selectedProduct = multiColorProducts.get(0);
-	    System.out.println("✅ Random multi-color product selected");
-
-	 
+	    System.out.println("✅ Multi-color product selected");
 
 	    // ------------------ PLP COLORS ------------------
-	    List<WebElement> plpColorEls =
-	            selectedProduct.findElements(By.xpath(".//span[contains(@class,'zl-swatch-color')]"));
+	    List<WebElement> plpColorEls = selectedProduct.findElements(
+	            By.xpath(".//span[contains(@class,'prod_swatch_color')]")
+	    );
 
 	    List<String> plpColors = new ArrayList<>();
+
 	    for (WebElement color : plpColorEls) {
-	        String colorName = color.getAttribute("style").split("'")[1];
-	        plpColors.add(colorName.trim());
+	        String colorName = color.getAttribute("title").trim();   // ✅ correct way
+	        plpColors.add(colorName);
 	    }
 
-	    System.out.println("PLP Colors → " + plpColors);
+	    System.out.println("🎨 PLP Colors → " + plpColors);
 
 	    // ------------------ CLICK PRODUCT ------------------
-	    WebElement productLink = selectedProduct.findElement(By.tagName("a"));
+	    WebElement productLink = selectedProduct.findElement(
+	            By.xpath(".//a[contains(@class,'prod_listing_img')]")
+	    );
 
 	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", productLink);
 	    js.executeScript("arguments[0].click();", productLink);
+	    
+	    Common.waitForElement(3);
 
 	    // ------------------ PDP COLORS ------------------
 	    wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//div[contains(@class,'prod_color_list')]")));
+	            By.xpath("//div[contains(@class,'prod_color_list')]")
+	    ));
 
-	    List<WebElement> pdpColorEls =
-	            driver.findElements(By.xpath("//div[contains(@class,'prod_color_list')]"));
+	    List<WebElement> pdpColorEls = driver.findElements(
+	            By.xpath("//div[contains(@class,'prod_color_list')]")
+	    );
 
 	    List<String> pdpColors = new ArrayList<>();
+
 	    for (WebElement el : pdpColorEls) {
-	        pdpColors.add(
-	                el.findElement(By.className("prod_color_name"))
-	                        .getText().trim()
-	        );
+	        String colorName = el.getAttribute("title").trim();
+	        pdpColors.add(colorName);
 	    }
 
-	    System.out.println("PDP Colors → " + pdpColors);
+	    System.out.println("🎨 PDP Colors → " + pdpColors);
 
 	    // ------------------ VALIDATION ------------------
 	    Collections.sort(plpColors);
 	    Collections.sort(pdpColors);
 
-	    Assert.assertTrue(
+	    Assert.assertEquals(
 	            "❌ Color mismatch\nPLP: " + plpColors + "\nPDP: " + pdpColors,
-	            plpColors.equals(pdpColors)
+	            plpColors,
+	            pdpColors
 	    );
 
-	    System.out.println("✅ COLOR MATCH SUCCESS");
+	    System.out.println("✅ COLOR MATCH SUCCESS 🎉");
 	}
 	
 	

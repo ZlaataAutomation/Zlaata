@@ -7,7 +7,7 @@ Feature: This is My orders feature
   #Expected: Orders sanity 
   #============================================================================
   @Sanity
-           @Order
+  @Order
   @TC_UI_Zlaata_Orders_01
   Scenario Outline: TC_UI_Zlaata_Orders_01 |Verify user placing order and verifies all calculations|"<TD_ID>"
      
