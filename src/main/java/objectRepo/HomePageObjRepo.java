@@ -2,6 +2,7 @@ package objectRepo;
 
 
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -157,5 +158,16 @@ public abstract class HomePageObjRepo extends BasePage {
 	   protected WebElement zlaataIndiaShopButton;
 	
 	
+	@FindBy(xpath = "//a[@class='brand_switch ']")
+	protected WebElement bosslady;
+	
+	@FindBy(xpath = "//a[@href='/boss-lady/']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	protected WebElement clickOnBossladyShopNowButton;
+	
+	@FindBy(xpath = "//div[@class='cross__bttn_for_bosslaypopup popup_containers_cls_btn']")
+	protected WebElement bossladyPopup;
+	
+	@FindBy(xpath = "//section[@data-section='zi_threads_banner']")
+	protected WebElement threadBanner;
 }
 
