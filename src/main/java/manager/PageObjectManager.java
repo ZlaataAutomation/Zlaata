@@ -29,7 +29,7 @@ public class PageObjectManager {
     private CouponPage coupon;
     private AdminPanelPage admin;
     private AllBrokenLinkPage link;
-//    private landingPage land;
+    private landingPage land;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -114,8 +114,8 @@ public class PageObjectManager {
         return (link == null) ? link = new AllBrokenLinkPage(driver) : link;
     
 	}
-//	public landingPage  getLandingPage() {
-//		return (land== null)? land = new landingPage(driver): land;
-//	}
+	public landingPage  getLandingPage() {
+		return (land== null)? land = new landingPage(driver): land;
+	}
 	
 }

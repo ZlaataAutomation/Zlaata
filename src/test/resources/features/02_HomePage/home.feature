@@ -8,9 +8,8 @@ Feature: This is HomePage feature
   #ScenarioDescription : Complete HomePage
   #Expected: HomePage sanity 
   #============================================================================
-  
-  @Sanity
   @Home
+  @Sanity
   @TC_UI_Zlaata_Home_01
   Scenario Outline: TC_UI_Zlaata_Home_01 |Verify if the user is able to launch URL and click Logo and banner on the homepage banner.|"<TD_ID>"
     
@@ -54,16 +53,17 @@ Feature: This is HomePage feature
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Home_04 |
-      
-       @TC_UI_Zlaata_Home_05
-  Scenario Outline: TC_UI_Zlaata_Home_05 |Verify if the user is able to click on the product image in the "Top Selling" section.|"<TD_ID>"
-     
-     Given User clicks on product image at tope selling section
-    
+  @Home
+  @Sanity    
+  @TC_UI_Zlaata_Home_05
+Scenario Outline: TC_UI_Zlaata_Home_05 |Verify if the user is able to click on the product image in the New In section of Zlaata India | "<TD_ID>"
 
-    Examples: 
-      | TD_ID                  |
-      | TD_UI_Zlaata_Home_05 |
+  Given User clicks on product image in the New In section of Zlaata India
+
+Examples:
+  | TD_ID                 |
+  | TD_UI_Zlaata_Home_05 |
+
       
        @TC_UI_Zlaata_Home_06
   Scenario Outline: TC_UI_Zlaata_Home_06 |Verify if the user is able to click on the "New Arrival" section forward and backward arrows.|"<TD_ID>"
@@ -116,7 +116,7 @@ Feature: This is HomePage feature
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Home_10 |
- 
+ @Home
       @Sanity
        @TC_UI_Zlaata_Home_11
   Scenario Outline: TC_UI_Zlaata_Home_11 |Verify if the user is able to click on the WhatsApp icon on all pages.|"<TD_ID>"
@@ -127,7 +127,8 @@ Feature: This is HomePage feature
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Home_11 |
-      
+      @Home
+      @Sanity
        @TC_UI_Zlaata_Home_12
   Scenario Outline: TC_UI_Zlaata_Home_12 |Verify if the user is able to click on the forward and backward arrows in the "Feature On" section.|"<TD_ID>"
      
@@ -147,41 +148,94 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_13 |
       
-      
-      
-            @sanity         
-   @TC_UI_Zlaata_Home_14
-Scenario Outline: TC_UI_Zlaata_Home_14 |Verify that the Home Page logo is displayed| "<TD_ID>"
-
-  Given the user verifies that the logo is available on the Home Page
-
-Examples:
-  | TD_ID                  |
-  | TD_UI_Zlaata_Home_14   |
-  
-  	
-   
- @TC_UI_Zlaata_Home_15
-Scenario Outline: TC_UI_Zlaata_Home_15 |Verify that zlaata India and Boss lady Thread banner is available in the Home Page| "<TD_ID>"
+     	
+  	@Home
+    @Sanity
+ @TC_UI_Zlaata_Home_14
+Scenario Outline: TC_UI_Zlaata_Home_14 |Verify that zlaata India and Boss lady Thread banner is available in the Home Page| "<TD_ID>"
 
   Given the user verifies that the Thread banner is available on the Home Page for zlaata India  and Boss lady
 
 Examples:
   | TD_ID                  |
-  | TD_UI_Zlaata_Home_15   |
+  | TD_UI_Zlaata_Home_14   |
  
-  
-  @TC_UI_Zlaata_Home_17
-Scenario Outline: TC_UI_Zlaata_Home_17 |Verify that the Monsoon Banner is available| "<TD_ID>"
+ 
+ 
+    @Home   
+            @Sanity         
+   @TC_UI_Zlaata_Home_15
+Scenario Outline: TC_UI_Zlaata_Home_15 |Verify that zlaata India and Boss lady  Gift banner is available in the Home Page| "<TD_ID>"
 
-  Given the user verifies that the Monsoon Banner section is available on the Home Page
+Given the user verifies that the Gift card  banner is available on the Home Page for zlaata India  and Boss lady
+Examples:
+  | TD_ID                  |
+  | TD_UI_Zlaata_Home_15  |
+  
+  @Home
+   @Sanity
+  @TC_UI_Zlaata_Home_16
+Scenario Outline: TC_UI_Zlaata_Home_16 |Verify that zlaata India and Boss lady  Influencer Banner  is available in the Home Page| "<TD_ID>"
+
+  Given the user verifies that the Influencer Banner section is available on the Home Page for zlaata India  and Boss lady
+
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_Home_16 |
+  
+  @Home
+    @Sanity
+  @TC_UI_Zlaata_Home_17
+Scenario Outline: TC_UI_Zlaata_Home_17 |Verify that zlaata India and Boss lady about us banner is available in the Home Page| "<TD_ID>"
+
+  Given the user verifies that the about us  Banner section is available on the Home Page for zlaata India  and Boss lady
 
 Examples:
   | TD_ID                |
   | TD_UI_Zlaata_Home_17 |
+   
   
-  
-  
+@Home
+      @Sanity
+  @TC_UI_Zlaata_Home_18
+Scenario Outline: TC_UI_Zlaata_Home_18 |Verify that zlaata India collection  banner is available  the Home Page| "<TD_ID>"
 
+  Given the user verifies that the collection  banner  is available on the Home Page for zlaata India 
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_Home_18 |
+  
+  
+  @Home
+      @Sanity
+  @TC_UI_Zlaata_Home_19
+Scenario Outline: TC_UI_Zlaata_Home_19 |Verify that zlaata India  category  banner is available  the Home Page| "<TD_ID>"
+
+  Given the user verifies that the category  banner  is available on the Home Page for zlaata India 
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_Home_19 |
+  
+    @Home
+      @Sanity
+  @TC_UI_Zlaata_Home_20
+Scenario Outline: TC_UI_Zlaata_Home_20 |Verify that Boss lady  category  banner is available  the Home Page| "<TD_ID>"
+
+  Given the user verifies that the category  banner  is available on the Home Page for Boss lady 
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_Home_20 |
+  
+     @Home
+      @Sanity
+  @TC_UI_Zlaata_Home_21
+Scenario Outline: TC_UI_Zlaata_Home_21 |Verify that zlaata India and Boss lady  flash notification is available in the Home Page | "<TD_ID>"
+
+  Given the user verifies that the flash notification  is available on the Home Page for Boss lady  and zlaata India 
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_Home_21 |
+  
+  
   
   
