@@ -12,10 +12,18 @@ public abstract class SearchBarObjRepo extends BasePage {
 	@FindBy(xpath = "//div[@class='navigation_search_input_box']")
 	protected WebElement searchBarInput;
 	
+	@FindBy(id="searchBtn")
+	protected WebElement clickOnSearchBar;
+	
+	@FindBy(xpath = "//div[@class='global_search_placeholder']")
+	protected WebElement searchKeywordTextBox;
+	
+	
 	@FindBy(xpath = "//input[@class='navigation_search_input_field Cls_redirect_restrict']")
 	protected WebElement searchbaractive;
 	
-	
+	@FindBy(xpath = "//div[@class='search_bar_wrapper']")
+	protected WebElement  searchBarPage;
 
 	@FindBy(xpath = "//h5[.='TRENDINGS']")
 	protected WebElement headingTrendings;
@@ -81,6 +89,21 @@ public abstract class SearchBarObjRepo extends BasePage {
 	@FindBy(xpath = "//button[@class='prod_buy_now_btn btn___2 Cls_Buy_now_To_Cart']")
 	protected WebElement buyNowButton;
 	
+	
+	
+	@FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	   protected WebElement zlaataIndiaShopButton;
+	
+	
+
+	@FindBy(xpath = "//a[@class='brand_switch ']")
+	protected WebElement bosslady;
+	
+	@FindBy(xpath = "//a[@href='/boss-lady/']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	protected WebElement clickOnBossladyShopNowButton;
+	
+	@FindBy(xpath = "//input[@id='globalSearchInput']")
+	protected WebElement searchBoxPlaceholder;
 	
 }
 
