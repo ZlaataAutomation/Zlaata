@@ -41,16 +41,15 @@ public class landingStepDef {
 
 
 
-	@Given("User is on landing page, if cart button is redirected")
-	public void user_is_on_landing_page_if_cart_button_is_redirected() {
+
+	@Given("User is on landing page, if  Profile  button is redirected")
+	public void user_is_on_landing_page_if_profile_button_is_redirected() {
 		land.verifycartButtonRedirection();
+
 	}
 
 
-	@Given("User is on landing page, if  Wishlist button is redirected")
-	public void user_is_on_landing_page_if_wishlist_button_is_redirected() {
-		land.verifyProfileiconRedirection();
-	}
+
 
 
 	@Given("User is on the landing page and checks for Flash Sale notification")

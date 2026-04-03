@@ -2,6 +2,9 @@ package pages;
 
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
@@ -31,20 +34,82 @@ public final class SearchSectionPage  extends SearchBarObjRepo{
 	public void searchbarClikable() {
 		Common.waitForElement(5);
 		
-		click(searchBarInput);
+	click(clickOnSearchBar);
+	
+//	Common.waitForElement(2000);
 		try {
-			if (headingRelatedProducts.isDisplayed()) 
+			if (searchBarPage.isDisplayed()) 
 			{
-				System.out.println("the Search bar cliked");
+				System.out.println("the Search  icon is  cliked and it is open the search page ");
 			}
 			else {
-				System.out.println("the Search bar not  cliked");
+				System.out.println("the Search icon not  cliked it is not ooen the search page ");
 			}
 		} catch (Exception e) 
 		{
 			System.out.println(e);
 		}
+		
+	}
+	
+	
+	public void printRecentSearches() {
 
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    // 🎨 COLORS
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    // 🔹 OPEN SEARCH
+	    WebElement searchBox = wait.until(
+	            ExpectedConditions.elementToBeClickable(By.xpath("//input[@type='search']"))
+	    );
+	    searchBox.click();
+
+	    System.out.println(CYAN + "🔍 Search opened" + RESET);
+
+	    // 🔹 CHECK IF SECTION EXISTS
+	    By recentSectionBy = By.xpath("//div[contains(@class,'recent_search_wrapper')]");
+	    List<WebElement> section = driver.findElements(recentSectionBy);
+
+	    if (section.size() == 0) {
+	        System.out.println(YELLOW + "⚠️ No Recent Searches section available" + RESET);
+	        return;
+	    }
+
+	    // 🔹 GET LIST
+	    By recentListBy = By.xpath("//ul[contains(@class,'recent_search_list')]//li");
+	    List<WebElement> recentSearches = driver.findElements(recentListBy);
+
+	    // 🔹 CHECK EMPTY LIST
+	    if (recentSearches.size() == 0) {
+	        System.out.println(YELLOW + "⚠️ Recent Searches section present but NO data" + RESET);
+	        return;
+	    }
+
+	    System.out.println(YELLOW + "📌 Total Recent Searches: " + recentSearches.size() + RESET);
+
+	    // 🔹 LOOP & PRINT
+	    for (int i = 0; i < recentSearches.size(); i++) {
+
+	        recentSearches = driver.findElements(recentListBy); // 🔁 re-fetch
+	        WebElement item = recentSearches.get(i);
+
+	        String text = item.getText().trim();
+
+	        if (text.isEmpty()) {
+	            System.out.println(RED + "⚠️ Empty search at index " + i + RESET);
+	            continue;
+	        }
+
+	        System.out.println(GREEN + "👉 [" + (i + 1) + "] " + text + RESET);
+	    }
+
+	    System.out.println(CYAN + "✅ Recent Searches validation completed" + RESET);
 	}
 	
 //TC 02
@@ -406,11 +471,411 @@ public final class SearchSectionPage  extends SearchBarObjRepo{
 	    System.out.println("\u001B[32m✅ Recently viewed product matches (partially or fully): " + recentProduct + "\u001B[0m");
 	}
 
+	
 
 
+	public void verifyBothBrandRelatedQueries() throws InterruptedException {
+		
+		searchbarClikable();
+		verifyRelatedQueriesZI();
+		searchbarClikable();
+		verifyRelatedQueriesBL();
 
+		
+	}
+	public void verifyRelatedQueriesZI() throws InterruptedException {
 
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
 
+	    String keyword = "Red";
+	    System.out.println(CYAN + "🔍 Searching for keyword: " + keyword + RESET);
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // ✅ Open search
+	    WebElement searchInput = wait.until(
+	            ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
+	    );
+
+	    searchInput.click();
+	    searchInput.clear();
+	    searchInput.sendKeys(keyword);
+
+	    Thread.sleep(2000);
+
+	    // ✅ Check wrapper
+	    By wrapperBy = By.xpath("//div[@class='recent_search_wrapper']");
+	    List<WebElement> wrappers = driver.findElements(wrapperBy);
+
+	    if (wrappers.isEmpty()) {
+	        System.out.println(YELLOW + "⚠️ No Related Queries section found" + RESET);
+	        return;
+	    }
+
+	    WebElement wrapper = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(wrapperBy)
+	    );
+
+	    String sectionHeading = wrapper.findElement(By.xpath(".//h3")).getText();
+	    System.out.println(GREEN + "📌 Section Heading: " + sectionHeading + RESET);
+
+	    // ✅ Queries XPath
+	    By queriesBy = By.xpath("//li[contains(@class,'product-redirect-tag')]");
+
+	    List<WebElement> queries = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(queriesBy)
+	    );
+
+	    int total = queries.size();
+	    System.out.println(CYAN + "🔽 Total Related Queries: " + total + RESET);
+
+	    // ✅ Product XPath
+	    By productsBy = By.xpath("//div[contains(@class,'prod_listing_card')]");
+
+	    for (int i = 0; i < total; i++) {
+
+	        // 🔁 Re-fetch queries
+	        queries = wait.until(
+	                ExpectedConditions.visibilityOfAllElementsLocatedBy(queriesBy)
+	        );
+
+	        WebElement query = queries.get(i);
+	        String expected = query.getText().trim();
+
+	        System.out.println(YELLOW + "👉 Clicking Query [" + (i + 1) + "] : " + expected + RESET);
+
+	        try {
+	            wait.until(ExpectedConditions.elementToBeClickable(query)).click();
+	        } catch (Exception e) {
+	            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", query);
+	        }
+
+	        // ✅ Heading validation
+	        WebElement headingEle = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//h2[contains(@class,'prod_listing_topic')]")
+	                )
+	        );
+
+	        String actual = headingEle.getText().trim();
+
+	        if (actual.equalsIgnoreCase(expected)) {
+	            System.out.println(GREEN + "✅ Heading matched: " + actual + RESET);
+	        } else {
+	            System.out.println(RED + "❌ Heading mismatch! Expected: " + expected + " | Actual: " + actual + RESET);
+	            Assert.fail("Heading mismatch");
+	        }
+
+	        // ✅ PRODUCT VALIDATION (NEW 🔥)
+	        List<WebElement> products = wait.until(
+	                ExpectedConditions.visibilityOfAllElementsLocatedBy(productsBy)
+	        );
+
+	        int productCount = products.size();
+
+	        if (productCount > 0) {
+	            System.out.println(GREEN + "🛍 Products Found: " + productCount + RESET);
+	        } else {
+	            System.out.println(RED + "❌ No products found!" + RESET);
+	            Assert.fail("No products displayed for: " + expected);
+	        }
+
+	        // 🔙 Back
+	        driver.navigate().back();
+
+	        // 🔥 Re-open search (fix stale)
+	        searchInput = wait.until(
+	                ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
+	        );
+
+	        searchInput.click();
+	        searchInput.clear();
+	        searchInput.sendKeys(keyword);
+
+	        Thread.sleep(1500);
+	    }
+
+	    System.out.println(GREEN + "🎉 All Related Queries + Products validated successfully!" + RESET);
+	}
+	   
+	public void verifyRelatedQueriesBL() throws InterruptedException {
+		
+		click(bosslady);
+		
+		
+	  String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    String keyword = " set";
+	    System.out.println(CYAN + "🔍 Searching for keyword: " + keyword + RESET);
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // ✅ Open search
+	    WebElement searchInput = wait.until(
+	            ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
+	    );
+
+	    searchInput.click();
+	    searchInput.clear();
+	    searchInput.sendKeys(keyword);
+
+	    Thread.sleep(2000);
+
+	    // ✅ Check wrapper
+	    By wrapperBy = By.xpath("//div[@class='recent_search_wrapper']");
+	    List<WebElement> wrappers = driver.findElements(wrapperBy);
+
+	    if (wrappers.isEmpty()) {
+	        System.out.println(YELLOW + "⚠️ No Related Queries section found" + RESET);
+	        return;
+	    }
+
+	    WebElement wrapper = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(wrapperBy)
+	    );
+
+	    String sectionHeading = wrapper.findElement(By.xpath(".//h3")).getText();
+	    System.out.println(GREEN + "📌 Section Heading: " + sectionHeading + RESET);
+
+	    // ✅ Queries XPath
+	    By queriesBy = By.xpath("//li[contains(@class,'product-redirect-tag')]");
+
+	    List<WebElement> queries = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(queriesBy)
+	    );
+
+	    int total = queries.size();
+	    System.out.println(CYAN + "🔽 Total Related Queries: " + total + RESET);
+
+	    // ✅ Product XPath
+	    By productsBy = By.xpath("//div[contains(@class,'prod_listing_card')]");
+
+	    for (int i = 0; i < total; i++) {
+
+	        // 🔁 Re-fetch queries
+	        queries = wait.until(
+	                ExpectedConditions.visibilityOfAllElementsLocatedBy(queriesBy)
+	        );
+
+	        WebElement query = queries.get(i);
+	        String expected = query.getText().trim();
+
+	        System.out.println(YELLOW + "👉 Clicking Query [" + (i + 1) + "] : " + expected + RESET);
+
+	        try {
+	            wait.until(ExpectedConditions.elementToBeClickable(query)).click();
+	        } catch (Exception e) {
+	            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", query);
+	        }
+
+	        // ✅ Heading validation
+	        WebElement headingEle = wait.until(
+	                ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//h2[contains(@class,'prod_listing_topic')]")
+	                )
+	        );
+
+	        String actual = headingEle.getText().trim();
+
+	        if (actual.equalsIgnoreCase(expected)) {
+	            System.out.println(GREEN + "✅ Heading matched: " + actual + RESET);
+	        } else {
+	            System.out.println(RED + "❌ Heading mismatch! Expected: " + expected + " | Actual: " + actual + RESET);
+	            Assert.fail("Heading mismatch");
+	        }
+
+	        // ✅ PRODUCT VALIDATION (NEW 🔥)
+	        List<WebElement> products = wait.until(
+	                ExpectedConditions.visibilityOfAllElementsLocatedBy(productsBy)
+	        );
+
+	        int productCount = products.size();
+
+	        if (productCount > 0) {
+	            System.out.println(GREEN + "🛍 Products Found: " + productCount + RESET);
+	        } else {
+	            System.out.println(RED + "❌ No products found!" + RESET);
+	            Assert.fail("No products displayed for: " + expected);
+	        }
+
+	        // 🔙 Back
+	        driver.navigate().back();
+
+	        // 🔥 Re-open search (fix stale)
+	        searchInput = wait.until(
+	                ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
+	        );
+
+	        searchInput.click();
+	        searchInput.clear();
+	        searchInput.sendKeys(keyword);
+
+	        Thread.sleep(1500);
+	    }
+
+	    System.out.println(GREEN + "🎉 All Related Queries + Products validated successfully!" + RESET);
+	}
+	public void verifyBothBrandcloseButtonInSearchbar() throws InterruptedException {
+		searchbarClikable();
+		verifyCloseButtonInSearchBarFor();
+		System.out.println("Text remove from zlaata India ");
+		click(bosslady);
+		searchbarClikable();
+		verifyCloseButtonInSearchBarFor();
+		System.out.println("Text remove from Boss lady ");
+
+		
+	}
+
+	public void verifyCloseButtonInSearchBarFor() throws InterruptedException {
+
+		 String keyword = "kurta";
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+		    // ANSI color codes for console
+		    final String RESET = "\u001B[0m";
+		    final String RED = "\u001B[31m";
+		    final String GREEN = "\u001B[32m";
+		    final String YELLOW = "\u001B[33m";
+		    final String BLUE = "\u001B[34m";
+
+		    // ✅ Step 1: Open search and type keyword
+		    WebElement searchInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("globalSearchInput")));
+		    searchInput.click();
+		    searchInput.clear();
+		    searchInput.sendKeys(keyword);
+		    System.out.println(BLUE + "✍️ Typed keyword: " + keyword + RESET);
+
+		    Thread.sleep(500); // shorter wait, enough for UI update
+
+		    // ✅ Step 2: Click Close button (SVG)
+		    By closeBtnBy = By.xpath("//*[@class='search_clr_icon']");
+		    WebElement closeBtn = wait.until(ExpectedConditions.elementToBeClickable(closeBtnBy));
+
+		    try {
+		        closeBtn.click();
+		        System.out.println(RED + "❌ Clicked Close button" + RESET);
+		    } catch (Exception e) {
+		        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", closeBtn);
+		        System.out.println(YELLOW + "⚠️ JS click on Close button performed" + RESET);
+		    }
+
+		    Thread.sleep(500); // wait for DOM update
+
+		    // ✅ Step 3: Validate search input is cleared
+		    String currentValue = searchInput.getAttribute("value");
+		    System.out.println(BLUE + "📌 Search input value after close: '" + currentValue + "'" + RESET);
+
+		    if (currentValue == null || currentValue.isEmpty()) {
+		        System.out.println(GREEN + "✅ PASS → Text removed after clicking Close" + RESET);
+		    } else {
+		        System.err.println(RED + "❌ FAIL → Text NOT removed. Value: '" + currentValue + "'" + RESET);
+		        Assert.fail("Search text not removed after Close button");
+		    }
+	}
+	
+	public void verifyBothBrandRecentSearches() {
+		searchbarClikable();
+		verifyRecentSearchesZL();
+		click(bosslady);
+		searchbarClikable();
+		verifyRecentSearchesZL();
+		
+	}
+	
+		public void verifyRecentSearchesZL() {
+
+	    // Console colors
+	    String GREEN = "\u001B[32m";
+	    String RED = "\u001B[31m";
+	    String CYAN = "\u001B[36m";
+	    String RESET = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // 1️⃣ Random dress keyword
+	    List<String> dressKeywords = Arrays.asList(
+	            "dress", "kurta", "gown", "maxi dress", "mini dress",
+	            "saree dress", "evening dress", "party dress"
+	    );
+	    Collections.shuffle(dressKeywords);
+	    String keyword = dressKeywords.get(0);
+	    System.out.println(CYAN + "Random dress keyword selected: " + keyword + RESET);
+
+	    String currentUrlBefore = "";
+	    int productCountBefore = 0;
+
+	    try {
+	        // 2️⃣ Open search and type keyword
+	        WebElement searchInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("globalSearchInput")));
+	        searchInput.click();
+	        searchInput.clear();
+	        searchInput.sendKeys(keyword);
+	        searchInput.sendKeys(Keys.ENTER);
+
+	        // 3️⃣ Store URL and product count
+	        currentUrlBefore = driver.getCurrentUrl();
+	        By productsBy = By.xpath("//div[contains(@class,'prod_listing_card')]");
+	        wait.until(ExpectedConditions.visibilityOfElementLocated(productsBy));
+	        productCountBefore = driver.findElements(productsBy).size();
+
+	        System.out.println("Initial URL: " + currentUrlBefore);
+	        System.out.println("Initial product count: " + productCountBefore);
+
+	        // 4️⃣ Click the Close button (without clearing)
+	        WebElement closeBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='search_clr_icon']")));
+	        closeBtn.click();
+
+	        // 5️⃣ Click search bar again
+	        searchInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("globalSearchInput")));
+	        searchInput.click();
+
+	        // 6️⃣ Click the same keyword from Recent Searches
+	        By recentListBy = By.xpath("//ul[@class='recent_search_list']/li[contains(@class,'search_history_item_name')]");
+	        List<WebElement> recentItems = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(recentListBy));
+	        boolean foundRecent = false;
+
+	        for (WebElement item : recentItems) {
+	            if (item.getText().trim().equalsIgnoreCase(keyword)) {
+	                foundRecent = true;
+	                item.click();
+	                break;
+	            }
+	        }
+
+	        if (!foundRecent) {
+	            System.out.println(RED + "❌ Keyword not found in Recent Searches: " + keyword + RESET);
+	            return;
+	        }
+
+	        // 7️⃣ After navigation, re-locate products and URL
+	        String urlAfter = driver.getCurrentUrl();
+	        wait.until(ExpectedConditions.visibilityOfElementLocated(productsBy));
+	        int productCountAfter = driver.findElements(productsBy).size();
+
+	        // ✅ Verification using equalsIgnoreCase for URL
+	        if (currentUrlBefore.equalsIgnoreCase(urlAfter) && productCountBefore == productCountAfter) {
+	            System.out.println(GREEN + "✅ Recent search results match previous search for keyword: " + keyword + RESET);
+	            System.out.println(GREEN + "✅ URL: " + urlAfter + RESET);
+	            System.out.println(GREEN + "✅ Product count: " + productCountAfter + RESET);
+	        } else {
+	            System.out.println(RED + "❌ Recent search results DO NOT match previous search for keyword: " + keyword + RESET);
+	            System.out.println(RED + "❌ Previous URL: " + currentUrlBefore + ", Current URL: " + urlAfter + RESET);
+	            System.out.println(RED + "❌ Previous count: " + productCountBefore + ", Current count: " + productCountAfter + RESET);
+	        }
+
+	    } catch (Exception e) {
+	        System.out.println(RED + "Error during recent search verification: " + e.getMessage() + RESET);
+	    }
+	}
 	@Override
 	public boolean verifyExactText(WebElement ele, String expectedText) {
 		// TODO Auto-generated method stub
@@ -429,5 +894,7 @@ public final class SearchSectionPage  extends SearchBarObjRepo{
 		return false;
 	}
 
+
+	
 }
 

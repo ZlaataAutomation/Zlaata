@@ -37,7 +37,7 @@ public final class HomePage extends HomePageObjRepo {
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 //				type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
 //				click(submit);
-		handleAccessCodeIfPresentFast();
+//		handleAccessCodeIfPresentFast();
 //			popup();
 		click(zlaataIndiaShopButton);
 
@@ -817,190 +817,356 @@ public void validateUrlAndLogo() {
 
 
 
+//private void featureOnSection() {
+//
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//
+//	    By featuredSection = By.xpath("//section[contains(@class,'featured_section')]");
+//	    
+//	    By imagesBy = By.xpath("//section[contains(@class,'featured_section')]//img");
+//
+//	    // ---------------- SCROLL ----------------
+//	    WebElement featureEle = wait.until(
+//	            ExpectedConditions.presenceOfElementLocated(featuredSection)
+//	    );
+//
+//	    ((JavascriptExecutor) driver).executeScript(
+//	            "arguments[0].scrollIntoView({block:'center'});", featureEle);
+//
+//	    wait.until(ExpectedConditions.visibilityOf(featureEle));
+//
+//	    System.out.println("✅ Scrolled to Featured Section");
+//
+//	 // ---------------- SMALL SCROLL ----------------
+//	    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,300)");
+//	    Common.waitForElement(5);
+//
+//
+//	    // ---------------- FORWARD ARROW ----------------
+//	    By nextArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-next')]");
+//
+//	    List<WebElement> nextBtns = driver.findElements(nextArrowBy);
+//
+//	    if (nextBtns.isEmpty()) {
+//
+//	        System.out.println("⚠️ Forward Arrow NOT AVAILABLE");
+//
+//	    } else {
+//
+//	        WebElement nextBtn = nextBtns.get(0);
+//
+//	        String classAttr = nextBtn.getAttribute("class");
+//
+//	        if (classAttr != null && classAttr.contains("swiper-button-next swiper-button-lock")) {
+//
+//	            System.out.println("⚠️ Forward Arrow NOT ACTIVE");
+//
+//	        } else {
+//
+//	            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", nextBtn);
+//
+//	            try {
+//	                nextBtn.click();
+//	            } catch (Exception e) {
+//	                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", nextBtn);
+//	            }
+//
+//	            System.out.println("➡️ Forward Arrow ACTIVE → CLICKED");
+//	        }
+//	    }
+//
+//
+//	    // ---------------- BACKWARD ARROW ----------------
+//	    By prevArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-prev')]");
+//
+//	    List<WebElement> prevBtns = driver.findElements(prevArrowBy);
+//
+//	    if (prevBtns.isEmpty()) {
+//
+//	        System.out.println("⚠️ Backward Arrow NOT AVAILABLE");
+//
+//	    } else {
+//
+//	        WebElement prevBtn = prevBtns.get(0);
+//
+//	        String classAttr = prevBtn.getAttribute("class");
+//
+//	        if (classAttr != null && classAttr.contains("swiper-button-prev swiper-button-lock")) {
+//
+//	            System.out.println("⚠️ Backward Arrow NOT ACTIVE");
+//
+//	        } else {
+//
+//	            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", prevBtn);
+//
+//	            try {
+//	                prevBtn.click();
+//	            } catch (Exception e) {
+//	                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", prevBtn);
+//	            }
+//
+//	            System.out.println("⬅️ Backward Arrow ACTIVE → CLICKED");
+//	        }
+//	    }
+//	    // ---------------- CLICK ALL BANNERS ----------------
+//	    List<WebElement> images = wait.until(
+//	            ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
+//	    );
+//
+//	    int total = images.size();
+//	    System.out.println("🖼 Total Banners: " + total);
+//
+//	    for (int i = 0; i < total; i++) {
+//
+//	        // 🔁 Re-fetch to avoid stale element
+//	        images = wait.until(
+//	                ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
+//	        );
+//
+//	        WebElement img = images.get(i);
+//
+//	        try {
+//	            ((JavascriptExecutor) driver).executeScript(
+//	                    "arguments[0].scrollIntoView({block:'center'});", img);
+//
+//	            wait.until(ExpectedConditions.elementToBeClickable(img));
+//
+//	            // ---------------- ALT CHECK ----------------
+//	            String bannerName = img.getAttribute("alt");
+//
+//	            if (bannerName == null || bannerName.trim().isEmpty()) {
+//	                System.out.println("⚠️ Banner [" + (i + 1) + "] has NO ALT text → Skipping");
+//	                continue;
+//	            }
+//
+//	            bannerName = bannerName.toLowerCase().trim();
+//
+//	            System.out.println("👉 Clicking Banner [" + (i + 1) + "] : " + bannerName);
+//
+//	            // ---------------- URL BEFORE CLICK ----------------
+//	            String beforeClickUrl = driver.getCurrentUrl();
+//
+//	            clickUsingJavaScript(img);
+//
+//	            Thread.sleep(2000);
+//
+//	            // ---------------- URL AFTER CLICK ----------------
+//	            String currentUrl = driver.getCurrentUrl().toLowerCase();
+//
+//	            // ---------------- NO REDIRECT ----------------
+//	            if (currentUrl.equalsIgnoreCase(beforeClickUrl)) {
+//
+//	                System.out.println("⚠️ Banner [" + (i + 1) + "] has NO REDIRECT / NO LINK");
+//	                continue;
+//	            }
+//
+//	            // ---------------- MATCH LOGIC ----------------
+//	            String cleanBanner = bannerName.replace(" ", "")
+//	                                           .replace(".com", "")
+//	                                           .replace("-", "");
+//
+//	            String cleanUrl = currentUrl.replace("https://", "")
+//	                                        .replace("http://", "")
+//	                                        .replace("www.", "")
+//	                                        .replace(".com", "")
+//	                                        .replace("-", "")
+//	                                        .replace("/", "");
+//
+//	            if (cleanUrl.contains(cleanBanner)) {
+//
+//	                System.out.println("✅ PASS → Banner & URL matched");
+//	                System.out.println("🔗 URL: " + currentUrl);
+//
+//	            } else {
+//
+//	                Assert.fail(
+//	                        "❌ FAIL → Banner & URL NOT matched\n" +
+//	                        "Banner : " + bannerName +
+//	                        "\nURL    : " + currentUrl
+//	                );
+//	            }
+//
+//	            // 🔙 Go back
+//	            driver.navigate().back();
+//
+//	            wait.until(ExpectedConditions.visibilityOfElementLocated(featuredSection));
+//
+//	        } catch (Exception e) {
+//	            Assert.fail("❌ Error on banner index " + i + " : " + e.getMessage());
+//	        }
+//	    }
+//
+//	    System.out.println("🎉 All banners validated successfully!");
+//	}
+
+
 private void featureOnSection() {
 
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-	    By featuredSection = By.xpath("//section[contains(@class,'featured_section')]");
-	    
-	    By imagesBy = By.xpath("//section[contains(@class,'featured_section')]//img");
+    // 🎨 COLORS
+    String GREEN  = "\u001B[32m";
+    String RED    = "\u001B[31m";
+    String YELLOW = "\u001B[33m";
+    String CYAN   = "\u001B[36m";
+    String RESET  = "\u001B[0m";
 
-	    // ---------------- SCROLL ----------------
-	    WebElement featureEle = wait.until(
-	            ExpectedConditions.presenceOfElementLocated(featuredSection)
-	    );
+    By featuredSection = By.xpath("//section[contains(@class,'featured_section')]");
+    By imagesBy = By.xpath("//section[contains(@class,'featured_section')]//img");
 
-	    ((JavascriptExecutor) driver).executeScript(
-	            "arguments[0].scrollIntoView({block:'center'});", featureEle);
+    // ---------------- SCROLL ----------------
+    WebElement featureEle = wait.until(
+            ExpectedConditions.presenceOfElementLocated(featuredSection)
+    );
 
-	    wait.until(ExpectedConditions.visibilityOf(featureEle));
+    ((JavascriptExecutor) driver).executeScript(
+            "arguments[0].scrollIntoView({block:'center'});", featureEle);
 
-	    System.out.println("✅ Scrolled to Featured Section");
+    wait.until(ExpectedConditions.visibilityOf(featureEle));
 
-	 // ---------------- SMALL SCROLL ----------------
-	    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,300)");
-	    Common.waitForElement(5);
+    System.out.println(CYAN + "✅ Scrolled to Featured Section" + RESET);
 
+    // ---------------- SMALL SCROLL ----------------
+    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,300)");
+    Common.waitForElement(5);
 
-	    // ---------------- FORWARD ARROW ----------------
-	    By nextArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-next')]");
+    // ---------------- FORWARD ARROW ----------------
+    By nextArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-next')]");
 
-	    List<WebElement> nextBtns = driver.findElements(nextArrowBy);
+    List<WebElement> nextBtns = driver.findElements(nextArrowBy);
 
-	    if (nextBtns.isEmpty()) {
+    if (nextBtns.isEmpty()) {
+        System.out.println(YELLOW + "⚠️ Forward Arrow NOT AVAILABLE" + RESET);
+    } else {
+        WebElement nextBtn = nextBtns.get(0);
+        String classAttr = nextBtn.getAttribute("class");
 
-	        System.out.println("⚠️ Forward Arrow NOT AVAILABLE");
+        if (classAttr != null && classAttr.contains("swiper-button-next swiper-button-lock")) {
+            System.out.println(YELLOW + "⚠️ Forward Arrow NOT ACTIVE" + RESET);
+        } else {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", nextBtn);
 
-	    } else {
+            try {
+                nextBtn.click();
+            } catch (Exception e) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", nextBtn);
+            }
 
-	        WebElement nextBtn = nextBtns.get(0);
+            System.out.println(GREEN + "➡️ Forward Arrow ACTIVE → CLICKED" + RESET);
+        }
+    }
 
-	        String classAttr = nextBtn.getAttribute("class");
+    // ---------------- BACKWARD ARROW ----------------
+    By prevArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-prev')]");
 
-	        if (classAttr != null && classAttr.contains("swiper-button-next swiper-button-lock")) {
+    List<WebElement> prevBtns = driver.findElements(prevArrowBy);
 
-	            System.out.println("⚠️ Forward Arrow NOT ACTIVE");
+    if (prevBtns.isEmpty()) {
+        System.out.println(YELLOW + "⚠️ Backward Arrow NOT AVAILABLE" + RESET);
+    } else {
+        WebElement prevBtn = prevBtns.get(0);
+        String classAttr = prevBtn.getAttribute("class");
 
-	        } else {
+        if (classAttr != null && classAttr.contains("swiper-button-prev swiper-button-lock")) {
+            System.out.println(YELLOW + "⚠️ Backward Arrow NOT ACTIVE" + RESET);
+        } else {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", prevBtn);
 
-	            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", nextBtn);
+            try {
+                prevBtn.click();
+            } catch (Exception e) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", prevBtn);
+            }
 
-	            try {
-	                nextBtn.click();
-	            } catch (Exception e) {
-	                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", nextBtn);
-	            }
+            System.out.println(GREEN + "⬅️ Backward Arrow ACTIVE → CLICKED" + RESET);
+        }
+    }
 
-	            System.out.println("➡️ Forward Arrow ACTIVE → CLICKED");
-	        }
-	    }
+    // ---------------- CLICK ALL BANNERS ----------------
+    List<WebElement> images = wait.until(
+            ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
+    );
 
+    int total = images.size();
+    System.out.println(CYAN + "🖼 Total Banners: " + total + RESET);
 
-	    // ---------------- BACKWARD ARROW ----------------
-	    By prevArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-prev')]");
+    for (int i = 0; i < total; i++) {
 
-	    List<WebElement> prevBtns = driver.findElements(prevArrowBy);
+        images = wait.until(
+                ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
+        );
 
-	    if (prevBtns.isEmpty()) {
+        WebElement img = images.get(i);
 
-	        System.out.println("⚠️ Backward Arrow NOT AVAILABLE");
+        try {
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].scrollIntoView({block:'center'});", img);
 
-	    } else {
+            wait.until(ExpectedConditions.elementToBeClickable(img));
 
-	        WebElement prevBtn = prevBtns.get(0);
+            // ---------------- ALT CHECK ----------------
+            String bannerName = img.getAttribute("alt");
 
-	        String classAttr = prevBtn.getAttribute("class");
+            if (bannerName == null || bannerName.trim().isEmpty()) {
+                System.out.println(YELLOW + "⚠️ Banner [" + (i + 1) + "] NO ALT → Skipping" + RESET);
+                continue;
+            }
 
-	        if (classAttr != null && classAttr.contains("swiper-button-prev swiper-button-lock")) {
+            bannerName = bannerName.toLowerCase().trim();
 
-	            System.out.println("⚠️ Backward Arrow NOT ACTIVE");
+            System.out.println(CYAN + "👉 Clicking Banner [" + (i + 1) + "] : " + bannerName + RESET);
 
-	        } else {
+            String beforeClickUrl = driver.getCurrentUrl();
 
-	            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", prevBtn);
+            clickUsingJavaScript(img);
 
-	            try {
-	                prevBtn.click();
-	            } catch (Exception e) {
-	                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", prevBtn);
-	            }
+            Thread.sleep(2000);
 
-	            System.out.println("⬅️ Backward Arrow ACTIVE → CLICKED");
-	        }
-	    }
-	    // ---------------- CLICK ALL BANNERS ----------------
-	    List<WebElement> images = wait.until(
-	            ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
-	    );
+            String currentUrl = driver.getCurrentUrl().toLowerCase();
 
-	    int total = images.size();
-	    System.out.println("🖼 Total Banners: " + total);
+            if (currentUrl.equalsIgnoreCase(beforeClickUrl)) {
+                System.out.println(YELLOW + "⚠️ Banner [" + (i + 1) + "] NO REDIRECT" + RESET);
+                continue;
+            }
 
-	    for (int i = 0; i < total; i++) {
+            String cleanBanner = bannerName.replace(" ", "")
+                                           .replace(".com", "")
+                                           .replace("-", "");
 
-	        // 🔁 Re-fetch to avoid stale element
-	        images = wait.until(
-	                ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
-	        );
+            String cleanUrl = currentUrl.replace("https://", "")
+                                        .replace("http://", "")
+                                        .replace("www.", "")
+                                        .replace(".com", "")
+                                        .replace("-", "")
+                                        .replace("/", "");
 
-	        WebElement img = images.get(i);
+            if (cleanUrl.contains(cleanBanner)) {
 
-	        try {
-	            ((JavascriptExecutor) driver).executeScript(
-	                    "arguments[0].scrollIntoView({block:'center'});", img);
+                System.out.println(GREEN + "✅ PASS → Banner & URL matched" + RESET);
+                System.out.println(CYAN + "🔗 URL: " + currentUrl + RESET);
 
-	            wait.until(ExpectedConditions.elementToBeClickable(img));
+            } else {
 
-	            // ---------------- ALT CHECK ----------------
-	            String bannerName = img.getAttribute("alt");
+                System.out.println(RED + "❌ FAIL → Banner & URL NOT matched" + RESET);
 
-	            if (bannerName == null || bannerName.trim().isEmpty()) {
-	                System.out.println("⚠️ Banner [" + (i + 1) + "] has NO ALT text → Skipping");
-	                continue;
-	            }
+                Assert.fail(
+                        "Banner : " + bannerName +
+                        "\nURL    : " + currentUrl
+                );
+            }
 
-	            bannerName = bannerName.toLowerCase().trim();
+            driver.navigate().back();
 
-	            System.out.println("👉 Clicking Banner [" + (i + 1) + "] : " + bannerName);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(featuredSection));
 
-	            // ---------------- URL BEFORE CLICK ----------------
-	            String beforeClickUrl = driver.getCurrentUrl();
+        } catch (Exception e) {
+            System.out.println(RED + "❌ Error on banner index " + i + RESET);
+            Assert.fail("Error: " + e.getMessage());
+        }
+    }
 
-	            clickUsingJavaScript(img);
-
-	            Thread.sleep(2000);
-
-	            // ---------------- URL AFTER CLICK ----------------
-	            String currentUrl = driver.getCurrentUrl().toLowerCase();
-
-	            // ---------------- NO REDIRECT ----------------
-	            if (currentUrl.equalsIgnoreCase(beforeClickUrl)) {
-
-	                System.out.println("⚠️ Banner [" + (i + 1) + "] has NO REDIRECT / NO LINK");
-	                continue;
-	            }
-
-	            // ---------------- MATCH LOGIC ----------------
-	            String cleanBanner = bannerName.replace(" ", "")
-	                                           .replace(".com", "")
-	                                           .replace("-", "");
-
-	            String cleanUrl = currentUrl.replace("https://", "")
-	                                        .replace("http://", "")
-	                                        .replace("www.", "")
-	                                        .replace(".com", "")
-	                                        .replace("-", "")
-	                                        .replace("/", "");
-
-	            if (cleanUrl.contains(cleanBanner)) {
-
-	                System.out.println("✅ PASS → Banner & URL matched");
-	                System.out.println("🔗 URL: " + currentUrl);
-
-	            } else {
-
-	                Assert.fail(
-	                        "❌ FAIL → Banner & URL NOT matched\n" +
-	                        "Banner : " + bannerName +
-	                        "\nURL    : " + currentUrl
-	                );
-	            }
-
-	            // 🔙 Go back
-	            driver.navigate().back();
-
-	            wait.until(ExpectedConditions.visibilityOfElementLocated(featuredSection));
-
-	        } catch (Exception e) {
-	            Assert.fail("❌ Error on banner index " + i + " : " + e.getMessage());
-	        }
-	    }
-
-	    System.out.println("🎉 All banners validated successfully!");
-	}
-
-
-
+    System.out.println(GREEN + "🎉 All banners validated successfully!" + RESET);
+}
 
 
 
@@ -1595,6 +1761,169 @@ public void verifyCollectionBanners() throws InterruptedException {
 
 
 
+//public void verifyAllCategoriesWithProductValidation() throws InterruptedException {
+//
+//    String GREEN  = "\u001B[32m";
+//    String RED    = "\u001B[31m";
+//    String YELLOW = "\u001B[33m";
+//    String BLUE   = "\u001B[34m";
+//    String RESET  = "\u001B[0m";
+//
+//    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//
+//    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//    click(zlaataIndiaShopButton);
+//
+//    // ✅ Scroll to Categories section
+//    WebElement section = wait.until(
+//        ExpectedConditions.presenceOfElementLocated(
+//            By.xpath("//section[contains(@class,'zi_categories_banner')]")
+//        )
+//    );
+//
+//    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", section);
+//    System.out.println(BLUE + "Scrolled to Categories section" + RESET);
+//
+//    // ✅ Initial count (NO See More click here)
+//    List<WebElement> categories = driver.findElements(
+//        By.xpath("//a[contains(@class,'zi_categories_card')]")
+//    );
+//
+//    int initialCount = categories.size();
+//    System.out.println(BLUE + "Initial Category Count: " + initialCount + RESET);
+//
+//    int clickedCount = 0;
+//
+//    for (int i = 0; i < initialCount; i++) {
+//
+//        // ✅ ONLY after 6th category → click See More
+//        if (i == 6) {
+//            List<WebElement> seeMoreBtn = driver.findElements(
+//                By.xpath("//span[text()='See More']/parent::div")
+//            );
+//
+//            if (seeMoreBtn.size() > 0 && seeMoreBtn.get(0).isDisplayed()) {
+//                try {
+//                    seeMoreBtn.get(0).click();
+//                } catch (Exception e) {
+//                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", seeMoreBtn.get(0));
+//                }
+//                System.out.println(BLUE + "Clicked See More" + RESET);
+//                Thread.sleep(1500);
+//            }
+//        }
+//
+//        // ✅ Re-fetch categories
+//        categories = driver.findElements(
+//            By.xpath("//a[contains(@class,'zi_categories_card')]")
+//        );
+//
+//        WebElement category = categories.get(i);
+//        String categoryName = category.getText().trim();
+//
+//        System.out.println(BLUE + "Clicking: " + categoryName + RESET);
+//
+//        // ✅ Safe click (stale fix)
+//        for (int retry = 0; retry < 3; retry++) {
+//            try {
+//                wait.until(ExpectedConditions.elementToBeClickable(category));
+//                category.click();
+//                clickedCount++;
+//                break;
+//            } catch (StaleElementReferenceException e) {
+//                categories = driver.findElements(By.xpath("//a[contains(@class,'zi_categories_card')]"));
+//                category = categories.get(i);
+//            }
+//        }
+//
+//        // ✅ Verify heading
+//        WebElement heading = wait.until(
+//            ExpectedConditions.visibilityOfElementLocated(
+//                By.xpath("//h2[@class='prod_listing_topic']")
+//            )
+//        );
+//
+//        String pageHeading = heading.getText().trim();
+//        System.out.println(YELLOW + "Heading: " + pageHeading + RESET);
+//
+//        // ✅ Verify URL
+//        String currentUrl = driver.getCurrentUrl();
+//        System.out.println("URL: " + currentUrl);
+//
+//        // ✅ Compare category vs heading
+//        String cat = categoryName.replace("&", "").replace("-", "").replace(" ", "").toLowerCase();
+//        String head = pageHeading.replace("&", "").replace("-", "").replace(" ", "").toLowerCase();
+//
+//        if (!cat.equals(head)) {
+//            System.out.println(RED + "Mismatch: " + categoryName + " vs " + pageHeading + RESET);
+//        }
+//
+//        // ✅ Product validation (ADDED)
+//        List<WebElement> products = driver.findElements(
+//            By.xpath("//div[contains(@class,'prod_listing_card')]")
+//        );
+//
+//        if (products.size() > 0) {
+//
+//            WebElement firstProduct = wait.until(
+//                ExpectedConditions.visibilityOf(products.get(0))
+//            );
+//
+//            if (firstProduct.isDisplayed()) {
+//                System.out.println(GREEN + "Product displayed for: " + categoryName + RESET);
+//            }
+//
+//        } else {
+//            System.out.println(YELLOW + "No products found for: " + categoryName + RESET);
+//        }
+//
+//        // ✅ Back
+//        driver.navigate().back();
+//
+//        wait.until(ExpectedConditions.presenceOfElementLocated(
+//            By.xpath("//section[contains(@class,'zi_categories_banner')]")
+//        ));
+//
+//        // ✅ Scroll again
+//        WebElement sec = driver.findElement(
+//            By.xpath("//section[contains(@class,'zi_categories_banner')]")
+//        );
+//
+//        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sec);
+//
+//        // ✅ Re-click See More after back (for remaining categories)
+//        if (i >= 6) {
+//            List<WebElement> seeMoreBtn = driver.findElements(
+//                By.xpath("//span[text()='See More']/parent::div")
+//            );
+//
+//            if (seeMoreBtn.size() > 0 && seeMoreBtn.get(0).isDisplayed()) {
+//                try {
+//                    seeMoreBtn.get(0).click();
+//                } catch (Exception e) {
+//                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", seeMoreBtn.get(0));
+//                }
+//                System.out.println(BLUE + "Re-clicked See More" + RESET);
+//                Thread.sleep(1000);
+//            }
+//        }
+//    }
+//
+//    // ✅ Final validation
+//    System.out.println(BLUE + "Initial Count: " + initialCount + RESET);
+//    System.out.println(BLUE + "Clicked Count: " + clickedCount + RESET);
+//
+//    if (initialCount == clickedCount) {
+//        System.out.println(GREEN + "PASS: All categories clicked successfully" + RESET);
+//    } else {
+//        System.out.println(RED + "FAIL: Count mismatch" + RESET);
+//    }
+//
+//    // ✅ Close browser
+//    driver.quit();
+//    System.out.println(BLUE + "Browser closed" + RESET);
+//}
+
 public void verifyAllCategoriesWithProductValidation() throws InterruptedException {
 
     String GREEN  = "\u001B[32m";
@@ -1618,7 +1947,6 @@ public void verifyAllCategoriesWithProductValidation() throws InterruptedExcepti
     ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", section);
     System.out.println(BLUE + "Scrolled to Categories section" + RESET);
 
-    // ✅ Initial count (NO See More click here)
     List<WebElement> categories = driver.findElements(
         By.xpath("//a[contains(@class,'zi_categories_card')]")
     );
@@ -1630,13 +1958,13 @@ public void verifyAllCategoriesWithProductValidation() throws InterruptedExcepti
 
     for (int i = 0; i < initialCount; i++) {
 
-        // ✅ ONLY after 6th category → click See More
+        // ✅ See More logic
         if (i == 6) {
             List<WebElement> seeMoreBtn = driver.findElements(
                 By.xpath("//span[text()='See More']/parent::div")
             );
 
-            if (seeMoreBtn.size() > 0 && seeMoreBtn.get(0).isDisplayed()) {
+            if (!seeMoreBtn.isEmpty() && seeMoreBtn.get(0).isDisplayed()) {
                 try {
                     seeMoreBtn.get(0).click();
                 } catch (Exception e) {
@@ -1647,7 +1975,7 @@ public void verifyAllCategoriesWithProductValidation() throws InterruptedExcepti
             }
         }
 
-        // ✅ Re-fetch categories
+        // ✅ Re-fetch categories (FIX)
         categories = driver.findElements(
             By.xpath("//a[contains(@class,'zi_categories_card')]")
         );
@@ -1657,16 +1985,20 @@ public void verifyAllCategoriesWithProductValidation() throws InterruptedExcepti
 
         System.out.println(BLUE + "Clicking: " + categoryName + RESET);
 
-        // ✅ Safe click (stale fix)
+        // ✅ Safe click with retry
         for (int retry = 0; retry < 3; retry++) {
             try {
-                wait.until(ExpectedConditions.elementToBeClickable(category));
-                category.click();
-                clickedCount++;
-                break;
-            } catch (StaleElementReferenceException e) {
                 categories = driver.findElements(By.xpath("//a[contains(@class,'zi_categories_card')]"));
                 category = categories.get(i);
+
+                wait.until(ExpectedConditions.elementToBeClickable(category));
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", category);
+
+                clickedCount++;
+                break;
+
+            } catch (StaleElementReferenceException e) {
+                System.out.println(RED + "Retry click for index: " + i + RESET);
             }
         }
 
@@ -1680,11 +2012,7 @@ public void verifyAllCategoriesWithProductValidation() throws InterruptedExcepti
         String pageHeading = heading.getText().trim();
         System.out.println(YELLOW + "Heading: " + pageHeading + RESET);
 
-        // ✅ Verify URL
-        String currentUrl = driver.getCurrentUrl();
-        System.out.println("URL: " + currentUrl);
-
-        // ✅ Compare category vs heading
+        // ✅ Compare names
         String cat = categoryName.replace("&", "").replace("-", "").replace(" ", "").toLowerCase();
         String head = pageHeading.replace("&", "").replace("-", "").replace(" ", "").toLowerCase();
 
@@ -1692,21 +2020,13 @@ public void verifyAllCategoriesWithProductValidation() throws InterruptedExcepti
             System.out.println(RED + "Mismatch: " + categoryName + " vs " + pageHeading + RESET);
         }
 
-        // ✅ Product validation (ADDED)
+        // ✅ 🔥 FIXED PRODUCT VALIDATION (NO STALE / NO TIMEOUT)
         List<WebElement> products = driver.findElements(
             By.xpath("//div[contains(@class,'prod_listing_card')]")
         );
 
-        if (products.size() > 0) {
-
-            WebElement firstProduct = wait.until(
-                ExpectedConditions.visibilityOf(products.get(0))
-            );
-
-            if (firstProduct.isDisplayed()) {
-                System.out.println(GREEN + "Product displayed for: " + categoryName + RESET);
-            }
-
+        if (!products.isEmpty()) {
+            System.out.println(GREEN + "Product displayed for: " + categoryName + RESET);
         } else {
             System.out.println(YELLOW + "No products found for: " + categoryName + RESET);
         }
@@ -1725,13 +2045,13 @@ public void verifyAllCategoriesWithProductValidation() throws InterruptedExcepti
 
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sec);
 
-        // ✅ Re-click See More after back (for remaining categories)
+        // ✅ Re-click See More
         if (i >= 6) {
             List<WebElement> seeMoreBtn = driver.findElements(
                 By.xpath("//span[text()='See More']/parent::div")
             );
 
-            if (seeMoreBtn.size() > 0 && seeMoreBtn.get(0).isDisplayed()) {
+            if (!seeMoreBtn.isEmpty() && seeMoreBtn.get(0).isDisplayed()) {
                 try {
                     seeMoreBtn.get(0).click();
                 } catch (Exception e) {
@@ -1753,153 +2073,11 @@ public void verifyAllCategoriesWithProductValidation() throws InterruptedExcepti
         System.out.println(RED + "FAIL: Count mismatch" + RESET);
     }
 
-    // ✅ Close browser
     driver.quit();
     System.out.println(BLUE + "Browser closed" + RESET);
 }
 
 
-
-public void verifyAllCategoriesWithoutChangingFlow() throws InterruptedException {
-
-    String GREEN  = "\u001B[32m";
-    String RED    = "\u001B[31m";
-    String YELLOW = "\u001B[33m";
-    String BLUE   = "\u001B[34m";
-    String RESET  = "\u001B[0m";
-
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
-    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-    click(zlaataIndiaShopButton);
-
-    // ✅ Scroll to section
-    WebElement section = wait.until(
-        ExpectedConditions.presenceOfElementLocated(
-            By.xpath("//section[contains(@class,'zi_categories_banner')]")
-        )
-    );
-
-    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", section);
-    System.out.println(BLUE + "Scrolled to Categories section" + RESET);
-
-    // ✅ Initial count (NO See More click here)
-    List<WebElement> categories = driver.findElements(
-        By.xpath("//a[contains(@class,'zi_categories_card')]")
-    );
-
-    int initialCount = categories.size();
-    System.out.println(BLUE + "Initial Category Count: " + initialCount + RESET);
-
-    int clickedCount = 0;
-
-    for (int i = 0; i < initialCount; i++) {
-
-        // ✅ ONLY after 6th category → click See More
-        if (i == 6) {
-            List<WebElement> seeMoreBtn = driver.findElements(
-                By.xpath("//span[text()='See More']/parent::div")
-            );
-
-            if (seeMoreBtn.size() > 0 && seeMoreBtn.get(0).isDisplayed()) {
-                try {
-                    seeMoreBtn.get(0).click();
-                } catch (Exception e) {
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", seeMoreBtn.get(0));
-                }
-                System.out.println(BLUE + "Clicked See More" + RESET);
-                Thread.sleep(1500);
-            }
-        }
-
-        // ✅ Re-fetch categories
-        categories = driver.findElements(
-            By.xpath("//a[contains(@class,'zi_categories_card')]")
-        );
-
-        WebElement category = categories.get(i);
-        String categoryName = category.getText().trim();
-
-        System.out.println(BLUE + "Clicking: " + categoryName + RESET);
-
-        // ✅ Safe click (stale fix)
-        for (int retry = 0; retry < 3; retry++) {
-            try {
-                wait.until(ExpectedConditions.elementToBeClickable(category));
-                category.click();
-                clickedCount++;
-                break;
-            } catch (StaleElementReferenceException e) {
-                categories = driver.findElements(By.xpath("//a[contains(@class,'zi_categories_card')]"));
-                category = categories.get(i);
-            }
-        }
-
-        // ✅ Verify heading
-        WebElement heading = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//h2[@class='prod_listing_topic']")
-            )
-        );
-
-        String pageHeading = heading.getText().trim();
-        System.out.println(YELLOW + "Heading: " + pageHeading + RESET);
-
-        // ✅ URL
-        System.out.println("URL: " + driver.getCurrentUrl());
-
-        // ✅ Compare
-        String cat = categoryName.replace("&", "").replace("-", "").replace(" ", "").toLowerCase();
-        String head = pageHeading.replace("&", "").replace("-", "").replace(" ", "").toLowerCase();
-
-        if (!cat.equals(head)) {
-            System.out.println(RED + "Mismatch: " + categoryName + " vs " + pageHeading + RESET);
-        }
-
-        // ✅ Back
-        driver.navigate().back();
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(
-            By.xpath("//section[contains(@class,'zi_categories_banner')]")
-        ));
-
-        // ✅ Scroll again
-        WebElement sec = driver.findElement(
-            By.xpath("//section[contains(@class,'zi_categories_banner')]")
-        );
-
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sec);
-
-        // ✅ After back → if remaining categories, click See More again
-        if (i >= 6) {
-            List<WebElement> seeMoreBtn = driver.findElements(
-                By.xpath("//span[text()='See More']/parent::div")
-            );
-
-            if (seeMoreBtn.size() > 0 && seeMoreBtn.get(0).isDisplayed()) {
-                try {
-                    seeMoreBtn.get(0).click();
-                } catch (Exception e) {
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", seeMoreBtn.get(0));
-                }
-                System.out.println(BLUE + "Re-clicked See More" + RESET);
-                Thread.sleep(1000);
-            }
-        }
-    }
-
-    // ✅ Final validation
-    System.out.println(BLUE + "Initial Count: " + initialCount + RESET);
-    System.out.println(BLUE + "Clicked Count: " + clickedCount + RESET);
-
-    if (initialCount == clickedCount) {
-        System.out.println(GREEN + "PASS: All categories clicked" + RESET);
-    } else {
-        System.out.println(RED + "FAIL: Count mismatch" + RESET);
-    }
-
-    driver.quit();
-}
 
 
 

@@ -30,7 +30,7 @@ public class SearchBarStepDef {
 	public void user_verifies_that_they_can_click_on_the_search_bar() {
 		home.homeLaunch();
 		search.searchbarClikable();
-		
+
 	}
 
 	@Given("User focuses on the search bar and verifies the display of TRENDING and Related Products headings.")
@@ -56,8 +56,8 @@ public class SearchBarStepDef {
 	@Given("User enters a valid search keyword and verifies redirection to the correct page")
 	public void user_enters_a_valid_search_keyword_and_verifies_redirection_to_the_correct_page() {
 		home.homeLaunch();
-        search.searchKeyWordRedirectToCorrectpage();
-		
+		search.searchKeyWordRedirectToCorrectpage();
+
 	}
 
 	@Given("User verifies that Related Queries are displayed under the search results")
@@ -107,10 +107,33 @@ public class SearchBarStepDef {
 
 	}
 
-	
 
 
 
+	@Given("User verifies that Related Queries are displayed under the search results for both brand")
+	public void user_verifies_that_related_queries_are_displayed_under_the_search_results_for_both_brand() throws InterruptedException {
+		home.homeLaunch();
+		search.verifyBothBrandRelatedQueries();
+		
+		
+	}
+
+
+
+	@Given("the user verifies that the close button is available in both brand search bars")
+	public void the_user_verifies_that_the_close_button_is_available_in_both_brand_search_bars() throws InterruptedException {
+		home.homeLaunch();
+		search.verifyBothBrandcloseButtonInSearchbar();
+	}
+
+
+
+		@Given("the user verifies that Recent Searches are visible in both brand search bars")
+	public void the_user_verifies_that_recent_searches_are_visible_in_both_brand_search_bars() {
+			home.homeLaunch();
+			search.verifyBothBrandRecentSearches();
+		
+	}
 
 
 
