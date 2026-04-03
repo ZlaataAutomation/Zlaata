@@ -81,6 +81,7 @@ Scenario Outline: TC_UI_Zlaata_SB_10 | Verify that the Recently Viewed section i
     | TD_ID                |
     | TD_UI_Zlaata_SB_10  |
     
+    @Search
 @TC_UI_Zlaata_SB_11
 Scenario Outline: TC_UI_Zlaata_SB_11 |Verify that the Related Queries display in both zlaata Indai and Boss lady  | "<TD_ID>"
   Given User verifies that Related Queries are displayed under the search results for both brand 
@@ -89,7 +90,7 @@ Scenario Outline: TC_UI_Zlaata_SB_11 |Verify that the Related Queries display in
     | TD_ID                |
     | TD_UI_Zlaata_SB_11  |
 
-
+  @Search
 @TC_UI_Zlaata_SB_12
 Scenario Outline: TC_UI_Zlaata_SB_12 |Verify that the close button in both brand search bars is working properly | "<TD_ID>"
 
@@ -100,7 +101,7 @@ Examples:
   | TD_UI_Zlaata_SB_12 |
   
   
-  
+    @Search
   @TC_UI_Zlaata_SB_13
 Scenario Outline: TC_UI_Zlaata_SB_13 |Verify that Recent Searches are displayed correctly in both brand search bars | "<TD_ID>"
 
