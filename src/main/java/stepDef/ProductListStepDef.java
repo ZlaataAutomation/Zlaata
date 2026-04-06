@@ -53,13 +53,13 @@ public class ProductListStepDef {
 	@Given("User clicks on show filter button")
 	public void user_clicks_on_show_filter_button() {
 		home.homeLaunch();
-		pLp.showFilter();
+		pLp.verifyFilter();
 	}
 
 		@Given("User clicks on sort by option")
 	public void user_clicks_on_sort_by_option() {
 			home.homeLaunch();
-			pLp.sortByFilter();
+			pLp.verifySortBy();
 	}
 
 
