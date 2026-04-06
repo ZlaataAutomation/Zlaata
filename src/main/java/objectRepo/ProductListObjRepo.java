@@ -23,6 +23,8 @@ public abstract  class ProductListObjRepo extends BasePage {
 	
 	@FindBy(xpath = "//a[normalize-space()='All']")
 	protected WebElement category;
+	@FindBy(xpath = "//a[normalize-space()='dresses']")
+	protected WebElement categoryDresses;
 	
 	@FindBy(xpath = "//a[contains(@class,'bread_crumb_link')]")
 	protected WebElement homeCrumbLink;

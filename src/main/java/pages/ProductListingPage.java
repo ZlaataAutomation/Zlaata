@@ -333,6 +333,73 @@ Thread.sleep(2000);
 			throw e1;
 		}
 	}
+	public void verifyFilter() {
+
+	    String CYAN  = "\u001B[36m";
+	    String BLUE  = "\u001B[34m";
+	    String RED   = "\u001B[31m";
+	    String GREEN = "\u001B[32m";
+	    String RESET = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    Actions actions = new Actions(driver);
+
+	    System.out.println(CYAN + "🔍 Navigating to PLP..." + RESET);
+
+	    // ✅ Navigate to PLP
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(categoryDresses).click().perform();
+
+	    // ✅ Click Filter Button (SVG)
+	    WebElement filterBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//*[name()='svg' and contains(@class,'prod_list_filter_btn')]")
+	    ));
+	    filterBtn.click();
+	    System.out.println("✅ Clicked Filter Button");
+
+	    // ✅ Click Categories section
+	    WebElement categories = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//li[@data-filter='categories']")
+	    ));
+	    categories.click();
+	    System.out.println("✅ Opened Categories");
+
+	    // ✅ Select Accessories checkbox
+	    WebElement accessoriesCheckbox = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.id("categories_Accessories")
+	    ));
+
+	    // Scroll + click (safe)
+	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", accessoriesCheckbox);
+	    js.executeScript("arguments[0].click();", accessoriesCheckbox);
+
+	    System.out.println("✅ Selected Accessories");
+
+	    // ✅ Click Apply button
+	    WebElement applyBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//button[contains(@class,'Cls_apply_filter')]")
+	    ));
+	    applyBtn.click();
+
+	    System.out.println("✅ Clicked Apply");
+
+	    // ✅ Validate Heading = All
+	    WebElement heading = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//h2[contains(@class,'prod_listing_topic')]")
+	    ));
+
+	    String headingText = heading.getText().trim();
+
+	    if (headingText.equalsIgnoreCase("All")) {
+	        System.out.println(GREEN + "✅ Heading Verified: " + headingText + RESET);
+	    } else {
+	        System.out.println(RED + "❌ Heading Mismatch: " + headingText + RESET);
+	        Assert.fail("Heading is not 'All'");
+	    }
+
+	    System.out.println(GREEN + "🎉 FILTER TEST PASSED" + RESET);
+	}
 
 	public void sortByFilter() {
 		Common.waitForElement(5);
@@ -342,6 +409,175 @@ Thread.sleep(2000);
 		Common.waitForElement(5);
 		actions.moveToElement(sortBy).click().build().perform();
 
+	}
+	
+	public void selectSortOption(String option) {
+	    By sortOption = By.xpath("//li[contains(@class,'filter_sort_list_items') and normalize-space()='" + option + "']");
+	    driver.findElement(sortOption).click();
+	}
+	public void waitForProductsToLoad() {
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//div[contains(@class,'prod_listing_card')]")));
+	}
+	public List<Integer> getAllPrices() {
+	    List<WebElement> elements = driver.findElements(
+	            By.xpath("//span[@class='product_discounted_price']")
+	    );
+
+	    List<Integer> prices = new ArrayList<>();
+
+	    for (WebElement ele : elements) {
+	        String text = ele.getText().trim();
+
+	        // 🔥 skip empty values
+	        if (text.isEmpty()) {
+	            continue;
+	        }
+
+	        text = text.replaceAll("[^0-9]", "");
+
+	        // 🔥 double safety
+	        if (!text.isEmpty()) {
+	            prices.add(Integer.parseInt(text));
+	        }
+	    }
+
+	    return prices;
+	}
+	public List<Integer> getAllDiscounts() {
+	    List<WebElement> elements = driver.findElements(
+	            By.xpath("//span[contains(@class,'product_discounted_percentage')]")
+	    );
+
+	    List<Integer> discounts = new ArrayList<>();
+
+	    for (WebElement ele : elements) {
+	        String text = ele.getText().trim();
+
+	        if (text.isEmpty()) {
+	            continue;
+	        }
+
+	        text = text.replaceAll("[^0-9]", "");
+
+	        if (!text.isEmpty()) {
+	            discounts.add(Integer.parseInt(text));
+	        }
+	    }
+
+	    return discounts;
+	}
+	public boolean isSortedAscending(List<Integer> list) {
+	    for (int i = 0; i < list.size() - 1; i++) {
+	        if (list.get(i) > list.get(i + 1)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	public boolean isSortedDescending(List<Integer> list) {
+	    for (int i = 0; i < list.size() - 1; i++) {
+	        if (list.get(i) < list.get(i + 1)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	public void verifySortBy() {
+
+	    String CYAN  = "\u001B[36m";
+	    String BLUE  = "\u001B[34m";
+	    String RED   = "\u001B[31m";
+	    String GREEN = "\u001B[32m";
+	    String RESET = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    Actions actions = new Actions(driver);
+
+	    System.out.println(CYAN + "🔍 Navigating to PLP..." + RESET);
+
+	    // ✅ Navigate to PLP
+	    actions.moveToElement(shopMenu).perform();
+	    actions.moveToElement(categoryDresses).click().perform();
+
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//div[contains(@class,'prod_listing_card')]")));
+
+	    // ================================
+	    // 🔹 SORT BUTTON
+	    // ================================
+	    By sortBtn = By.xpath("//*[name()='svg' and contains(@class,'prod_list_sortby_btn')]");
+
+	    // ================================
+	    // 🔹 1. PRICE HIGH TO LOW
+	    // ================================
+	    System.out.println(BLUE + "🔽 Verifying Price High to Low..." + RESET);
+
+	    driver.findElement(sortBtn).click();
+	    Common.waitForElement(2);
+	    selectSortOption("Price High to Low");
+
+	    waitForProductsToLoad();
+
+	    if (isSortedDescending(getAllPrices())) {
+	        System.out.println(GREEN + "✅ Price High to Low working" + RESET);
+	    } else {
+	        System.out.println(RED + "❌ Price High to Low failed" + RESET);
+	    }
+	    Common.waitForElement(2);
+	    // ================================
+	    // 🔹 2. PRICE LOW TO HIGH
+	    // ================================
+	    System.out.println(BLUE + "🔼 Verifying Price Low to High..." + RESET);
+
+	    driver.findElement(sortBtn).click();
+	    Common.waitForElement(2);
+	    selectSortOption("Price Low to High");
+
+	    waitForProductsToLoad();
+
+	    if (isSortedAscending(getAllPrices())) {
+	        System.out.println(GREEN + "✅ Price Low to High working" + RESET);
+	    } else {
+	        System.out.println(RED + "❌ Price Low to High failed" + RESET);
+	    }
+	    Common.waitForElement(2);
+	    // ================================
+	    // 🔹 3. DISCOUNT HIGH TO LOW
+	    // ================================
+	    System.out.println(BLUE + "🔽 Verifying Discount High to Low..." + RESET);
+
+	    driver.findElement(sortBtn).click();
+	    Common.waitForElement(2);
+	    selectSortOption("Discount High to Low");
+
+	    waitForProductsToLoad();
+
+	    if (isSortedDescending(getAllDiscounts())) {
+	        System.out.println(GREEN + "✅ Discount High to Low working" + RESET);
+	    } else {
+	        System.out.println(RED + "❌ Discount High to Low failed" + RESET);
+	    }
+	    Common.waitForElement(2);
+	    // ================================
+	    // 🔹 4. DISCOUNT LOW TO HIGH
+	    // ================================
+	    System.out.println(BLUE + "🔼 Verifying Discount Low to High..." + RESET);
+
+	    driver.findElement(sortBtn).click();
+	    Common.waitForElement(2);
+	    selectSortOption("Discount Low to High");
+
+	    waitForProductsToLoad();
+
+	    if (isSortedAscending(getAllDiscounts())) {
+	        System.out.println(GREEN + "✅ Discount Low to High working" + RESET);
+	    } else {
+	        System.out.println(RED + "❌ Discount Low to High failed" + RESET);
+	    }
+	    Common.waitForElement(2);
 	}
 //	public void basicFilterFunction() {
 //		Common.waitForElement(5);
