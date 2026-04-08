@@ -11,7 +11,7 @@ public class ProductListStepDef {
 
 	TestContext testContext;
 	ProductListingPage pLp;
-    HomePage home;
+	HomePage home;
 
 
 	public ProductListStepDef(TestContext context) {
@@ -56,10 +56,10 @@ public class ProductListStepDef {
 		pLp.verifyFilter();
 	}
 
-		@Given("User clicks on sort by option")
+	@Given("User clicks on sort by option")
 	public void user_clicks_on_sort_by_option() {
-			home.homeLaunch();
-			pLp.verifySortBy();
+		home.homeLaunch();
+		pLp.verifySortBy();
 	}
 
 
@@ -74,13 +74,13 @@ public class ProductListStepDef {
 	public void user_verifies_sort_by_filters() {
 		home.homeLaunch();
 		pLp.allsortBy();;
-		
+
 	}
 
 
 	@Given("User clicks on wish list icon")
 	public void user_clicks_on_wish_list_icon() throws InterruptedException {
-	
+
 		pLp.wishListIcon();
 	}
 
@@ -89,6 +89,16 @@ public class ProductListStepDef {
 	public void user_clicks_on_add_to_cart_button() throws InterruptedException {
 		pLp.addToCart();
 	}
+
+
+
+	@Given("User navigates to product listing page and verifies {int}-grid and {int}-grid layout")
+	public void user_navigates_to_product_listing_page_and_verifies_grid_and_grid_layout(Integer int1, Integer int2) {
+		pLp.gridToggle();
+	}
+
+
+
 }
 
 

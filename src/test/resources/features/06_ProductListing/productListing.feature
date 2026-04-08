@@ -146,4 +146,16 @@ Feature: This is Product Listing Page feature
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_PLP_11 |
+      
+      
+      
+      @TC_UI_Zlaata_PLP_12
+Scenario Outline: TC_UI_Zlaata_PLP_12 | Verify grid toggle in PLP | "<TD_ID>"
+
+  Given User navigates to product listing page and verifies 2-grid and 4-grid layout
+
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_PLP_12 |
+      
     

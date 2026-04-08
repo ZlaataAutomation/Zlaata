@@ -1749,6 +1749,66 @@ Thread.sleep(2000);
 	}
 	
 	
+	public void gridToggle() {
+
+	    // 🎨 Console Colors
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String CYAN   = "\u001B[36m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    click(zlaataIndiaShopButton);
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    Actions actions = new Actions(driver);
+
+	    System.out.println(CYAN + "🔍 Navigating to category..." + RESET);
+
+	    // ---------- NAVIGATION ----------
+	    wait.until(ExpectedConditions.visibilityOf(shopMenu));
+	    actions.moveToElement(shopMenu).perform();
+
+	    wait.until(ExpectedConditions.elementToBeClickable(categoryDresses));
+	    actions.moveToElement(categoryDresses).click().perform();
+
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//div[contains(@class,'prod_listing')]")
+	    ));
+
+	    System.out.println(YELLOW + "📦 Product listing page loaded" + RESET);
+
+	    // ---------- GRID LOCATORS ----------
+	    By twoGrid = By.xpath("//span[@data-layout-toggle='2']");
+	    By fourGrid = By.xpath("//span[@data-layout-toggle='4']");
+
+	    // ---------- CLICK 2 GRID ----------
+	    try {
+	        wait.until(ExpectedConditions.elementToBeClickable(twoGrid)).click();
+
+	        wait.until(ExpectedConditions.attributeContains(twoGrid, "class", "active"));
+
+	        System.out.println(GREEN + "✅ 2-Grid layout applied successfully" + RESET);
+
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Failed to apply 2-Grid layout" + RESET);
+	    }
+
+	    // ---------- CLICK 4 GRID ----------
+	    try {
+	        wait.until(ExpectedConditions.elementToBeClickable(fourGrid)).click();
+
+	        wait.until(ExpectedConditions.attributeContains(fourGrid, "class", "active"));
+
+	        System.out.println(GREEN + "✅ 4-Grid layout applied successfully" + RESET);
+
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Failed to apply 4-Grid layout" + RESET);
+	    }
+	}
+
+
 	
 	
 	
