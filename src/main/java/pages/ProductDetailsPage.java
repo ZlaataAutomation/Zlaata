@@ -1007,22 +1007,264 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 
 	
 	
+//	
+//	public void verifySizeOption() {
+//		
+//driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//
+//	    
+//	    click(zlaataIndiaShopButton);
+//
+//		RandomProduct();
+//	    // ---------- GET SIZE LISTS ----------
+//	    List<WebElement> topSizes = driver.findElements(
+//	            By.xpath("//div[contains(@class,'Cls_prod_size_list') and not(contains(@class,'bottom'))]")
+//	    );
+//
+//	    List<WebElement> bottomSizes = driver.findElements(
+//	            By.xpath("//div[contains(@class,'Cls_prod_size_list_bottom')]")
+//	    );
+//
+//	    // ---------- BOTH TOP + BOTTOM ----------
+//	    if (!topSizes.isEmpty() && !bottomSizes.isEmpty()) {
+//
+//	        System.out.println("✅ Product has TOP + BOTTOM sizes");
+//
+//	        verifySizeGroup(
+//	                "TOP",
+//	                topSizes,
+//	                "(//span[contains(@class,'Cls_prod_selected_size')])[1]"
+//	        );
+//
+//	        verifySizeGroup(
+//	                "BOTTOM",
+//	                bottomSizes,
+//	                "//span[contains(@class,'Cls_prod_selected_size_bottom')]"
+//	        );
+//	    }
+//
+//	    // ---------- ONLY TOP ----------
+//	    else if (!topSizes.isEmpty()) {
+//
+//	        System.out.println("✅ Product has ONLY TOP size");
+//
+//	        verifySizeGroup(
+//	                "TOP",
+//	                topSizes,
+//	                "(//span[contains(@class,'Cls_prod_selected_size')])[1]"
+//	        );
+//	    }
+//
+//	    // ---------- ONLY BOTTOM ----------
+//	    else if (!bottomSizes.isEmpty()) {
+//
+//	        System.out.println("✅ Product has ONLY BOTTOM size");
+//
+//	        verifySizeGroup(
+//	                "BOTTOM",
+//	                bottomSizes,
+//	                "//span[contains(@class,'Cls_prod_selected_size_bottom')]"
+//	        );
+//	    }
+//
+//	    else {
+//	        System.out.println("⚠️ No size options available for this product");
+//	    }
+//	}
+//
+//	private void verifySizeGroup(String type,
+//            List<WebElement> sizeList,
+//            String selectedSizeXpath) {
+//
+//WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//
+//System.out.println("🔹 Checking " + type + " sizes");
+//
+//for (WebElement size : sizeList) {
+//
+//if (!size.isDisplayed()) continue;
+//
+//String sizeName = size.getText().trim();
+//
+//// Click size
+//size.click();
+//Common.waitForElement(2);
+//// Get selected size text
+//WebElement selectedSize = wait.until(
+//ExpectedConditions.visibilityOfElementLocated(
+//       By.xpath(selectedSizeXpath)));
+//
+//String selectedText = selectedSize.getText().trim();
+//
+//// ✅ ASSERTION
+//Assert.assertEquals(
+//"❌ Selected size mismatch",
+//sizeName,
+//selectedText
+//);
+//
+//System.out.println("✅ " + type + " size verified → " + sizeName);
+//}
+//}
+//	public void verifySizeOptions() {
+//		RandomProduct();
+//		List<WebElement> topSizes = driver.findElements(By.xpath("//div[@class='prod_size_list Cls_prod_size_list']"));
+//		List<WebElement> bottomSizes = driver.findElements(By.xpath("//div[@class='prod_size_list Cls_prod_size_list_bottom']"));
+//
+//		if (!topSizes.isEmpty() && !bottomSizes.isEmpty()) {
+//			System.out.println("Product contains both top and bottom size");
+//
+//			String defaultTopSize = topSizes.get(0).getText();
+//			System.out.println("Default selected top size: " + defaultTopSize);
+//			System.out.println("default top sizes are: ");
+//			for (WebElement topSize : topSizes) {
+//				if (topSize.isEnabled()) {
+//					topSize.click();
+//					System.out.print(topSize.getText() + " ");
+//				}
+//			}
+//
+//			String defaultBottomSize = bottomSizes.get(0).getText();
+//			System.out.println("\nDefault selected bottom size: " + defaultBottomSize);
+//			System.out.println("default bottom sizes are: ");
+//			for (WebElement bottomSize : bottomSizes) {
+//				if (bottomSize.isEnabled()) {
+//					bottomSize.click();
+//					System.out.print(bottomSize.getText() + " ");
+//				}
+//			}
+//		} else if (!topSizes.isEmpty()) {
+//			System.out.println("Product contains only top size");
+//
+//			String defaultTopSize = topSizes.get(0).getText();
+//			System.out.println("Default selected size: " + defaultTopSize);
+//			System.out.println("Visible sizes are: ");
+//			for (WebElement topSize : topSizes) {
+//				if (topSize.isEnabled()) {
+//					topSize.click();
+//					System.out.print(topSize.getText() + " ");
+//				}
+//			}
+//		} else if (!bottomSizes.isEmpty()) {
+//			System.out.println("Product contains only bottom size");
+//
+//			String defaultBottomSize = bottomSizes.get(0).getText();
+//			System.out.println("Default selected size: " + defaultBottomSize);
+//			System.out.println("Visible sizes are: ");
+//			for (WebElement bottomSize : bottomSizes) {
+//				if (bottomSize.isEnabled()) {
+//					bottomSize.click();
+//					System.out.print(bottomSize.getText() + " ");
+//				}
+//			}
+//		} else {
+//			System.out.println("No sizes available");
+//		}
+//	}
 	
+	
+	
+//	public void verifySizeOption() {
+//
+//	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//	    click(zlaataIndiaShopButton);
+//
+//	    RandomProduct();
+//	    
+////	    WebElement pdpName = wait.until(
+////	            ExpectedConditions.visibilityOfElementLocated(
+////	                    By.xpath("//h4[@class='prod_name']")
+////	            )
+////	    );
+////	    
+////	    System.out.println(pdpName);
+//
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+//
+//	    // ---------- TOP SIZES ----------
+//	    List<WebElement> topSizes = driver.findElements(
+//	            By.xpath("//div[contains(@class,'Cls_prod_size_name') and not(contains(@class,'bottom'))]")
+//	    );
+//
+//	    // ---------- BOTTOM SIZES ----------
+//	    List<WebElement> bottomSizes = driver.findElements(
+//	            By.xpath("//div[contains(@class,'Cls_prod_size_name_bottom')]")
+//	    );
+//
+//	    // ---------- BOTH TOP + BOTTOM ----------
+//	    if (!topSizes.isEmpty() && !bottomSizes.isEmpty()) {
+//
+//	        System.out.println("✅ Product has TOP + BOTTOM sizes");
+//
+//	        verifySizeGroup(
+//	                "TOP",
+//	                "//div[contains(@class,'Cls_prod_size_name') and not(contains(@class,'bottom'))]",
+//	                "//span[contains(@class,'Cls_prod_selected_size')]"
+//	        );
+//
+//	        verifySizeGroup(
+//	                "BOTTOM",
+//	                "//div[contains(@class,'Cls_prod_size_name_bottom')]",
+//	                "//span[contains(@class,'Cls_prod_selected_size_bottom')]"
+//	        );
+//	    }
+//
+//	    // ---------- ONLY TOP ----------
+//	    else if (!topSizes.isEmpty()) {
+//
+//	        System.out.println("✅ Product has ONLY TOP sizes");
+//
+//	        verifySizeGroup(
+//	                "TOP",
+//	                "//div[contains(@class,'Cls_prod_size_name') and not(contains(@class,'bottom'))]",
+//	                "//span[contains(@class,'Cls_prod_selected_size')]"
+//	        );
+//	    }
+//
+//	    // ---------- ONLY BOTTOM ----------
+//	    else if (!bottomSizes.isEmpty()) {
+//
+//	        System.out.println("✅ Product has ONLY BOTTOM sizes");
+//
+//	        verifySizeGroup(
+//	                "BOTTOM",
+//	                "//div[contains(@class,'Cls_prod_size_name_bottom')]",
+//	                "//span[contains(@class,'Cls_prod_selected_size_bottom')]"
+//	        );
+//	    }
+//
+//	    // ---------- NO SIZE ----------
+//	    else {
+//	        System.out.println("⚠️ No sizes available for this product");
+//	    }
+//	}
 	public void verifySizeOption() {
-		
-driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
-	    
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 	    click(zlaataIndiaShopButton);
 
-		RandomProduct();
-	    // ---------- GET SIZE LISTS ----------
-	    List<WebElement> topSizes = driver.findElements(
-	            By.xpath("//div[contains(@class,'Cls_prod_size_list') and not(contains(@class,'bottom'))]")
+	    RandomProduct();
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    // ✅ GET PRODUCT NAME
+	    WebElement pdpName = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//h4[@class='prod_name']")
+	            )
 	    );
 
+	    String productName = pdpName.getText();
+	    System.out.println("🛍️ Product Name: " + productName);
+
+	    // ---------- TOP SIZES ----------
+	    List<WebElement> topSizes = driver.findElements(
+	            By.xpath("//div[contains(@class,'Cls_prod_size_name') and not(contains(@class,'bottom'))]")
+	    );
+
+	    // ---------- BOTTOM SIZES ----------
 	    List<WebElement> bottomSizes = driver.findElements(
-	            By.xpath("//div[contains(@class,'Cls_prod_size_list_bottom')]")
+	            By.xpath("//div[contains(@class,'Cls_prod_size_name_bottom')]")
 	    );
 
 	    // ---------- BOTH TOP + BOTTOM ----------
@@ -1032,13 +1274,13 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 
 	        verifySizeGroup(
 	                "TOP",
-	                topSizes,
-	                "(//span[contains(@class,'Cls_prod_selected_size')])[1]"
+	                "//div[contains(@class,'Cls_prod_size_name') and not(contains(@class,'bottom'))]",
+	                "//span[contains(@class,'Cls_prod_selected_size')]"
 	        );
 
 	        verifySizeGroup(
 	                "BOTTOM",
-	                bottomSizes,
+	                "//div[contains(@class,'Cls_prod_size_name_bottom')]",
 	                "//span[contains(@class,'Cls_prod_selected_size_bottom')]"
 	        );
 	    }
@@ -1046,59 +1288,70 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	    // ---------- ONLY TOP ----------
 	    else if (!topSizes.isEmpty()) {
 
-	        System.out.println("✅ Product has ONLY TOP size");
+	        System.out.println("✅ Product has ONLY TOP sizes");
 
 	        verifySizeGroup(
 	                "TOP",
-	                topSizes,
-	                "(//span[contains(@class,'Cls_prod_selected_size')])[1]"
+	                "//div[contains(@class,'Cls_prod_size_name') and not(contains(@class,'bottom'))]",
+	                "//span[contains(@class,'Cls_prod_selected_size')]"
 	        );
 	    }
 
 	    // ---------- ONLY BOTTOM ----------
 	    else if (!bottomSizes.isEmpty()) {
 
-	        System.out.println("✅ Product has ONLY BOTTOM size");
+	        System.out.println("✅ Product has ONLY BOTTOM sizes");
 
 	        verifySizeGroup(
 	                "BOTTOM",
-	                bottomSizes,
+	                "//div[contains(@class,'Cls_prod_size_name_bottom')]",
 	                "//span[contains(@class,'Cls_prod_selected_size_bottom')]"
 	        );
 	    }
 
+	    // ---------- NO SIZE ----------
 	    else {
-	        System.out.println("⚠️ No size options available for this product");
+	        System.out.println("⚠️ No sizes available for this product");
 	    }
 	}
-
 	private void verifySizeGroup(String type,
-            List<WebElement> sizeList,
+            String sizeXpath,
             String selectedSizeXpath) {
 
 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
 System.out.println("🔹 Checking " + type + " sizes");
 
-for (WebElement size : sizeList) {
+List<WebElement> sizes = driver.findElements(By.xpath(sizeXpath));
 
-if (!size.isDisplayed()) continue;
+for (int i = 0; i < sizes.size(); i++) {
 
-String sizeName = size.getText().trim();
+// 🔄 Re-fetch to avoid stale element issue
+sizes = driver.findElements(By.xpath(sizeXpath));
+WebElement size = sizes.get(i);
+
+// ❌ Skip disabled sizes
+if (size.getAttribute("class").contains("disabled")) {
+continue;
+}
+
+// ✅ Get clean size (NO '2left' issue)
+String sizeName = size.getAttribute("data-value").trim();
 
 // Click size
 size.click();
-Common.waitForElement(2);
-// Get selected size text
+Common.waitForElement(1);
+
+// Get selected size
 WebElement selectedSize = wait.until(
-ExpectedConditions.visibilityOfElementLocated(
-       By.xpath(selectedSizeXpath)));
+ExpectedConditions.visibilityOfElementLocated(By.xpath(selectedSizeXpath))
+);
 
 String selectedText = selectedSize.getText().trim();
 
-// ✅ ASSERTION
+// ✅ Assertion
 Assert.assertEquals(
-"❌ Selected size mismatch",
+"❌ " + type + " size mismatch",
 sizeName,
 selectedText
 );
