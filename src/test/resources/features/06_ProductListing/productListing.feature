@@ -147,7 +147,8 @@ Feature: This is Product Listing Page feature
       | TD_ID                  |
       | TD_UI_Zlaata_PLP_11 |
       
-      
+      @PLP
+      @Sanity
       
       @TC_UI_Zlaata_PLP_12
 Scenario Outline: TC_UI_Zlaata_PLP_12 | Verify grid toggle in PLP | "<TD_ID>"
@@ -158,4 +159,15 @@ Examples:
   | TD_ID                |
   | TD_UI_Zlaata_PLP_12 |
       
-    
+      
+      
+@PLP
+@Sanity
+@TC_UI_Zlaata_PLP_13
+Scenario Outline: TC_UI_Zlaata_PLP_13 |Verify that the user is able to click on a color dot for a product on the product listing page | "<TD_ID>"
+
+  Given User navigates to product listing page and is able to click on a color dot
+
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_PLP_13 |

@@ -99,6 +99,14 @@ public class ProductListStepDef {
 
 
 
+		@Given("User navigates to product listing page and is able to click on a color dot")
+	public void user_navigates_to_product_listing_page_and_is_able_to_click_on_a_color_dot() {
+		pLp.verifyUserAbleToClickOnColorButton();
+	}
+
+
+
+
 }
 
 

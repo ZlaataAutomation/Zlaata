@@ -1874,7 +1874,109 @@ Thread.sleep(2000);
 	}
 	
 	
-	
+	public void verifyUserAbleToClickOnColorButton() {
+
+		 String GREEN  = "\u001B[32m";
+		    String RED    = "\u001B[31m";
+		    String CYAN   = "\u001B[36m";
+		    String RESET  = "\u001B[0m";
+
+		    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+		    click(zlaataIndiaShopButton);
+
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+		    Actions actions = new Actions(driver);
+		    
+		    Random random = new Random();
+
+		    System.out.println(CYAN + "🔍 Navigating to category..." + RESET);
+
+		    // ---------- NAVIGATION ----------
+		    wait.until(ExpectedConditions.visibilityOf(shopMenu));
+		    actions.moveToElement(shopMenu).perform();
+
+		    wait.until(ExpectedConditions.elementToBeClickable(category));
+		    actions.moveToElement(category).click().perform();
+		
+			  By productCard = By.xpath("//div[contains(@class,'prod_listing_card')]");
+			    List<WebElement> products = wait.until(
+			            ExpectedConditions.visibilityOfAllElementsLocatedBy(productCard)
+			    );
+
+			    List<Integer> validProductIndexes = new ArrayList<>();
+
+			    // ✅ STEP 1: Collect products having NON-ACTIVE colors
+			    for (int i = 0; i < products.size(); i++) {
+
+			        List<WebElement> colors = products.get(i).findElements(
+			                By.xpath(".//span[contains(@class,'prod_swatch_color')]")
+			        );
+
+			        for (WebElement c : colors) {
+			            String cls = c.getAttribute("class");
+
+			            if (cls != null && !cls.contains("active")) {
+			                validProductIndexes.add(i);
+			                break;
+			            }
+			        }
+			    }
+
+			    if (validProductIndexes.isEmpty()) {
+			        System.out.println(RED + "❌ No valid products found" + RESET);
+			        return;
+			    }
+
+			    // ✅ STEP 2: Pick RANDOM product
+			    int productIndex = validProductIndexes.get(
+			            random.nextInt(validProductIndexes.size())
+			    );
+
+			    WebElement product = products.get(productIndex);
+
+			    // ✅ STEP 3: Get NON-ACTIVE colors
+			    List<WebElement> colors = product.findElements(
+			            By.xpath(".//span[contains(@class,'prod_swatch_color')]")
+			    );
+
+			    List<WebElement> nonActiveColors = new ArrayList<>();
+
+			    for (WebElement c : colors) {
+			        String cls = c.getAttribute("class");
+
+			        if (cls != null && !cls.contains("active")) {
+			            nonActiveColors.add(c);
+			        }
+			    }
+
+			    // ✅ STEP 4: Pick RANDOM color
+			    WebElement color = nonActiveColors.get(
+			            random.nextInt(nonActiveColors.size())
+			    );
+
+			    String colorName = color.getAttribute("title");
+
+			    System.out.println(CYAN + "🎨 Clicking Random Product Index: " + productIndex + RESET);
+			    System.out.println(CYAN + "🎨 Clicking Random Color: " + colorName + RESET);
+
+			    // CLICK
+			    color.click();
+
+			    // Wait refresh
+			    wait.until(ExpectedConditions.stalenessOf(product));
+
+			    // Re-fetch
+			    products = driver.findElements(productCard);
+			    product = products.get(productIndex);
+
+			    String productName = product.findElement(
+			            By.xpath(".//a[contains(@class,'product_list_name')]")
+			    ).getText().trim();
+
+			    System.out.println(GREEN + "✅ Product Name: " + productName + RESET);
+			}
+		
+		
 	
 	
 	
