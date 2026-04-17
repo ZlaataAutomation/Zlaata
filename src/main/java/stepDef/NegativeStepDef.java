@@ -25,7 +25,9 @@ public class NegativeStepDef {
 		@Given("User left name field Empty")
 		public void user_left_name_field_empty() {
 			try {
+				
 				negsignup.launchZltV7();
+				negsignup.verifyLogOut();
 				negsignup.ClickProfileIcon();
 				negsignup.signupbutton();
 				negsignup.userNumber();

@@ -21,7 +21,7 @@ public abstract class SignupObjRepository extends BasePage {
 //	@FindBy(xpath = "//div[@class='navigation_cta_icon_list account_icon_btn open__popup']")
 //	protected WebElement profile;
 	
-	@FindBy(xpath = "//div[@class='navigation_cta_icon_list account_icon_btn open__popup ']")
+	@FindBy(xpath = "//button[@class='header_cta_btn account_icon_btn ']")
 	protected WebElement profile;
 	
 	@FindBy(xpath = "//button[@class='signup_box_btn']")
