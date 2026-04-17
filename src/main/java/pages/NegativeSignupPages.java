@@ -141,6 +141,7 @@ public void verifyLogOut() {
 
 
 	public void contbtn() {
+		Common.waitForElement(2);
 		click(continueButton);
 
 
@@ -285,7 +286,7 @@ public void verifyLogOut() {
 		System.out.println("📥 Excel Data: " + excelData + " | Length: " + excelData.length());
 		type(name, excelData);
 		contbtn();
-		//	    Common.waitForElement(5);
+			    Common.waitForElement(2);
 		String actualMessage = validationMsgName.getText();
 		String uiData = name.getAttribute("value");
 		System.out.println("📤 Application UI Data: " + uiData + " | Length: " + uiData.length());
