@@ -21,7 +21,7 @@ public abstract class SignupObjRepository extends BasePage {
 //	@FindBy(xpath = "//div[@class='navigation_cta_icon_list account_icon_btn open__popup']")
 //	protected WebElement profile;
 	
-	@FindBy(xpath = "//div[@class='navigation_cta_icon_list account_icon_btn open__popup ']")
+	@FindBy(xpath = "//button[@class='header_cta_btn account_icon_btn ']")
 	protected WebElement profile;
 	
 	@FindBy(xpath = "//button[@class='signup_box_btn']")
@@ -42,7 +42,7 @@ public abstract class SignupObjRepository extends BasePage {
 	@FindBy(xpath = "//button[@class='verify__otp_btn btn___2']	")
 	protected WebElement verify;
 	
-	@FindBy(id ="err_name")
+	@FindBy(xpath  ="//span[@class='error__msg name_error_msg active']")
 	protected WebElement validationMsgName;
 	
 	@FindBy(name ="userMail")
@@ -54,7 +54,7 @@ public abstract class SignupObjRepository extends BasePage {
 	@FindBy(xpath = "//span[@class='error__msg phone_error_msg active']")
 	protected WebElement validationMsgNumber;
 	
-	@FindBy(id ="err_email")
+	@FindBy(xpath  ="//span[@class='error__msg email_error_msg active']")
 	protected WebElement validationMsgMail;
 //	
 //	@FindBy(id="err_contact")

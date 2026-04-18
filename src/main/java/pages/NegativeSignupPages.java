@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
@@ -40,8 +41,8 @@ public final class NegativeSignupPages extends SignupObjRepository {
 	public void launchZltV7() {
 
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
-		click(submit);
+//		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
+//		click(submit);
 		//        popup();
 	}
 	private void popup() {
@@ -59,6 +60,42 @@ public final class NegativeSignupPages extends SignupObjRepository {
 		}
 
 	}
+	
+	
+public void verifyLogOut() {
+
+    	
+        try {
+        	  profile.click();
+              WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+            // 🔹 Case 1: Logout visible
+            WebElement logoutBtn = wait.until(ExpectedConditions
+                    .visibilityOfElementLocated(
+                            By.xpath("//a[contains(@class,'logout-btn')]")
+                    ));
+         // ✅ Scroll to Logout
+            ((JavascriptExecutor) driver)
+                    .executeScript("arguments[0].scrollIntoView(true);", logoutBtn);
+
+            Common.waitForElement(1);
+            if (logoutBtn.isDisplayed()) {
+                System.out.println("✅ Logout option visible. Logging out...");
+                Common.waitForElement(2);
+                ((JavascriptExecutor) driver)
+                .executeScript("arguments[0].click();", logoutBtn);
+                
+                  return;
+            }
+
+        } catch (Exception e) {
+        	driver.navigate().refresh();
+        	   System.out.println("ℹ Logout option not found. Skipping logout.");
+        }
+
+       
+    }
+    
 
 	private static Random rnd = new Random();
 
@@ -80,6 +117,7 @@ public final class NegativeSignupPages extends SignupObjRepository {
 
 
 	public void ClickProfileIcon() {
+		Common.waitForElement(2);
 		click(profile);
 
 	}
@@ -103,6 +141,7 @@ public final class NegativeSignupPages extends SignupObjRepository {
 
 
 	public void contbtn() {
+		Common.waitForElement(2);
 		click(continueButton);
 
 
@@ -247,7 +286,7 @@ public final class NegativeSignupPages extends SignupObjRepository {
 		System.out.println("📥 Excel Data: " + excelData + " | Length: " + excelData.length());
 		type(name, excelData);
 		contbtn();
-		//	    Common.waitForElement(5);
+			    Common.waitForElement(2);
 		String actualMessage = validationMsgName.getText();
 		String uiData = name.getAttribute("value");
 		System.out.println("📤 Application UI Data: " + uiData + " | Length: " + uiData.length());

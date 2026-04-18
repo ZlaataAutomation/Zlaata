@@ -501,7 +501,8 @@ Thread.sleep(2000);
 	    // ✅ Navigate to PLP
 	    actions.moveToElement(shopMenu).perform();
 	    actions.moveToElement(categoryDresses).click().perform();
-
+Common.waitForElement(2);
+	    
 	    wait.until(ExpectedConditions.visibilityOfElementLocated(
 	            By.xpath("//div[contains(@class,'prod_listing_card')]")));
 
@@ -1897,6 +1898,8 @@ Thread.sleep(2000);
 
 		    wait.until(ExpectedConditions.elementToBeClickable(category));
 		    actions.moveToElement(category).click().perform();
+		    
+		    Common.waitForElement(5);
 		
 			  By productCard = By.xpath("//div[contains(@class,'prod_listing_card')]");
 			    List<WebElement> products = wait.until(
