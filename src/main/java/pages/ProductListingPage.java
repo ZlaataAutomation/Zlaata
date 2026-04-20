@@ -56,6 +56,7 @@ public final class ProductListingPage extends ProductListObjRepo {
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
 	    // Hover and open category
+	    Common.waitForElement(2);
 	    Actions actions = new Actions(driver);
 	    actions.moveToElement(shopMenu).perform();
 	    actions.moveToElement(category).click().perform();

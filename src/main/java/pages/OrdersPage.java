@@ -1459,7 +1459,7 @@ public String takeRandomProductFromAll() {
     
     Common.waitForElement(2);
     WebElement addToCart = wait.until(ExpectedConditions.elementToBeClickable(
-            By.xpath("(//button[contains(text(),'Add to')])[1]")));
+            By.xpath("(//button[contains(text(),'Buy Now')])[1]")));
     
 
 //    
