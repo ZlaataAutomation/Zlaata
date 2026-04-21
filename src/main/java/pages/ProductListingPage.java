@@ -1157,182 +1157,96 @@ Common.waitForElement(2);
 	    actions.moveToElement(category).click().perform();
 
 	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
-
-	    // Wait for products
+	    Common.waitForElement(2);
+	 // Wait for products
 	    wait.until(ExpectedConditions.visibilityOfElementLocated(
 	            By.xpath("//div[contains(@class,'prod_listing_card')]")
 	    ));
-
+	    Common.waitForElement(3);
 	    // Get all products
 	    List<WebElement> products = driver.findElements(
 	            By.xpath("//div[contains(@class,'prod_listing_card')]")
 	    );
 
-	    System.out.println(CYAN + "Total Products on page: " + products.size() + RESET);
+	    // Filter NOT liked products
+	    List<WebElement> notLikedProducts = new ArrayList<>();
 
-	    List<String> alreadyInWishlist = new ArrayList<>();
-	    List<WebElement> notInWishlist = new ArrayList<>();
-
-	    // Separate products based on wishlist status
 	    for (WebElement product : products) {
 	        try {
 	            WebElement wishBtn = product.findElement(
 	                    By.xpath(".//button[contains(@class,'product_wishlist_icon')]")
 	            );
+
 	            String classAttr = wishBtn.getAttribute("class");
-	            String productName = product.findElement(
-	                    By.xpath(".//a[contains(@class,'product_list_name')]")
-	            ).getText().trim();
 
-	            if (classAttr.contains("is-liked") || classAttr.contains("liked")) {
-	                alreadyInWishlist.add(productName);
-	            } else {
-	                notInWishlist.add(product);
+	            if (!classAttr.contains("liked")) {
+	                notLikedProducts.add(product);
 	            }
-	        } catch (StaleElementReferenceException e) {
-	            // Refetch the product if DOM changed
-	            product = driver.findElements(By.xpath("//div[contains(@class,'prod_listing_card')]"))
-	                    .get(products.indexOf(product));
-	        }
+
+	        } catch (Exception ignored) {}
 	    }
 
-	    System.out.println(GREEN + "✅ Products already in wishlist (" + alreadyInWishlist.size() + "):" + RESET);
-	    alreadyInWishlist.forEach(System.out::println);
-
-	    System.out.println(BLUE + "🟡 Products not in wishlist (" + notInWishlist.size() + "):" + RESET);
-	    notInWishlist.forEach(p -> {
-	        try {
-	            System.out.println(p.findElement(By.xpath(".//a[contains(@class,'product_list_name')]")).getText().trim());
-	        } catch (NoSuchElementException | StaleElementReferenceException ignored) {}
-	    });
-
-	    if (notInWishlist.isEmpty()) {
-	        System.out.println(GREEN + "All products already in wishlist. No product needs to be added." + RESET);
-	        return; // Stop execution
+	    // If no product available
+	    if (notLikedProducts.isEmpty()) {
+	        System.out.println("All products already in wishlist");
+	        return;
 	    }
 
-	    // Add first available product to wishlist
-	    WebElement productCard = notInWishlist.get(0);
+	    // 👉 Pick RANDOM product
+	    Random rand = new Random();
+	    WebElement productCard = notLikedProducts.get(rand.nextInt(notLikedProducts.size()));
 
-	    String productName;
-	    String productActualPrice;
-	    String productOfferPrice;
-	    String productURL;
+	    // Get details
+	    String productName = productCard.findElement(
+	            By.xpath(".//a[contains(@class,'product_list_name')]")
+	    ).getText().trim();
 
-	    // Refetch productCard to avoid stale element
-	    productCard = driver.findElements(By.xpath("//div[contains(@class,'prod_listing_card')]"))
-	            .get(products.indexOf(productCard));
-
-	    productName = productCard.findElement(By.xpath(".//a[contains(@class,'product_list_name')]")).getText().trim();
-
-	    try{
-	        productActualPrice = productCard.findElement(
-	                By.xpath(".//s[contains(@class,'product_actual_price')]")
-	        ).getText().trim();
-	    }catch(Exception e){
-	        productActualPrice = "No Discount";
-	    }
-
-	    try{
-	        productOfferPrice = productCard.findElement(
-	                By.xpath(".//span[contains(@class,'product_discounted_price')]")
-	        ).getText().trim();
-	    }catch(Exception e){
-	        productOfferPrice = "No Price";
-	    }
-
-	    productURL = productCard.findElement(
+	    String productURL = productCard.findElement(
 	            By.xpath(".//a[contains(@class,'product_list_name')]")
 	    ).getAttribute("href");
 
-	    // Click wishlist icon
+	    // Click wishlist
 	    WebElement wishBtn = productCard.findElement(
-	            By.xpath(".//button[@aria-label='Add to wishlist']")
+	            By.xpath(".//button[contains(@class,'product_wishlist_icon')]")
 	    );
 
-	    String classBefore = wishBtn.getAttribute("class");
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", wishBtn);
 
-	    if (classBefore.contains("liked")) {
-	        System.out.println(GREEN + "❤️ Product already in wishlist" + RESET);
-	    } else {
-	        System.out.println(BLUE + "🤍 Adding product to wishlist..." + RESET);
-	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", wishBtn);
-	        wait.until(d -> wishBtn.getAttribute("class").contains("liked"));
-	        System.out.println(GREEN + "❤️ Product added to wishlist" + RESET);
-	    }
+	    // Wait until liked
+	    wait.until(d -> wishBtn.getAttribute("class").contains("liked"));
 
-	    System.out.println(CYAN + "📌 Newly Added Product Details:" + RESET);
-	    System.out.println("   Name        : " + productName);
-	    System.out.println("   Actual Price: " + productActualPrice);
-	    System.out.println("   Offer Price : " + productOfferPrice);
-	    System.out.println("   Product URL : " + productURL);
+	    System.out.println(GREEN+ "Added Product to Wish List: " + productName + RESET);
 
-	    // Open wishlist page
-	    WebElement wishlistIcon = wait.until(
-	            ExpectedConditions.elementToBeClickable(
-	                    By.xpath("//button[contains(@class,'wishlist-icon')]")
-	            )
-	    );
-	    wishlistIcon.click();
-
-	    // Refetch wishlist products to avoid stale elements
+	    // Go to Wishlist page
+	    driver.findElement(
+	            By.xpath("//button[contains(@class,'wishlist-icon')]")
+	    ).click();
+	    Common.waitForElement(2);
+	    // Wait for wishlist products
 	    List<WebElement> wishlistProducts = wait.until(
 	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
 	                    By.xpath("//div[contains(@class,'prod_listing_card')]")
 	            )
 	    );
 
-	    boolean productFound = false;
-	    System.out.println(CYAN + "🛒 Verifying Newly Added Product in Wishlist:" + RESET);
+	    // Verify product
+	    boolean found = false;
 
-	    for(int i = 0; i < wishlistProducts.size(); i++){
-	        WebElement product = wishlistProducts.get(i);
-	        try {
-	            String wishName = product.findElement(
-	                    By.xpath(".//a[contains(@class,'product_list_name')]")
-	            ).getText().trim();
+	    for (WebElement product : wishlistProducts) {
+	        String name = product.findElement(
+	                By.xpath(".//a[contains(@class,'product_list_name')]")
+	        ).getText().trim();
 
-	            if(wishName.equals(productName)){
-	                productFound = true;
-
-	                String wishActualPrice;
-	                try{
-	                    wishActualPrice = product.findElement(
-	                            By.xpath(".//s[contains(@class,'product_actual_price')]")
-	                    ).getText().trim();
-	                }catch(Exception e){
-	                    wishActualPrice = "No Discount";
-	                }
-
-	                String wishPrice;
-	                try{
-	                    wishPrice = product.findElement(
-	                            By.xpath(".//span[contains(@class,'product_discounted_price')]")
-	                    ).getText().trim();
-	                }catch(Exception e){
-	                    wishPrice = "No Price";
-	                }
-
-	                String wishURL = product.findElement(
-	                        By.xpath(".//a[contains(@class,'product_list_name')]")
-	                ).getAttribute("href");
-
-	                System.out.println("-----------------------------------");
-	                System.out.println("Product Name  : " + wishName);
-	                System.out.println("Actual Price  : " + wishActualPrice);
-	                System.out.println("Offer Price   : " + wishPrice);
-	                System.out.println("Product URL   : " + wishURL);
-	                break;
-	            }
-	        } catch (StaleElementReferenceException e) {
-	            // Refetch product list and retry
-	            wishlistProducts = driver.findElements(By.xpath("//div[contains(@class,'prod_listing_card')]"));
-	            i--; // Retry current index
+	        if (name.equals(productName)) {
+	            found = true;
+	            break;
 	        }
 	    }
 
-	    Assert.assertTrue("Wishlist validation failed. Product not found.", productFound);
-	    System.out.println(GREEN + "✅ Added product verified successfully in Wishlist!" + RESET);
+	    // Assertion
+	    Assert.assertTrue("Product not found in wishlist", found);
+
+	    System.out.println("✅ Product verified in Wishlist");
 	}
 //	public void addToCart() throws InterruptedException {
 //
