@@ -32,7 +32,7 @@ public abstract  class ProductListObjRepo extends BasePage {
 //	@FindBy(xpath = "//div[contains(@class,'home_banner_container')]")
 //	protected WebElement banners;
 	
-	@FindBy(xpath = "//section[@data-section='zi_home_page_banner']//img[contains(@class,'hero-banner-img')]")
+	@FindBy(xpath = "//section[@data-section='zi_home_page_banner']")
 	protected WebElement banners;
 	
 	@FindBy(xpath = "//h2[@class='prod_listing_topic']")
