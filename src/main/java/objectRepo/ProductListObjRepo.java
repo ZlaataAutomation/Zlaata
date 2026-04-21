@@ -109,7 +109,7 @@ public abstract  class ProductListObjRepo extends BasePage {
 	protected WebElement closeShowFilter;
 	
 	
-	 @FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	 @FindBy(xpath = "//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
 	   protected WebElement zlaataIndiaShopButton;
 	
 	
