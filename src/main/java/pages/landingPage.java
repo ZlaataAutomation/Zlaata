@@ -42,7 +42,7 @@ public final class landingPage  extends landingPageObjRepo{
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
 	    click(hambager);
-	    Thread.sleep(2000);
+	     Common.waitForElement(5);
 
 	    List<WebElement> categories = driver.findElements(
 	            By.xpath("//div[contains(@class,'brand_categories_card')]//a"));
@@ -51,7 +51,9 @@ public final class landingPage  extends landingPageObjRepo{
 	    System.out.println(CYAN + "Total categories found: " + total + RESET);
 
 	    click(hambager);
+	     Common.waitForElement(5);
 
+	    
 	    for (int i = 0; i < total; i++) {
 
 	        wait.until(ExpectedConditions.elementToBeClickable(hambager)).click();
@@ -66,6 +68,8 @@ public final class landingPage  extends landingPageObjRepo{
 	        System.out.println(BLUE + "Clicking category: " + categoryName + RESET);
 
 	        category.click();
+		     Common.waitForElement(2);
+
 
 	        WebElement heading = wait.until(ExpectedConditions.visibilityOfElementLocated(
 	                By.xpath("//h2[@class='prod_listing_topic']")));
@@ -118,11 +122,11 @@ public final class landingPage  extends landingPageObjRepo{
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
 	    System.out.println(CYAN + "Opening Application..." + RESET);
-	    Common.waitForElement(2);
+
 	    // Click Zlaata India Shop
 	    System.out.println(BLUE + "Clicking Zlaata India Shop button" + RESET);
 	    click(zlaataIndiaShopButton);
-	    Common.waitForElement(2);
+
 	    wait.until(ExpectedConditions.urlContains("zlaata-india"));
 
 	    String actualUrl = driver.getCurrentUrl();
@@ -139,13 +143,22 @@ public final class landingPage  extends landingPageObjRepo{
 	    // Click Zlaata Logo
 	    System.out.println(BLUE + "Clicking Zlaata Logo to return home" + RESET);
 
-	    openTheApplication();
-	    Common.waitForElement(2);
+	    WebElement  blogs = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[normalize-space()='ZBLOG']")));
+
+	    blogs.click();
+	    
+
+	    WebElement  logo  = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//img[@alt='Zlaata Blog']")));
+
+	    logo.click();
+
 	    // Click Boss Lady Shop
 	    System.out.println(BLUE + "Clicking Boss Lady Shop button" + RESET);
 
 	    wait.until(ExpectedConditions.elementToBeClickable(bossladyShopButton)).click();
-	    Common.waitForElement(2);
+
 	    wait.until(ExpectedConditions.urlContains("boss-lady"));
 
 	    String bossActualUrl = driver.getCurrentUrl();
@@ -161,6 +174,8 @@ public final class landingPage  extends landingPageObjRepo{
 
 	    System.out.println(CYAN + "Both Shop buttons working correctly" + RESET);
 	}
+
+
 
 
 	public void verifythatLogoRedirectionInLandingPage() {

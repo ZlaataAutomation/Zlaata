@@ -351,6 +351,8 @@ Thread.sleep(2000);
 	    // ✅ Navigate to PLP
 	    actions.moveToElement(shopMenu).perform();
 	    actions.moveToElement(categoryDresses).click().perform();
+	    
+	    Common.waitForElement(2);
 
 	    // ✅ Click Filter Button (SVG)
 	    WebElement filterBtn = wait.until(ExpectedConditions.elementToBeClickable(
@@ -1502,7 +1504,7 @@ Common.waitForElement(2);
 	                    By.xpath("//div[@class='prod_listing_card']")
 	            )
 	    );
-
+Common.waitForElement(3);
 	    // Check if product is out of stock
 	    List<WebElement> stockLabels = productCard.findElements(
 	            By.xpath(".//span[contains(@class,'prod_listing_hurry') and contains(text(),'Out of Stock')]")

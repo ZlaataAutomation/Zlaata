@@ -1588,8 +1588,49 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	            .getConfigReader()
 	            .getApplicationUrl());
 
-	    click(zlaataIndiaShopButton);
+	   
+	        // Open cart
+	        driver.findElement(By.xpath("//button[@class='header_cta_btn Cls_cart_btn ']")).click();
+	        Common.waitForElement(1);
 
+	        // ✅ STEP 1: Check if cart is already empty
+	        try {
+	            if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	                System.out.println("🛍️ Cart already empty. No delete action needed.");
+	                return; // Stop method immediately
+	            }
+	        } catch (NoSuchElementException ignored) {
+	            // Cart is NOT empty, proceed to delete
+	        }
+
+	        // ✅ STEP 2: Delete products one by one
+	        while (true) {
+	            try {
+	                WebElement deleteBtn = driver.findElement(By.xpath("//div[@title='Delete']"));
+	                deleteBtn.click();
+	                System.out.println("🗑️ Product deleted");
+	                Common.waitForElement(1); 
+	            } catch (NoSuchElementException e) {
+	                System.out.println("✅ No more products to delete.");
+	                break;
+	            } catch (Exception e) {
+	                System.out.println("⚠️ Error while deleting: " + e.getMessage());
+	                break;
+	            }
+	        }
+
+	        // ✅ STEP 3: Final confirmation
+	        try {
+	            if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	                System.out.println("🛍️ Cart is empty, Continue Shopping displayed.");
+	            }
+	        } catch (NoSuchElementException e) {
+	            System.out.println("ℹ️ Bag is not empty message not found.");
+	        }
+	    
+
+
+	    
 	    RandomProduct();
 
 	    Common.waitForElement(2);
@@ -1735,7 +1776,50 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
 	    
-	    click(zlaataIndiaShopButton);
+	   
+	    
+
+        // Open cart
+        driver.findElement(By.xpath("//button[@class='header_cta_btn Cls_cart_btn ']")).click();
+        Common.waitForElement(1);
+
+        // ✅ STEP 1: Check if cart is already empty
+        try {
+            if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+                System.out.println("🛍️ Cart already empty. No delete action needed.");
+                return; // Stop method immediately
+            }
+        } catch (NoSuchElementException ignored) {
+            // Cart is NOT empty, proceed to delete
+        }
+
+        // ✅ STEP 2: Delete products one by one
+        while (true) {
+            try {
+                WebElement deleteBtn = driver.findElement(By.xpath("//div[@title='Delete']"));
+                deleteBtn.click();
+                System.out.println("🗑️ Product deleted");
+                Common.waitForElement(1); 
+            } catch (NoSuchElementException e) {
+                System.out.println("✅ No more products to delete.");
+                break;
+            } catch (Exception e) {
+                System.out.println("⚠️ Error while deleting: " + e.getMessage());
+                break;
+            }
+        }
+
+        // ✅ STEP 3: Final confirmation
+        try {
+            if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+                System.out.println("🛍️ Cart is empty, Continue Shopping displayed.");
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("ℹ️ Bag is not empty message not found.");
+        }
+    
+
+	    
 
 
 	    try {

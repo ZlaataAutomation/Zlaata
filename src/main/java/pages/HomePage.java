@@ -1665,13 +1665,12 @@ public void clickOnAboutUsBannerForBL() {
 }
 
 public void verifyCollectionBanners() throws InterruptedException {
-	 
+
     driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
     click(zlaataIndiaShopButton);
 
     String GREEN  = "\u001B[32m";
-    String RED    = "\u001B[31m";
     String YELLOW = "\u001B[33m";
     String BLUE   = "\u001B[34m";
     String RESET  = "\u001B[0m";
@@ -1680,15 +1679,15 @@ public void verifyCollectionBanners() throws InterruptedException {
 
     // Scroll to collection section
     WebElement section = wait.until(
-        ExpectedConditions.presenceOfElementLocated(
-            By.xpath("//section[contains(@class,'zi_collection')]")
-        )
+            ExpectedConditions.presenceOfElementLocated(
+                    By.xpath("//section[contains(@class,'zi_collection')]")
+            )
     );
 
     ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", section);
 
     List<WebElement> banners = driver.findElements(
-        By.xpath("//a[contains(@class,'zi_collection_card')]")
+            By.xpath("//a[contains(@class,'zi_collection_card')]")
     );
 
     int total = banners.size();
@@ -1696,66 +1695,79 @@ public void verifyCollectionBanners() throws InterruptedException {
 
     for (int i = 0; i < total; i++) {
 
-        // Re-fetch elements
-        banners = driver.findElements(By.xpath("//a[contains(@class,'zi_collection_card')]"));
+        // Re-fetch banners every loop
+        banners = driver.findElements(
+                By.xpath("//a[contains(@class,'zi_collection_card')]")
+        );
 
         WebElement banner = banners.get(i);
 
         String bannerName = banner.getText().trim();
         System.out.println(BLUE + "Clicking banner: " + bannerName + RESET);
 
-        banner.click();
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
 
         // Wait for heading
         WebElement heading = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.xpath(" //h2[@class='prod_listing_topic']")
-            )
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//h2[@class='prod_listing_topic']")
+                )
         );
 
         String pageHeading = heading.getText().trim();
         System.out.println(YELLOW + "Page heading: " + pageHeading + RESET);
 
         // Normalize text
-        String normalizedBanner = bannerName.replace("-", "").replace(" ", "").toLowerCase();
-        String normalizedHeading = pageHeading.replace("-", "").replace(" ", "").toLowerCase();
+        String normalizedBanner = bannerName.replace("-", "")
+                .replace(" ", "")
+                .toLowerCase();
+
+        String normalizedHeading = pageHeading.replace("-", "")
+                .replace(" ", "")
+                .toLowerCase();
 
         // Validate heading match
         if (!normalizedBanner.equals(normalizedHeading)) {
             throw new AssertionError(
-                "Mismatch! Banner: " + bannerName + " | Heading: " + pageHeading);
+                    "Mismatch! Banner: " + bannerName +
+                            " | Heading: " + pageHeading
+            );
         }
 
-        // Print URL
-        String currentUrl = driver.getCurrentUrl();
-        System.out.println("URL: " + currentUrl);
-
-        // Product validation
+        // Product validation (RE-FETCH here to avoid stale element)
         List<WebElement> products = driver.findElements(
-            By.xpath("//div[contains(@class,'prod_listing_card')]")
+                By.xpath("//div[contains(@class,'prod_listing_card')]")
         );
 
         if (products.size() > 0) {
 
             WebElement firstProduct = wait.until(
-                ExpectedConditions.visibilityOf(products.get(0))
+                    ExpectedConditions.visibilityOfElementLocated(
+                            By.xpath("(//div[contains(@class,'prod_listing_card')])[1]")
+                    )
             );
 
             if (firstProduct.isDisplayed()) {
-                System.out.println(GREEN + "Product displayed for: " + bannerName + RESET);
+                System.out.println(
+                        GREEN + "Product displayed for: " + bannerName + RESET
+                );
             }
 
         } else {
-            System.out.println(YELLOW + "No products found for: " + bannerName + RESET);
+            System.out.println(
+                    YELLOW + "No products found for: " + bannerName + RESET
+            );
         }
 
-        // Go back
+        // Back to home page
         driver.navigate().back();
 
-        // Wait for section again
-        wait.until(ExpectedConditions.presenceOfElementLocated(
-            By.xpath("//section[contains(@class,'zi_collection')]")
-        ));
+        // Wait again for collection section
+        wait.until(
+                ExpectedConditions.presenceOfElementLocated(
+                        By.xpath("//section[contains(@class,'zi_collection')]")
+                )
+        );
     }
 }
 
