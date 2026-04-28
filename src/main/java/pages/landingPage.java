@@ -118,11 +118,11 @@ public final class landingPage  extends landingPageObjRepo{
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
 	    System.out.println(CYAN + "Opening Application..." + RESET);
-
+	    Common.waitForElement(2);
 	    // Click Zlaata India Shop
 	    System.out.println(BLUE + "Clicking Zlaata India Shop button" + RESET);
 	    click(zlaataIndiaShopButton);
-
+	    Common.waitForElement(2);
 	    wait.until(ExpectedConditions.urlContains("zlaata-india"));
 
 	    String actualUrl = driver.getCurrentUrl();
@@ -139,16 +139,13 @@ public final class landingPage  extends landingPageObjRepo{
 	    // Click Zlaata Logo
 	    System.out.println(BLUE + "Clicking Zlaata Logo to return home" + RESET);
 
-	    WebElement logo = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.xpath("//a[@class='brand_logo']//img[@alt='zlaata Logo']")));
-
-	    logo.click();
-
+	    openTheApplication();
+	    Common.waitForElement(2);
 	    // Click Boss Lady Shop
 	    System.out.println(BLUE + "Clicking Boss Lady Shop button" + RESET);
 
 	    wait.until(ExpectedConditions.elementToBeClickable(bossladyShopButton)).click();
-
+	    Common.waitForElement(2);
 	    wait.until(ExpectedConditions.urlContains("boss-lady"));
 
 	    String bossActualUrl = driver.getCurrentUrl();

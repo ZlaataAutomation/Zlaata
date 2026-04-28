@@ -186,7 +186,7 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
 	@FindBy(xpath = "//div[@class='prod_describe_drop_arrow']")//list of WebElement//div[@class='prod_describe_drop_arrow']
 	protected List <WebElement> clickAllDropDownArrow;
 
-	@FindBy(xpath = "//h5[normalize-space()='Return & Exchange']")
+	@FindBy(xpath = "//h5[normalize-space()='Return & Exchange' or normalize-space()='Exchange']")
 	protected WebElement clickOnReturn_ExchangeDropDownArrow;
 
 	@FindBy(xpath = "//a[.='click here.']")

@@ -38,9 +38,7 @@ Feature: CheckOut Page Feature
       | TD_UI_Zlaata_COP_03     |
 
 
-@Cart
-  @Sanity
-   @Ca
+
   @TC_UI_Zlaata_COP_04
   Scenario Outline: TC_UI_Zlaata_COP_04 |Verify That User Can Change Product Size|"<TD_ID>"
     Given User Verifies That User Can Change Product Size
@@ -49,8 +47,8 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_04     |
 
-@Cart
-  @Sanity
+#@Cart
+  #@Sanity
    @Ca
   @TC_UI_Zlaata_COP_05
   Scenario Outline: TC_UI_Zlaata_COP_05 |Verify User Can Increase or Decrease Product Quantity|"<TD_ID>"

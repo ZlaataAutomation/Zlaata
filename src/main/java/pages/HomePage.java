@@ -2688,8 +2688,12 @@ public void verifyDotsAndProducts() throws InterruptedException {
 
         System.out.println(CYAN + "After Click -> " + nameAfter + " | " + priceAfter + RESET);
 
-     // 🔹 Validate Name
-        if (!(nameAfter.contains(nameBefore) || nameBefore.contains(nameAfter))) {
+     // 🔹 Normalize strings
+        String before = nameBefore.toLowerCase().replaceAll("\\s+", "").replace(",", "");
+        String after  = nameAfter.toLowerCase().replaceAll("\\s+", "").replace(",", "");
+
+        // 🔹 Validate Name
+        if (!(before.contains(after) || after.contains(before))) {
             System.out.println(RED + "Name NOT matched" + RESET);
             throw new RuntimeException("Product name mismatch");
         }

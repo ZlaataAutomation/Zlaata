@@ -929,22 +929,22 @@ private void changeSizeForFirstProduct(WebElement productCard, String sizeType) 
         js.executeScript("arguments[0].click();", dropdownArrow);
         Common.waitForElement(1);
 
-        List<WebElement> refreshedOptions = sizeCard.findElements(
-            By.xpath(".//ul[contains(@class,'cp_dropdown_content')]//li")
+        List<WebElement> refreshedOptions = driver.findElements(
+                By.xpath("//ul[contains(@class,'cp_dropdown_content')]//li")
         );
 
         WebElement option = refreshedOptions.get(i);
         String sizeText = option.getText().trim();
 
         System.out.println("➡️ Trying size: " + sizeText);
-
+        Common.waitForElement(1);
         js.executeScript("arguments[0].click();", option);
         Common.waitForElement(2);
 
         // ✅ Re-locate selected size AFTER DOM refresh
-        WebElement selectedSize = sizeCard.findElement(
-            By.xpath(".//div[contains(@class,'cp_selected_size')]")
-        );
+        WebElement selectedSize = driver.findElement(
+        	    By.xpath("//div[contains(@class,'cp_selected_size')]")
+        	);
 
         String selectedText = selectedSize.getText().trim();
 
