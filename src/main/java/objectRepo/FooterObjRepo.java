@@ -65,4 +65,8 @@ public abstract class FooterObjRepo extends BasePage {
 	@FindBy(xpath = "//a[normalize-space()='Gift Card']")
 	protected WebElement giftCard;
 
+	
+	@FindBy(xpath = "//a[normalize-space()='Pop shop']")
+	protected WebElement expobanner;
+	
 }

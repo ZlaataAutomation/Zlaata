@@ -145,7 +145,7 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 	    WebElement pdpName = wait.until(
 	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//h4[@class='prod_name']")
+	                    By.xpath("//h3[@class='prod_name']")
 	            )
 	    );
 
@@ -696,7 +696,7 @@ Thread.sleep(2000);
 	        System.out.println("✅ Verified color: " + colorName);
 	        // ----- VERIFY PRODUCT NAME -----
 	        String productName = driver.findElement(
-	                By.xpath("//h4[@class='prod_name']")).getText().toLowerCase();
+	                By.xpath("//h3[@class='prod_name']")).getText().toLowerCase();
 
 //	        Assert.assertTrue(
 //	                "Product name mismatch",
@@ -763,7 +763,7 @@ Thread.sleep(2000);
 
 	        // ---------------- PRODUCT NAME ----------------
 	        String productName = driver.findElement(
-	                By.xpath("//h4[@class='prod_name']"))
+	                By.xpath("//h3[@class='prod_name']"))
 	                .getText().toLowerCase();
 //
 //	        Assert.assertTrue(
@@ -1250,7 +1250,7 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	    // ✅ GET PRODUCT NAME
 	    WebElement pdpName = wait.until(
 	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//h4[@class='prod_name']")
+	                    By.xpath("//h3[@class='prod_name']")
 	            )
 	    );
 
@@ -1639,10 +1639,10 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 
 	    // ---------------- GET PRODUCT DETAILS ----------------
 	    wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//h4[@class='prod_name']")));
+	            By.xpath("//h3[@class='prod_name']")));
 
 	    String productName = driver.findElement(
-	            By.xpath("//h4[@class='prod_name']"))
+	            By.xpath("//h3[@class='prod_name']"))
 	            .getText().trim();
 
 	    String selectedColor = driver.findElement(
@@ -1828,7 +1828,7 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	        Common.waitForElement(2);
 	        // ---------------- GET PRODUCT DETAILS ----------------
 		    String productName = driver.findElement(
-		            By.xpath("//h4[@class='prod_name']"))
+		            By.xpath("//h3[@class='prod_name']"))
 		            .getText().trim();
 
 		    String selectedColor = driver.findElement(

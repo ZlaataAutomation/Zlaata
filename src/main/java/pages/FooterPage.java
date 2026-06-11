@@ -7,7 +7,9 @@ import static org.junit.Assert.fail;
 import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -245,94 +247,252 @@ public  final class FooterPage  extends FooterObjRepo{
 	    }
 	}
 
-//TC-03
-	public void verifyPopShopLink() {
+	//TC-03
+		public void verifyPopShopLink() {
 
-	    String GREEN  = "\u001B[32m";
-	    String RED    = "\u001B[31m";
-	    String CYAN   = "\u001B[36m";
-	    String YELLOW = "\u001B[33m";
-	    String RESET  = "\u001B[0m";
-
-	    driver.get(FileReaderManager.getInstance()
-	            .getConfigReader()
-	            .getApplicationUrl());
-	    
-		click(zlaataIndiaShopButton);
+		    String GREEN  = "\u001B[32m";
+		    String RED    = "\u001B[31m";
+		    String CYAN   = "\u001B[36m";
+		    String YELLOW = "\u001B[33m";
+		    String RESET  = "\u001B[0m";
+	        String PURPLE = "\033[0;35m";
+	         String BLUE = "\033[0;34m";
 
 
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+		    driver.get(FileReaderManager.getInstance()
+		            .getConfigReader()
+		            .getApplicationUrl());
+		    
+			click(zlaataIndiaShopButton);
 
-	    try {
 
-	        scrollUsingJSWindow();
-	        Common.waitForElement(1);
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-	        String beforeClickUrl = driver.getCurrentUrl();
-	        System.out.println(CYAN + "🔗 URL before clicking Pop Shop: "
-	                + beforeClickUrl + RESET);
+		    try {
 
-	        WebElement popShopLink = wait.until(
-	                ExpectedConditions.elementToBeClickable(
-	                        By.xpath("//a[normalize-space()='Pop shop']")
-	                )
-	        );
-	        popShopLink.click();
+		        scrollUsingJSWindow();
+		        Common.waitForElement(1);
 
-	        Common.waitForElement(2);
+		        String beforeClickUrl = driver.getCurrentUrl();
+		        System.out.println(CYAN + "🔗 URL before clicking Pop Shop: "
+		                + beforeClickUrl + RESET);
 
-	        wait.until(ExpectedConditions.not(
-	                ExpectedConditions.urlToBe(beforeClickUrl)
-	        ));
+		        WebElement popShopLink = wait.until(
+		                ExpectedConditions.elementToBeClickable(
+		                        By.xpath("//a[normalize-space()='Pop shop']")
+		                )
+		        );
+		        popShopLink.click();
 
-	        String actualUrl = driver.getCurrentUrl();
-	        System.out.println(CYAN + "🔗 URL after clicking Pop Shop: "
-	                + actualUrl + RESET);
+		        Common.waitForElement(2);
 
-	        Assert.assertTrue(
-	                "URL does not contain /pop-shop",
-	                actualUrl.contains("/pop-shop")
-	        );
+		        wait.until(ExpectedConditions.not(
+		                ExpectedConditions.urlToBe(beforeClickUrl)
+		        ));
 
-	        URI baseUri = URI.create(beforeClickUrl);
-	        String expectedUrl =
-	                baseUri.getScheme() + "://" + baseUri.getHost() + "/pop-shop";
+		        String actualUrl = driver.getCurrentUrl();
+		        System.out.println(CYAN + "🔗 URL after clicking Pop Shop: "
+		                + actualUrl + RESET);
 
-	        Assert.assertEquals(
-	                "Pop Shop URL mismatch",
-	                expectedUrl,
-	                actualUrl
-	        );
+		        Assert.assertTrue(
+		                "URL does not contain /pop-shop",
+		                actualUrl.contains("/pop-shop")
+		        );
 
-	        System.out.println(GREEN + "✅ Pop Shop URL verified successfully" + RESET);
+		        URI baseUri = URI.create(beforeClickUrl);
+		        String expectedUrl =
+		                baseUri.getScheme() + "://" + baseUri.getHost() + "/pop-shop";
 
-	        WebElement banner = wait.until(
-	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("//div[contains(@class,'expo_header_banner')]//img")
-	                )
-	        );
+		        Assert.assertEquals(
+		                "Pop Shop URL mismatch",
+		                expectedUrl,
+		                actualUrl
+		        );
 
-	        Assert.assertTrue(
-	                "Pop Shop banner image not displayed",
-	                banner.isDisplayed()
-	        );
+		        System.out.println(GREEN + "✅ Pop Shop URL verified successfully" + RESET);
 
-	        String bannerSrc = banner.getAttribute("src");
+		        WebElement banner = wait.until(
+		                ExpectedConditions.visibilityOfElementLocated(
+		                        By.xpath("//div[contains(@class,'expo_header_banner')]//img")
+		                )
+		        );
 
-	        Assert.assertTrue(
-	                "Pop Shop banner image is broken",
-	                bannerSrc != null && !bannerSrc.contains("placeholder-img")
-	        );
+		        Assert.assertTrue(
+		                "Pop Shop banner image not displayed",
+		                banner.isDisplayed()
+		        );
 
-	        System.out.println(GREEN + "✅ Pop Shop banner displayed successfully" + RESET);
-	        System.out.println(GREEN + "🎉 Pop Shop page verified successfully" + RESET);
+		        String bannerSrc = banner.getAttribute("src");
 
-	    } catch (Exception e) {
-	        System.out.println(RED + "❌ Pop Shop verification failed: "
-	                + e.getMessage() + RESET);
-	        Assert.fail("Pop Shop validation failed");
-	    }
-	}
+		        Assert.assertTrue(
+		                "Pop Shop banner image is broken",
+		                bannerSrc != null && !bannerSrc.contains("placeholder-img")
+		        );
+
+		        System.out.println(GREEN + "✅ Pop Shop banner displayed successfully" + RESET);
+		        System.out.println(GREEN + "🎉 Pop Shop page verified successfully" + RESET);
+
+		    } catch (Exception e) {
+		        System.out.println(RED + "❌ Pop Shop verification failed: "
+		                + e.getMessage() + RESET);
+		        Assert.fail("Pop Shop validation failed");
+		    }
+		    
+
+		      
+
+		        driver.get(FileReaderManager.getInstance()
+		                .getConfigReader()
+		                .getApplicationUrl());
+
+		        expobanner.click();
+		        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+		        
+		        By sectionWrappers = By.xpath("//div[@class='expo_mall_wrpr']");
+		        By sectionTitle = By.xpath(".//h2[contains(@class,'expo_mall_heading')]");
+		        By cards = By.xpath(".//div[@class='expo_review_slider_card']");
+		        By customerName = By.xpath(".//h2[@class='expo_review_slider_card_txt_heading']");
+		        By customerComment = By.xpath(".//p[contains(@class,'expo_review_slider_card_desc')]");
+		        By productLink = By.xpath(".//a[@class='expo_review_slider_card_img']");
+		        By productName = By.xpath("//h3[@class='prod_name']");
+		        By page404Text = By.xpath("//div[@class='server__err__wrpr']");
+
+		        // 🔥 NEW MAP FOR 404 URLS
+		        Map<String, List<String>> section404UrlMap = new LinkedHashMap<>();
+
+		        List<WebElement> sections = driver.findElements(sectionWrappers);
+
+		        System.out.println(GREEN + "Total Sections : " + sections.size() + RESET);
+
+		        for (int i = 0; i < sections.size(); i++) {
+
+		            sections = driver.findElements(sectionWrappers);
+		            WebElement section = sections.get(i);
+
+		            js.executeScript("arguments[0].scrollIntoView(true);", section);
+		            Common.waitForElement(2);
+
+		            String sectionName = section.findElement(sectionTitle).getText().trim();
+
+		            System.out.println(PURPLE + "\n==============================");
+		            System.out.println(PURPLE + "✅ SECTION : " + sectionName);
+		            System.out.println(PURPLE + "==============================" + RESET);
+
+		            List<WebElement> allCards = section.findElements(cards);
+
+		            System.out.println(BLUE + "🟦 Total Reviews : " + allCards.size() + RESET);
+
+		            for (int j = 0; j < allCards.size(); j++) {
+
+		                try {
+
+		                    sections = driver.findElements(sectionWrappers);
+		                    section = sections.get(i);
+		                    allCards = section.findElements(cards);
+
+		                    WebElement card = allCards.get(j);
+
+		                    String name = card.findElement(customerName).getText();
+		                    System.out.println(CYAN + "👤 Customer Name : " + name + RESET);
+
+		                    String comment;
+		                    try {
+		                        comment = card.findElement(customerComment).getText();
+		                        System.out.println(YELLOW + "💬 Comment : " + comment + RESET);
+		                    } catch (Exception e) {
+		                        System.out.println(RED + "❌ Comment Missing" + RESET);
+		                    }
+
+		                    // ================= CLICK PRODUCT =================
+
+		                    WebElement img = card.findElement(productLink);
+
+		                    String beforeUrl = driver.getCurrentUrl();
+
+		                    js.executeScript("arguments[0].scrollIntoView(true);", img);
+		                    Common.waitForElement(1);
+
+		                    js.executeScript("arguments[0].click();", img);
+
+		                    Common.waitForElement(3);
+
+		                    String afterUrl = driver.getCurrentUrl();
+
+		                    // ================= NO REDIRECT =================
+
+		                    if (beforeUrl.equals(afterUrl)) {
+
+		                        System.out.println(RED + "🔁 NO REDIRECT - SKIPPING PRODUCT" + RESET);
+
+		                        driver.navigate().refresh();
+		                        Common.waitForElement(2);
+
+		                        continue;
+		                    }
+
+		                    // ================= PRODUCT VALIDATION =================
+
+		                    if (driver.findElements(productName).size() > 0) {
+
+		                        String prod = wait.until(ExpectedConditions
+		                                .visibilityOfElementLocated(productName))
+		                                .getText();
+
+		                        System.out.println(GREEN + "🟢 PRODUCT : " + prod + RESET);
+
+		                    } else if (driver.findElements(page404Text).size() > 0) {
+
+		                        String currentUrl = driver.getCurrentUrl();
+
+		                        System.out.println(RED + "🔴 404 ERROR PAGE DISPLAYED" + RESET);
+		                        System.out.println(RED + "🔗 URL : " + currentUrl + RESET);
+
+		                        // 🔥 STORE 404 URL
+		                        section404UrlMap
+		                                .computeIfAbsent(sectionName, k -> new ArrayList<>())
+		                                .add(currentUrl);
+
+		                    } else {
+
+		                        System.out.println(RED + "🔴 PRODUCT NOT LOADED" + RESET);
+		                    }
+
+		                    // ================= BACK =================
+
+		                    driver.navigate().back();
+		                    Common.waitForElement(2);
+
+		                    sections = driver.findElements(sectionWrappers);
+		                    section = sections.get(i);
+
+		                    js.executeScript("arguments[0].scrollIntoView(true);", section);
+		                    Common.waitForElement(2);
+
+		                } catch (Exception e) {
+		                    System.out.println(RED + "❌ ERROR IN CARD INDEX : " + j + RESET);
+		                }
+		            }
+		        }
+
+		        // ================= FINAL 404 REPORT =================
+
+		        System.out.println(GREEN + "\n=================================================" + RESET);
+		        System.out.println(CYAN + "📌 404 ERROR URL REPORT" + RESET);
+		        System.out.println(GREEN + "=================================================" + RESET);
+
+		        for (Map.Entry<String, List<String>> entry : section404UrlMap.entrySet()) {
+
+		            System.out.println(PURPLE + "\n✅ SECTION : " + entry.getKey() + RESET);
+
+		            for (String url : entry.getValue()) {
+		                System.out.println(RED + "🔗 " + url + RESET);
+		            }
+		        }
+
+		        System.out.println(GREEN + "\n✅ FINAL EXECUTION COMPLETED SUCCESSFULLY" + RESET);
+		    }
+		
 
 //TC-04
 	public void verifyTermsAndConditionsLink() {
@@ -397,7 +557,7 @@ public  final class FooterPage  extends FooterObjRepo{
 
  	        WebElement heading = wait.until(
 	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("//div[contains(@class,'privacy__policy__title')]")
+	                        By.xpath("//h2[contains(@class,'privacy__policy__title')]")
 	                )
 	        );
 
@@ -487,7 +647,7 @@ public  final class FooterPage  extends FooterObjRepo{
 
  	        WebElement heading = wait.until(
 	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("//div[contains(@class,'privacy__policy__title')]")
+	                        By.xpath("//h2[contains(@class,'privacy__policy__title')]")
 	                )
 	        );
 
@@ -590,13 +750,13 @@ public  final class FooterPage  extends FooterObjRepo{
 
  	        WebElement getInTouch = wait.until(
 	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("(//h3[normalize-space()='GET IN TOUCH'])[2]")
+	                        By.xpath("//h3[normalize-space()='GET IN TOUCH']")
 	                )
 	        );
 
 	        WebElement contactTitle = wait.until(
 	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("//h4[normalize-space()='Contact']")
+	                        By.xpath("//h3[normalize-space()='Contact']")
 	                )
 	        );
 
@@ -697,7 +857,7 @@ public void verifyFaqLink() {
 
          WebElement faqHeading = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//h3[contains(@class,'faq_heading')]")
+                        By.xpath("//h2[contains(@class,'faq_heading')]")
                 )
         );
 
