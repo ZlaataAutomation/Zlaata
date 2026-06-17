@@ -513,6 +513,32 @@ public void validateOrderConfirmationDetails() throws InterruptedException {
 		    
 		    
 		    Thread.sleep(3000);
+		    Common.waitForElement(3);
+
+		    try {
+
+		        wait.until(
+		            ExpectedConditions.visibilityOfElementLocated(
+		                By.xpath("//h2[contains(text(),'THANK YOU FOR SHOPPING WITH US')]")
+		            )
+		        );
+
+		        List<WebElement> popup = driver.findElements(
+		            By.xpath("//h2[contains(text(),'THANK YOU FOR SHOPPING WITH US')]")
+		        );
+
+		        if (!popup.isEmpty()) {
+		            driver.findElement(
+		                By.xpath("//div[contains(@class,'feedback__closebtn')]")
+		            ).click();
+
+		            System.out.println("✅ Thank You popup displayed and closed.");
+		        }
+
+		    } catch (TimeoutException e) {
+		        System.out.println("ℹ️ Thank You popup not displayed. Continuing normal flow.");
+		    }
+		    Common.waitForElement(2);
 
 		    try {
 		        WebElement confirmMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
@@ -1333,6 +1359,25 @@ public void verifyTwoProductsOrderPlacedAndCancelButtons() {
     // ===============================
     System.out.println("🎯 2 Products → Order Placed & Cancel verification PASSED");
 }
+
+public void removePopup() {
+	try {
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+
+	    WebElement closePopup = wait.until(
+	        ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//div[contains(@class,'feedback__closebtn')]")
+	        )
+	    );
+
+	    closePopup.click();
+	    System.out.println("✅ Feedback popup displayed and closed.");
+	    Common.waitForElement(3);
+
+	} catch (TimeoutException e) {
+	    System.out.println("ℹ️ Feedback popup not displayed. Continuing normal flow.");
+	}
+}
 String productlistingName;
 
 public String takeRandomProductFromAll() {
@@ -1351,6 +1396,7 @@ public String takeRandomProductFromAll() {
     allButton.click();
 
    Common.waitForElement(5);
+   removePopup();
     System.out.println("✅ Clicked on 'Dress' under Shop menu");
 
     // Collect all product cards
@@ -1453,7 +1499,7 @@ public String takeRandomProductFromAll() {
     // Click ADD TO CART button on PDP
     
     productlistingName = driver.findElement(
-            By.xpath("//h4[@class='prod_name']")
+            By.xpath("//h3[@class='prod_name']")
     ).getText().trim();
     System.out.println("Product Name: " + productlistingName);
     
@@ -1485,18 +1531,19 @@ public void deleteAllProductsFromCart() {
 	driver.get(FileReaderManager.getInstance()
             .getConfigReader()
             .getApplicationUrl());
-	
+
     // Open cart
     driver.findElement(By.xpath("//button[@class='header_cta_btn Cls_cart_btn ']")).click();
     Common.waitForElement(1);
 
     // ✅ STEP 1: Check if cart is already empty
     try {
-        if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+        if (driver.findElement(By.xpath("//*[contains(text(),'Your bag is empty')]")).isDisplayed()) {
             System.out.println("🛍️ Cart already empty. No delete action needed.");
             return; // Stop method immediately
         }
     } catch (NoSuchElementException ignored) {
+    	System.out.println("Cart is NOT empty, proceed to delete");
         // Cart is NOT empty, proceed to delete
     }
 
@@ -1518,7 +1565,7 @@ public void deleteAllProductsFromCart() {
 
     // ✅ STEP 3: Final confirmation
     try {
-        if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+        if (driver.findElement(By.xpath("//*[contains(text(),'Your bag is empty')]")).isDisplayed()) {
             System.out.println("🛍️ Cart is empty, Continue Shopping displayed.");
         }
     } catch (NoSuchElementException e) {

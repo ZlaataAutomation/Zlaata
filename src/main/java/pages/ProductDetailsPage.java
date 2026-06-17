@@ -2197,7 +2197,7 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	        // ---------------- VERIFY HEADING ----------------
 	        WebElement heading = wait.until(
 	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("//div[contains(@class,'privacy__policy__title')]")));
+	                        By.xpath("//h2[contains(@class,'privacy__policy__title')]")));
 
 	        String actualHeading = heading.getText().trim();
 	        String expectedHeading = "RETURN, EXCHANGE & REPLACEMENT POLICY";

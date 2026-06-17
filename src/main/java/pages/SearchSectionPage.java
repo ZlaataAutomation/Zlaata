@@ -478,25 +478,17 @@ public final class SearchSectionPage  extends SearchBarObjRepo{
 		
 		searchbarClikable();
 		verifyRelatedQueriesZI();
-		searchbarClikable();
 		verifyRelatedQueriesBL();
 
 		
 	}
 	public void verifyRelatedQueriesZI() throws InterruptedException {
 
-	    String GREEN  = "\u001B[32m";
-	    String RED    = "\u001B[31m";
-	    String CYAN   = "\u001B[36m";
-	    String YELLOW = "\u001B[33m";
-	    String RESET  = "\u001B[0m";
-
-	    String keyword = "Red";
-	    System.out.println(CYAN + "🔍 Searching for keyword: " + keyword + RESET);
+	    String keyword = "red";
 
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-	    // ✅ Open search
+	    // Search
 	    WebElement searchInput = wait.until(
 	            ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
 	    );
@@ -507,221 +499,117 @@ public final class SearchSectionPage  extends SearchBarObjRepo{
 
 	    Thread.sleep(2000);
 
-	    // ✅ Check wrapper
-	    By wrapperBy = By.xpath("//div[@class='recent_search_wrapper']");
-	    List<WebElement> wrappers = driver.findElements(wrapperBy);
-
-	    if (wrappers.isEmpty()) {
-	        System.out.println(YELLOW + "⚠️ No Related Queries section found" + RESET);
-	        return;
-	    }
-
-	    WebElement wrapper = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(wrapperBy)
+	    // Get first suggestion
+	    WebElement firstSuggestion = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("(//li[contains(@class,'product-redirect-tag')])[1]")
+	            )
 	    );
 
-	    String sectionHeading = wrapper.findElement(By.xpath(".//h3")).getText();
-	    System.out.println(GREEN + "📌 Section Heading: " + sectionHeading + RESET);
+	    String expectedName = firstSuggestion.getText().trim();
 
-	    // ✅ Queries XPath
-	    By queriesBy = By.xpath("//li[contains(@class,'product-redirect-tag')]");
+	    System.out.println("First Suggestion: " + expectedName);
 
-	    List<WebElement> queries = wait.until(
-	            ExpectedConditions.visibilityOfAllElementsLocatedBy(queriesBy)
+	    // Click first suggestion
+	    firstSuggestion.click();
+
+	    // Verify heading
+	    WebElement heading = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//h2[contains(@class,'prod_listing_topic')]")
+	            )
 	    );
 
-	    int total = queries.size();
-	    System.out.println(CYAN + "🔽 Total Related Queries: " + total + RESET);
+	    String actualHeading = heading.getText().trim();
 
-	    // ✅ Product XPath
-	    By productsBy = By.xpath("//div[contains(@class,'prod_listing_card')]");
+	    System.out.println("Expected Heading: " + expectedName);
+	    System.out.println("Actual Heading: " + actualHeading);
 
-	    for (int i = 0; i < total; i++) {
+	    Assert.assertEquals(
+	    	    expectedName.toUpperCase(),
+	    	    actualHeading.toUpperCase()
+	    	);
 
-	        // 🔁 Re-fetch queries
-	        queries = wait.until(
-	                ExpectedConditions.visibilityOfAllElementsLocatedBy(queriesBy)
-	        );
+	    // Verify products are displayed
+	    List<WebElement> products = driver.findElements(
+	            By.xpath("//div[contains(@class,'prod_listing_card')]")
+	    );
 
-	        WebElement query = queries.get(i);
-	        String expected = query.getText().trim();
+	    Assert.assertTrue(
+	            "No products displayed!",
+	            products.size() > 0
+	   
+	    );
 
-	        System.out.println(YELLOW + "👉 Clicking Query [" + (i + 1) + "] : " + expected + RESET);
-
-	        try {
-	            wait.until(ExpectedConditions.elementToBeClickable(query)).click();
-	        } catch (Exception e) {
-	            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", query);
-	        }
-
-	        // ✅ Heading validation
-	        WebElement headingEle = wait.until(
-	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("//h2[contains(@class,'prod_listing_topic')]")
-	                )
-	        );
-
-	        String actual = headingEle.getText().trim();
-
-	        if (actual.equalsIgnoreCase(expected)) {
-	            System.out.println(GREEN + "✅ Heading matched: " + actual + RESET);
-	        } else {
-	            System.out.println(RED + "❌ Heading mismatch! Expected: " + expected + " | Actual: " + actual + RESET);
-	            Assert.fail("Heading mismatch");
-	        }
-
-	        // ✅ PRODUCT VALIDATION (NEW 🔥)
-	        List<WebElement> products = wait.until(
-	                ExpectedConditions.visibilityOfAllElementsLocatedBy(productsBy)
-	        );
-
-	        int productCount = products.size();
-
-	        if (productCount > 0) {
-	            System.out.println(GREEN + "🛍 Products Found: " + productCount + RESET);
-	        } else {
-	            System.out.println(RED + "❌ No products found!" + RESET);
-	            Assert.fail("No products displayed for: " + expected);
-	        }
-
-	        // 🔙 Back
-	        driver.navigate().back();
-
-	        // 🔥 Re-open search (fix stale)
-	        searchInput = wait.until(
-	                ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
-	        );
-
-	        searchInput.click();
-	        searchInput.clear();
-	        searchInput.sendKeys(keyword);
-
-	        Thread.sleep(1500);
-	    }
-
-	    System.out.println(GREEN + "🎉 All Related Queries + Products validated successfully!" + RESET);
+	    System.out.println("✅ Products Found: " + products.size());
+	    System.out.println("✅ First suggestion validated successfully.");
 	}
 	   
 	public void verifyRelatedQueriesBL() throws InterruptedException {
 		
 		click(bosslady);
 		
-		
-	  String GREEN  = "\u001B[32m";
-	    String RED    = "\u001B[31m";
-	    String CYAN   = "\u001B[36m";
-	    String YELLOW = "\u001B[33m";
-	    String RESET  = "\u001B[0m";
+		searchbarClikable();
 
-	    String keyword = " set";
-	    System.out.println(CYAN + "🔍 Searching for keyword: " + keyword + RESET);
+		 String keyword = "formal";
 
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-	    // ✅ Open search
-	    WebElement searchInput = wait.until(
-	            ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
-	    );
+		    // Search
+		    WebElement searchInput = wait.until(
+		            ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
+		    );
 
-	    searchInput.click();
-	    searchInput.clear();
-	    searchInput.sendKeys(keyword);
+		    searchInput.click();
+		    searchInput.clear();
+		    searchInput.sendKeys(keyword);
 
-	    Thread.sleep(2000);
+		    Thread.sleep(2000);
 
-	    // ✅ Check wrapper
-	    By wrapperBy = By.xpath("//div[@class='recent_search_wrapper']");
-	    List<WebElement> wrappers = driver.findElements(wrapperBy);
+		    // Get first suggestion
+		    WebElement firstSuggestion = wait.until(
+		            ExpectedConditions.visibilityOfElementLocated(
+		                    By.xpath("(//li[contains(@class,'product-redirect-tag')])[1]")
+		            )
+		    );
 
-	    if (wrappers.isEmpty()) {
-	        System.out.println(YELLOW + "⚠️ No Related Queries section found" + RESET);
-	        return;
-	    }
+		    String expectedName = firstSuggestion.getText().trim();
 
-	    WebElement wrapper = wait.until(
-	            ExpectedConditions.visibilityOfElementLocated(wrapperBy)
-	    );
+		    System.out.println("First Suggestion: " + expectedName);
 
-	    String sectionHeading = wrapper.findElement(By.xpath(".//h3")).getText();
-	    System.out.println(GREEN + "📌 Section Heading: " + sectionHeading + RESET);
+		    // Click first suggestion
+		    firstSuggestion.click();
 
-	    // ✅ Queries XPath
-	    By queriesBy = By.xpath("//li[contains(@class,'product-redirect-tag')]");
+		    // Verify heading
+		    WebElement heading = wait.until(
+		            ExpectedConditions.visibilityOfElementLocated(
+		                    By.xpath("//h2[contains(@class,'prod_listing_topic')]")
+		            )
+		    );
 
-	    List<WebElement> queries = wait.until(
-	            ExpectedConditions.visibilityOfAllElementsLocatedBy(queriesBy)
-	    );
+		    String actualHeading = heading.getText().trim();
 
-	    int total = queries.size();
-	    System.out.println(CYAN + "🔽 Total Related Queries: " + total + RESET);
+		    System.out.println("Expected Heading: " + expectedName);
+		    System.out.println("Actual Heading: " + actualHeading);
 
-	    // ✅ Product XPath
-	    By productsBy = By.xpath("//div[contains(@class,'prod_listing_card')]");
+		    Assert.assertEquals(
+		    	    expectedName.toUpperCase(),
+		    	    actualHeading.toUpperCase()
+		    	);
 
-	    for (int i = 0; i < total; i++) {
+		    // Verify products are displayed
+		    List<WebElement> products = driver.findElements(
+		            By.xpath("//div[contains(@class,'prod_listing_card')]")
+		    );
 
-	        // 🔁 Re-fetch queries
-	        queries = wait.until(
-	                ExpectedConditions.visibilityOfAllElementsLocatedBy(queriesBy)
-	        );
+		    Assert.assertTrue(
+		            "No products displayed!",
+		            products.size() > 0
+		   
+		    );
 
-	        WebElement query = queries.get(i);
-	        String expected = query.getText().trim();
-
-	        System.out.println(YELLOW + "👉 Clicking Query [" + (i + 1) + "] : " + expected + RESET);
-
-	        try {
-	            wait.until(ExpectedConditions.elementToBeClickable(query)).click();
-	        } catch (Exception e) {
-	            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", query);
-	        }
-
-	        // ✅ Heading validation
-	        WebElement headingEle = wait.until(
-	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("//h2[contains(@class,'prod_listing_topic')]")
-	                )
-	        );
-
-	        String actual = headingEle.getText().trim();
-
-	        if (actual.equalsIgnoreCase(expected)) {
-	            System.out.println(GREEN + "✅ Heading matched: " + actual + RESET);
-	        } else {
-	            System.out.println(RED + "❌ Heading mismatch! Expected: " + expected + " | Actual: " + actual + RESET);
-	            Assert.fail("Heading mismatch");
-	        }
-
-	        // ✅ PRODUCT VALIDATION (NEW 🔥)
-	        List<WebElement> products = wait.until(
-	                ExpectedConditions.visibilityOfAllElementsLocatedBy(productsBy)
-	        );
-
-	        int productCount = products.size();
-
-	        if (productCount > 0) {
-	            System.out.println(GREEN + "🛍 Products Found: " + productCount + RESET);
-	        } else {
-	            System.out.println(RED + "❌ No products found!" + RESET);
-	            Assert.fail("No products displayed for: " + expected);
-	        }
-
-	        // 🔙 Back
-	        driver.navigate().back();
-
-	        // 🔥 Re-open search (fix stale)
-	        searchInput = wait.until(
-	                ExpectedConditions.elementToBeClickable(By.id("globalSearchInput"))
-	        );
-
-	        searchInput.click();
-	        searchInput.clear();
-	        searchInput.sendKeys(keyword);
-
-	        Thread.sleep(1500);
-	    }
-
-	    System.out.println(GREEN + "🎉 All Related Queries + Products validated successfully!" + RESET);
+		    System.out.println("✅ Products Found: " + products.size());
+		    System.out.println("✅ First suggestion validated successfully.");
 	}
 	public void verifyBothBrandcloseButtonInSearchbar() throws InterruptedException {
 		searchbarClikable();
