@@ -1000,9 +1000,177 @@ public void validateUrlAndLogo() {
 //	}
 
 
+//private void featureOnSection() {
+//
+//    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//
+//    // 🎨 COLORS
+//    String GREEN  = "\u001B[32m";
+//    String RED    = "\u001B[31m";
+//    String YELLOW = "\u001B[33m";
+//    String CYAN   = "\u001B[36m";
+//    String RESET  = "\u001B[0m";
+//
+//    By featuredSection = By.xpath("//section[contains(@class,'featured_section')]");
+//    By imagesBy = By.xpath("//section[contains(@class,'featured_section')]//img");
+//
+//    // ---------------- SCROLL ----------------
+//    WebElement featureEle = wait.until(
+//            ExpectedConditions.presenceOfElementLocated(featuredSection)
+//    );
+//
+//    ((JavascriptExecutor) driver).executeScript(
+//            "arguments[0].scrollIntoView({block:'center'});", featureEle);
+//
+//    wait.until(ExpectedConditions.visibilityOf(featureEle));
+//
+//    System.out.println(CYAN + "✅ Scrolled to Featured Section" + RESET);
+//
+//    // ---------------- SMALL SCROLL ----------------
+//    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,300)");
+//    Common.waitForElement(5);
+//
+//    // ---------------- FORWARD ARROW ----------------
+//    By nextArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-next')]");
+//
+//    List<WebElement> nextBtns = driver.findElements(nextArrowBy);
+//
+//    if (nextBtns.isEmpty()) {
+//        System.out.println(YELLOW + "⚠️ Forward Arrow NOT AVAILABLE" + RESET);
+//    } else {
+//        WebElement nextBtn = nextBtns.get(0);
+//        String classAttr = nextBtn.getAttribute("class");
+//
+//        if (classAttr != null && classAttr.contains("swiper-button-next swiper-button-lock")) {
+//            System.out.println(YELLOW + "⚠️ Forward Arrow NOT ACTIVE" + RESET);
+//        } else {
+//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", nextBtn);
+//
+//            try {
+//                nextBtn.click();
+//            } catch (Exception e) {
+//                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", nextBtn);
+//            }
+//
+//            System.out.println(GREEN + "➡️ Forward Arrow ACTIVE → CLICKED" + RESET);
+//        }
+//    }
+//
+//    // ---------------- BACKWARD ARROW ----------------
+//    By prevArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-prev')]");
+//
+//    List<WebElement> prevBtns = driver.findElements(prevArrowBy);
+//
+//    if (prevBtns.isEmpty()) {
+//        System.out.println(YELLOW + "⚠️ Backward Arrow NOT AVAILABLE" + RESET);
+//    } else {
+//        WebElement prevBtn = prevBtns.get(0);
+//        String classAttr = prevBtn.getAttribute("class");
+//
+//        if (classAttr != null && classAttr.contains("swiper-button-prev swiper-button-lock")) {
+//            System.out.println(YELLOW + "⚠️ Backward Arrow NOT ACTIVE" + RESET);
+//        } else {
+//            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", prevBtn);
+//
+//            try {
+//                prevBtn.click();
+//            } catch (Exception e) {
+//                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", prevBtn);
+//            }
+//
+//            System.out.println(GREEN + "⬅️ Backward Arrow ACTIVE → CLICKED" + RESET);
+//        }
+//    }
+//
+// // ---------------- CLICK ALL BANNERS ----------------
+//    List<WebElement> images = wait.until(
+//            ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
+//    );
+//    int total = images.size();
+//    System.out.println(CYAN + "🖼 Total Banners: " + total + RESET);
+//
+//    for (int i = 0; i < total; i++) {
+//
+//        images = wait.until(
+//                ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
+//        );
+//
+//        WebElement img = images.get(i);
+//
+//        try {
+//            ((JavascriptExecutor) driver).executeScript(
+//                    "arguments[0].scrollIntoView({block:'center'});", img);
+//
+//            wait.until(ExpectedConditions.elementToBeClickable(img));
+//
+//            // ---------------- ALT CHECK ----------------
+//            String bannerName = img.getAttribute("alt");
+//
+//            if (bannerName == null || bannerName.trim().isEmpty()) {
+//                System.out.println(YELLOW + "⚠️ Banner [" + (i + 1) + "] NO ALT → Skipping" + RESET);
+//                continue;
+//            }
+//
+//            bannerName = bannerName.toLowerCase().trim();
+//
+//            System.out.println(CYAN + "👉 Clicking Banner [" + (i + 1) + "] : " + bannerName + RESET);
+//
+//            String beforeClickUrl = driver.getCurrentUrl();
+//
+//            clickUsingJavaScript(img);
+//
+//            Thread.sleep(2000);
+//
+//            String currentUrl = driver.getCurrentUrl().toLowerCase();
+//
+//            if (currentUrl.equalsIgnoreCase(beforeClickUrl)) {
+//                System.out.println(YELLOW + "⚠️ Banner [" + (i + 1) + "] NO REDIRECT" + RESET);
+//                continue;
+//            }
+//
+//            String cleanBanner = bannerName.replace(" ", "")
+//                                           .replace(".com", "")
+//                                           .replace("-", "");
+//
+//            String cleanUrl = currentUrl.replace("https://", "")
+//                                        .replace("http://", "")
+//                                        .replace("www.", "")
+//                                        .replace(".com", "")
+//                                        .replace("-", "")
+//                                        .replace("/", "");
+//
+//            if (cleanUrl.contains(cleanBanner)) {
+//
+//                System.out.println(GREEN + "✅ PASS → Banner & URL matched" + RESET);
+//                System.out.println(CYAN + "🔗 URL: " + currentUrl + RESET);
+//
+//            } else {
+//
+//                System.out.println(RED + "❌ FAIL → Banner & URL NOT matched" + RESET);
+//
+//                Assert.fail(
+//                        "Banner : " + bannerName +
+//                        "\nURL    : " + currentUrl
+//                );
+//            }
+//
+//            driver.navigate().back();
+//
+//            wait.until(ExpectedConditions.visibilityOfElementLocated(featuredSection));
+//
+//        } catch (Exception e) {
+//            System.out.println(RED + "❌ Error on banner index " + i + RESET);
+//            Assert.fail("Error: " + e.getMessage());
+//        }
+//    }
+//
+//    System.out.println(GREEN + "🎉 All banners validated successfully!" + RESET);
+//}
+//
 private void featureOnSection() {
 
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    WebDriverWait wait =
+            new WebDriverWait(driver, Duration.ofSeconds(15));
 
     // 🎨 COLORS
     String GREEN  = "\u001B[32m";
@@ -1011,143 +1179,259 @@ private void featureOnSection() {
     String CYAN   = "\u001B[36m";
     String RESET  = "\u001B[0m";
 
-    By featuredSection = By.xpath("//section[contains(@class,'featured_section')]");
-    By imagesBy = By.xpath("//section[contains(@class,'featured_section')]//img");
+    By featuredSection =
+            By.xpath("//section[contains(@class,'featured_section')]");
+
+    By imagesBy =
+            By.xpath("//section[contains(@class,'featured_section')]//img");
 
     // ---------------- SCROLL ----------------
+
     WebElement featureEle = wait.until(
             ExpectedConditions.presenceOfElementLocated(featuredSection)
     );
 
     ((JavascriptExecutor) driver).executeScript(
-            "arguments[0].scrollIntoView({block:'center'});", featureEle);
+            "arguments[0].scrollIntoView({block:'center'});",
+            featureEle);
 
     wait.until(ExpectedConditions.visibilityOf(featureEle));
 
     System.out.println(CYAN + "✅ Scrolled to Featured Section" + RESET);
 
     // ---------------- SMALL SCROLL ----------------
+
     ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,300)");
-    Common.waitForElement(5);
+    Common.waitForElement(3);
 
     // ---------------- FORWARD ARROW ----------------
-    By nextArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-next')]");
+
+    By nextArrowBy =
+            By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-next')]");
 
     List<WebElement> nextBtns = driver.findElements(nextArrowBy);
 
     if (nextBtns.isEmpty()) {
-        System.out.println(YELLOW + "⚠️ Forward Arrow NOT AVAILABLE" + RESET);
+
+        System.out.println(YELLOW +
+                "⚠️ Forward Arrow NOT AVAILABLE"
+                + RESET);
+
     } else {
+
         WebElement nextBtn = nextBtns.get(0);
         String classAttr = nextBtn.getAttribute("class");
 
-        if (classAttr != null && classAttr.contains("swiper-button-next swiper-button-lock")) {
-            System.out.println(YELLOW + "⚠️ Forward Arrow NOT ACTIVE" + RESET);
+        if (classAttr != null &&
+                classAttr.contains("swiper-button-lock")) {
+
+            System.out.println(YELLOW +
+                    "⚠️ Less banners → Forward Arrow NOT ACTIVE"
+                    + RESET);
+
         } else {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", nextBtn);
 
             try {
-                nextBtn.click();
-            } catch (Exception e) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", nextBtn);
-            }
 
-            System.out.println(GREEN + "➡️ Forward Arrow ACTIVE → CLICKED" + RESET);
+                ((JavascriptExecutor) driver).executeScript(
+                        "arguments[0].scrollIntoView({block:'center'});",
+                        nextBtn);
+
+                Common.waitForElement(1);
+
+                nextBtn.click();
+
+                System.out.println(GREEN +
+                        "➡️ Forward Arrow ACTIVE → CLICKED"
+                        + RESET);
+
+            } catch (Exception e) {
+
+                System.out.println(YELLOW +
+                        "⚠️ Forward Arrow click failed but continuing"
+                        + RESET);
+            }
         }
     }
 
     // ---------------- BACKWARD ARROW ----------------
-    By prevArrowBy = By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-prev')]");
+
+    By prevArrowBy =
+            By.xpath("//section[contains(@class,'featured_section')]//*[contains(@class,'swiper-button-prev')]");
 
     List<WebElement> prevBtns = driver.findElements(prevArrowBy);
 
     if (prevBtns.isEmpty()) {
-        System.out.println(YELLOW + "⚠️ Backward Arrow NOT AVAILABLE" + RESET);
+
+        System.out.println(YELLOW +
+                "⚠️ Backward Arrow NOT AVAILABLE"
+                + RESET);
+
     } else {
+
         WebElement prevBtn = prevBtns.get(0);
         String classAttr = prevBtn.getAttribute("class");
 
-        if (classAttr != null && classAttr.contains("swiper-button-prev swiper-button-lock")) {
-            System.out.println(YELLOW + "⚠️ Backward Arrow NOT ACTIVE" + RESET);
+        if (classAttr != null &&
+                classAttr.contains("swiper-button-lock")) {
+
+            System.out.println(YELLOW +
+                    "⚠️ Less banners → Backward Arrow NOT ACTIVE"
+                    + RESET);
+
         } else {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", prevBtn);
 
             try {
-                prevBtn.click();
-            } catch (Exception e) {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", prevBtn);
-            }
 
-            System.out.println(GREEN + "⬅️ Backward Arrow ACTIVE → CLICKED" + RESET);
+                ((JavascriptExecutor) driver).executeScript(
+                        "arguments[0].scrollIntoView({block:'center'});",
+                        prevBtn);
+
+                Common.waitForElement(1);
+
+                prevBtn.click();
+
+                System.out.println(GREEN +
+                        "⬅️ Backward Arrow ACTIVE → CLICKED"
+                        + RESET);
+
+            } catch (Exception e) {
+
+                System.out.println(YELLOW +
+                        "⚠️ Backward Arrow click failed but continuing"
+                        + RESET);
+            }
         }
     }
 
     // ---------------- CLICK ALL BANNERS ----------------
-    List<WebElement> images = wait.until(
-            ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
-    );
+
+    List<WebElement> images = driver.findElements(imagesBy);
+
+    if (images.isEmpty()) {
+
+        System.out.println(YELLOW +
+                "⚠️ No banners available in Featured Section"
+                + RESET);
+
+        return;
+    }
 
     int total = images.size();
-    System.out.println(CYAN + "🖼 Total Banners: " + total + RESET);
+
+    System.out.println(CYAN +
+            "🖼 Total Banners: " + total
+            + RESET);
 
     for (int i = 0; i < total; i++) {
 
-        images = wait.until(
-                ExpectedConditions.visibilityOfAllElementsLocatedBy(imagesBy)
-        );
-
-        WebElement img = images.get(i);
-
         try {
+
+            images = driver.findElements(imagesBy);
+
+            if (images.isEmpty()) {
+
+                System.out.println(YELLOW +
+                        "⚠️ No banners found while iterating"
+                        + RESET);
+
+                break;
+            }
+
+            WebElement img = images.get(i);
+
             ((JavascriptExecutor) driver).executeScript(
-                    "arguments[0].scrollIntoView({block:'center'});", img);
+                    "arguments[0].scrollIntoView({block:'center'});",
+                    img);
 
-            wait.until(ExpectedConditions.elementToBeClickable(img));
+            Common.waitForElement(2);
 
-            // ---------------- ALT CHECK ----------------
             String bannerName = img.getAttribute("alt");
 
-            if (bannerName == null || bannerName.trim().isEmpty()) {
-                System.out.println(YELLOW + "⚠️ Banner [" + (i + 1) + "] NO ALT → Skipping" + RESET);
+            if (bannerName == null ||
+                    bannerName.trim().isEmpty()) {
+
+                System.out.println(YELLOW +
+                        "⚠️ Banner [" + (i + 1)
+                        + "] NO ALT → Skipping"
+                        + RESET);
+
                 continue;
             }
 
             bannerName = bannerName.toLowerCase().trim();
 
-            System.out.println(CYAN + "👉 Clicking Banner [" + (i + 1) + "] : " + bannerName + RESET);
+            System.out.println(CYAN +
+                    "👉 Clicking Banner [" + (i + 1)
+                    + "] : " + bannerName
+                    + RESET);
 
-            String beforeClickUrl = driver.getCurrentUrl();
+            String beforeClickUrl =
+                    driver.getCurrentUrl();
 
-            clickUsingJavaScript(img);
+            // ---------------- SAFE CLICK ----------------
 
-            Thread.sleep(2000);
+            try {
 
-            String currentUrl = driver.getCurrentUrl().toLowerCase();
+                WebElement clickableBanner =
+                        img.findElement(By.xpath("./ancestor::a[1]"));
+
+                ((JavascriptExecutor) driver)
+                        .executeScript(
+                                "arguments[0].scrollIntoView({block:'center'});",
+                                clickableBanner);
+
+                Common.waitForElement(1);
+
+                clickableBanner.click();
+
+            } catch (Exception e) {
+
+                ((JavascriptExecutor) driver)
+                        .executeScript(
+                                "arguments[0].click();",
+                                img);
+            }
+
+            Common.waitForElement(3);
+
+            String currentUrl =
+                    driver.getCurrentUrl().toLowerCase();
 
             if (currentUrl.equalsIgnoreCase(beforeClickUrl)) {
-                System.out.println(YELLOW + "⚠️ Banner [" + (i + 1) + "] NO REDIRECT" + RESET);
+
+                System.out.println(YELLOW +
+                        "⚠️ Banner [" + (i + 1)
+                        + "] NO REDIRECT"
+                        + RESET);
+
                 continue;
             }
 
-            String cleanBanner = bannerName.replace(" ", "")
-                                           .replace(".com", "")
-                                           .replace("-", "");
+            String cleanBanner =
+                    bannerName.replace(" ", "")
+                            .replace(".com", "")
+                            .replace("-", "");
 
-            String cleanUrl = currentUrl.replace("https://", "")
-                                        .replace("http://", "")
-                                        .replace("www.", "")
-                                        .replace(".com", "")
-                                        .replace("-", "")
-                                        .replace("/", "");
+            String cleanUrl =
+                    currentUrl.replace("https://", "")
+                            .replace("http://", "")
+                            .replace("www.", "")
+                            .replace(".com", "")
+                            .replace("-", "")
+                            .replace("/", "");
 
             if (cleanUrl.contains(cleanBanner)) {
 
-                System.out.println(GREEN + "✅ PASS → Banner & URL matched" + RESET);
-                System.out.println(CYAN + "🔗 URL: " + currentUrl + RESET);
+                System.out.println(GREEN +
+                        "✅ PASS → Banner & URL matched"
+                        + RESET);
 
             } else {
 
-                System.out.println(RED + "❌ FAIL → Banner & URL NOT matched" + RESET);
+                System.out.println(RED +
+                        "❌ FAIL → Banner & URL NOT matched"
+                        + RESET);
 
                 Assert.fail(
                         "Banner : " + bannerName +
@@ -1157,18 +1441,26 @@ private void featureOnSection() {
 
             driver.navigate().back();
 
-            wait.until(ExpectedConditions.visibilityOfElementLocated(featuredSection));
+            wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(
+                            featuredSection));
+
+            Common.waitForElement(2);
 
         } catch (Exception e) {
-            System.out.println(RED + "❌ Error on banner index " + i + RESET);
+
+            System.out.println(RED +
+                    "❌ Error on banner index " + i
+                    + RESET);
+
             Assert.fail("Error: " + e.getMessage());
         }
     }
 
-    System.out.println(GREEN + "🎉 All banners validated successfully!" + RESET);
+    System.out.println(GREEN +
+            "🎉 All banners validated successfully!"
+            + RESET);
 }
-
-
 
 public void threadBannerINHomePage() {
 
@@ -1665,13 +1957,12 @@ public void clickOnAboutUsBannerForBL() {
 }
 
 public void verifyCollectionBanners() throws InterruptedException {
-	 
+
     driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
     click(zlaataIndiaShopButton);
 
     String GREEN  = "\u001B[32m";
-    String RED    = "\u001B[31m";
     String YELLOW = "\u001B[33m";
     String BLUE   = "\u001B[34m";
     String RESET  = "\u001B[0m";
@@ -1680,15 +1971,15 @@ public void verifyCollectionBanners() throws InterruptedException {
 
     // Scroll to collection section
     WebElement section = wait.until(
-        ExpectedConditions.presenceOfElementLocated(
-            By.xpath("//section[contains(@class,'zi_collection')]")
-        )
+            ExpectedConditions.presenceOfElementLocated(
+                    By.xpath("//section[contains(@class,'zi_collection')]")
+            )
     );
 
     ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", section);
 
     List<WebElement> banners = driver.findElements(
-        By.xpath("//a[contains(@class,'zi_collection_card')]")
+            By.xpath("//a[contains(@class,'zi_collection_card')]")
     );
 
     int total = banners.size();
@@ -1696,66 +1987,79 @@ public void verifyCollectionBanners() throws InterruptedException {
 
     for (int i = 0; i < total; i++) {
 
-        // Re-fetch elements
-        banners = driver.findElements(By.xpath("//a[contains(@class,'zi_collection_card')]"));
+        // Re-fetch banners every loop
+        banners = driver.findElements(
+                By.xpath("//a[contains(@class,'zi_collection_card')]")
+        );
 
         WebElement banner = banners.get(i);
 
         String bannerName = banner.getText().trim();
         System.out.println(BLUE + "Clicking banner: " + bannerName + RESET);
 
-        banner.click();
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
 
         // Wait for heading
         WebElement heading = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(
-                By.xpath(" //h2[@class='prod_listing_topic']")
-            )
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//h2[@class='prod_listing_topic']")
+                )
         );
 
         String pageHeading = heading.getText().trim();
         System.out.println(YELLOW + "Page heading: " + pageHeading + RESET);
 
         // Normalize text
-        String normalizedBanner = bannerName.replace("-", "").replace(" ", "").toLowerCase();
-        String normalizedHeading = pageHeading.replace("-", "").replace(" ", "").toLowerCase();
+        String normalizedBanner = bannerName.replace("-", "")
+                .replace(" ", "")
+                .toLowerCase();
+
+        String normalizedHeading = pageHeading.replace("-", "")
+                .replace(" ", "")
+                .toLowerCase();
 
         // Validate heading match
         if (!normalizedBanner.equals(normalizedHeading)) {
             throw new AssertionError(
-                "Mismatch! Banner: " + bannerName + " | Heading: " + pageHeading);
+                    "Mismatch! Banner: " + bannerName +
+                            " | Heading: " + pageHeading
+            );
         }
 
-        // Print URL
-        String currentUrl = driver.getCurrentUrl();
-        System.out.println("URL: " + currentUrl);
-
-        // Product validation
+        // Product validation (RE-FETCH here to avoid stale element)
         List<WebElement> products = driver.findElements(
-            By.xpath("//div[contains(@class,'prod_listing_card')]")
+                By.xpath("//div[contains(@class,'prod_listing_card')]")
         );
 
         if (products.size() > 0) {
 
             WebElement firstProduct = wait.until(
-                ExpectedConditions.visibilityOf(products.get(0))
+                    ExpectedConditions.visibilityOfElementLocated(
+                            By.xpath("(//div[contains(@class,'prod_listing_card')])[1]")
+                    )
             );
 
             if (firstProduct.isDisplayed()) {
-                System.out.println(GREEN + "Product displayed for: " + bannerName + RESET);
+                System.out.println(
+                        GREEN + "Product displayed for: " + bannerName + RESET
+                );
             }
 
         } else {
-            System.out.println(YELLOW + "No products found for: " + bannerName + RESET);
+            System.out.println(
+                    YELLOW + "No products found for: " + bannerName + RESET
+            );
         }
 
-        // Go back
+        // Back to home page
         driver.navigate().back();
 
-        // Wait for section again
-        wait.until(ExpectedConditions.presenceOfElementLocated(
-            By.xpath("//section[contains(@class,'zi_collection')]")
-        ));
+        // Wait again for collection section
+        wait.until(
+                ExpectedConditions.presenceOfElementLocated(
+                        By.xpath("//section[contains(@class,'zi_collection')]")
+                )
+        );
     }
 }
 
@@ -2396,7 +2700,7 @@ public void verifyNewInProductsCompleteFlow() throws InterruptedException {
             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", product);
 
             // ===== PDP =====
-            WebElement pdpNameEl = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[@class='prod_name']")));
+            WebElement pdpNameEl = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h3[@class='prod_name']")));
             WebElement pdpCurrentEl = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='prod_current_price']")));
             List<WebElement> pdpActualList = driver.findElements(By.xpath("//div[@class='prod_actual_price']"));
             String pdpActual = pdpActualList.size() > 0 ? pdpActualList.get(0).getText().trim() : "";
@@ -2661,7 +2965,7 @@ public void verifyDotsAndProducts() throws InterruptedException {
         Thread.sleep(800); // small wait for UI
 
         // 🔹 Get name & price AFTER hover
-        String nameBefore = product.findElement(By.xpath(".//h6")).getText().trim();
+        String nameBefore = product.findElement(By.xpath(".//h3")).getText().trim();
         String priceBefore = product.findElement(By.xpath(".//span")).getText().trim();
 
         if (nameBefore.isEmpty() || priceBefore.isEmpty()) {
@@ -2681,7 +2985,7 @@ public void verifyDotsAndProducts() throws InterruptedException {
 
         // 🔹 AFTER click
         String nameAfter = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[@class='prod_name']"))
+            ExpectedConditions.visibilityOfElementLocated(By.xpath("//h3[@class='prod_name']"))
         ).getText();
 
         String priceAfter = driver.findElement(By.xpath("//div[@class='prod_current_price']")).getText();

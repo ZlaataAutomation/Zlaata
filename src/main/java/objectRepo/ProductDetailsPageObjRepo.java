@@ -58,7 +58,7 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
 	protected final By backArrowEnabled = By.xpath("//div[@class='swiper-button-prev produtct_details_swiper_prev']");
 	protected final By backArrowDisabled = By.xpath("//div[@class='swiper-button-prev produtct_details_swiper_prev swiper-button-disabled']");
 
-	@FindBy(xpath = "//h4[@class='prod_name']")
+	@FindBy(xpath = "//h3[@class='prod_name']")
 	protected WebElement productName;
 
 	@FindBy(xpath = "//div[@class='prod_main_details']//div[@class='prod_wishlist_btn Cls_prod_wishlist_btn']")
@@ -186,7 +186,7 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
 	@FindBy(xpath = "//div[@class='prod_describe_drop_arrow']")//list of WebElement//div[@class='prod_describe_drop_arrow']
 	protected List <WebElement> clickAllDropDownArrow;
 
-	@FindBy(xpath = "//h5[normalize-space()='Return & Exchange' or normalize-space()='Exchange']")
+	@FindBy(xpath = "(//h3[normalize-space()='EASY Return & Exchange' or normalize-space()='Exchange'])[1]")
 	protected WebElement clickOnReturn_ExchangeDropDownArrow;
 
 	@FindBy(xpath = "//a[.='click here.']")
@@ -261,7 +261,7 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
    @FindBy(xpath = "//div[@class='zl-prod-color-swatches']")
    protected List<WebElement> colorDot;
    
-   @FindBy(xpath = "//h5[@class='prod_category']")
+   @FindBy(xpath = "//h2[@class='prod_category']")
    protected WebElement detailsPageCategoryName;
    
    @FindBy(xpath = "//div[@class='try_along_quickview_btn Cls_quickview_btn']")

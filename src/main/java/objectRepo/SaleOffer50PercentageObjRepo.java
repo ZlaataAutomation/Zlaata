@@ -31,7 +31,7 @@ public abstract class SaleOffer50PercentageObjRepo extends BasePage{
 	@FindBy(xpath = "//input[@id='search_input']")
 	protected WebElement userSearchBox;
 	
-	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Continue']")
+	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Place order']")
 	protected WebElement continueBtn;
 	
 	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Place order']")

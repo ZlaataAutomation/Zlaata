@@ -351,6 +351,8 @@ Thread.sleep(2000);
 	    // ✅ Navigate to PLP
 	    actions.moveToElement(shopMenu).perform();
 	    actions.moveToElement(categoryDresses).click().perform();
+	    
+	    Common.waitForElement(2);
 
 	    // ✅ Click Filter Button (SVG)
 	    WebElement filterBtn = wait.until(ExpectedConditions.elementToBeClickable(
@@ -368,7 +370,7 @@ Thread.sleep(2000);
 
 	    // ✅ Select Accessories checkbox
 	    WebElement accessoriesCheckbox = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.id("categories_Accessories")
+	            By.id("categories_accessories")
 	    ));
 
 	    // Scroll + click (safe)
@@ -1157,7 +1159,7 @@ Common.waitForElement(2);
 	    actions.moveToElement(category).click().perform();
 
 	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
-	    Common.waitForElement(2);
+	    Common.waitForElement(4);
 	 // Wait for products
 	    wait.until(ExpectedConditions.visibilityOfElementLocated(
 	            By.xpath("//div[contains(@class,'prod_listing_card')]")
@@ -1492,9 +1494,11 @@ Common.waitForElement(2);
 	    // Hover and open category
 	    Actions actions = new Actions(driver);
 	    actions.moveToElement(shopMenu).perform();
-	    actions.moveToElement(category).click().perform();
+	    actions.moveToElement(categoryDresses).click().perform();
 
 	    System.out.println(CYAN + "🔍 Navigated to category page" + RESET);
+	    
+	    Common.waitForElement(5);
 
 	    // Wait for product card
 	    WebElement productCard = wait.until(
@@ -1502,7 +1506,7 @@ Common.waitForElement(2);
 	                    By.xpath("//div[@class='prod_listing_card']")
 	            )
 	    );
-
+Common.waitForElement(3);
 	    // Check if product is out of stock
 	    List<WebElement> stockLabels = productCard.findElements(
 	            By.xpath(".//span[contains(@class,'prod_listing_hurry') and contains(text(),'Out of Stock')]")
@@ -1620,7 +1624,7 @@ Common.waitForElement(2);
 
 	    // Check if cart is already empty
 	    try {
-	        if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	        if (driver.findElement(By.xpath("//h2[contains(text(),'Your bag is empty')]")).isDisplayed()) {
 	            System.out.println("🛍️ Cart already empty. No delete action needed.");
 	            return;
 	        }
@@ -1656,7 +1660,7 @@ Common.waitForElement(2);
 
 	    // Final confirmation
 	    try {
-	        if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	        if (driver.findElement(By.xpath("//h2[contains(text(),'Your bag is empty')]")).isDisplayed()) {
 	            System.out.println("🛍️ Cart is empty, Continue Shopping displayed.");
 	        }
 	    } catch (NoSuchElementException e) {

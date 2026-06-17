@@ -145,7 +145,7 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 	    WebElement pdpName = wait.until(
 	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//h4[@class='prod_name']")
+	                    By.xpath("//h3[@class='prod_name']")
 	            )
 	    );
 
@@ -696,7 +696,7 @@ Thread.sleep(2000);
 	        System.out.println("✅ Verified color: " + colorName);
 	        // ----- VERIFY PRODUCT NAME -----
 	        String productName = driver.findElement(
-	                By.xpath("//h4[@class='prod_name']")).getText().toLowerCase();
+	                By.xpath("//h3[@class='prod_name']")).getText().toLowerCase();
 
 //	        Assert.assertTrue(
 //	                "Product name mismatch",
@@ -763,7 +763,7 @@ Thread.sleep(2000);
 
 	        // ---------------- PRODUCT NAME ----------------
 	        String productName = driver.findElement(
-	                By.xpath("//h4[@class='prod_name']"))
+	                By.xpath("//h3[@class='prod_name']"))
 	                .getText().toLowerCase();
 //
 //	        Assert.assertTrue(
@@ -1250,7 +1250,7 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	    // ✅ GET PRODUCT NAME
 	    WebElement pdpName = wait.until(
 	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//h4[@class='prod_name']")
+	                    By.xpath("//h3[@class='prod_name']")
 	            )
 	    );
 
@@ -1588,8 +1588,49 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	            .getConfigReader()
 	            .getApplicationUrl());
 
-	    click(zlaataIndiaShopButton);
+	   
+	        // Open cart
+	        driver.findElement(By.xpath("//button[@class='header_cta_btn Cls_cart_btn ']")).click();
+	        Common.waitForElement(1);
 
+	        // ✅ STEP 1: Check if cart is already empty
+	        try {
+	            if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	                System.out.println("🛍️ Cart already empty. No delete action needed.");
+	                return; // Stop method immediately
+	            }
+	        } catch (NoSuchElementException ignored) {
+	            // Cart is NOT empty, proceed to delete
+	        }
+
+	        // ✅ STEP 2: Delete products one by one
+	        while (true) {
+	            try {
+	                WebElement deleteBtn = driver.findElement(By.xpath("//div[@title='Delete']"));
+	                deleteBtn.click();
+	                System.out.println("🗑️ Product deleted");
+	                Common.waitForElement(1); 
+	            } catch (NoSuchElementException e) {
+	                System.out.println("✅ No more products to delete.");
+	                break;
+	            } catch (Exception e) {
+	                System.out.println("⚠️ Error while deleting: " + e.getMessage());
+	                break;
+	            }
+	        }
+
+	        // ✅ STEP 3: Final confirmation
+	        try {
+	            if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+	                System.out.println("🛍️ Cart is empty, Continue Shopping displayed.");
+	            }
+	        } catch (NoSuchElementException e) {
+	            System.out.println("ℹ️ Bag is not empty message not found.");
+	        }
+	    
+
+
+	    
 	    RandomProduct();
 
 	    Common.waitForElement(2);
@@ -1598,10 +1639,10 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 
 	    // ---------------- GET PRODUCT DETAILS ----------------
 	    wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//h4[@class='prod_name']")));
+	            By.xpath("//h3[@class='prod_name']")));
 
 	    String productName = driver.findElement(
-	            By.xpath("//h4[@class='prod_name']"))
+	            By.xpath("//h3[@class='prod_name']"))
 	            .getText().trim();
 
 	    String selectedColor = driver.findElement(
@@ -1735,7 +1776,50 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
 	    
-	    click(zlaataIndiaShopButton);
+	   
+	    
+
+        // Open cart
+        driver.findElement(By.xpath("//button[@class='header_cta_btn Cls_cart_btn ']")).click();
+        Common.waitForElement(1);
+
+        // ✅ STEP 1: Check if cart is already empty
+        try {
+            if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+                System.out.println("🛍️ Cart already empty. No delete action needed.");
+                return; // Stop method immediately
+            }
+        } catch (NoSuchElementException ignored) {
+            // Cart is NOT empty, proceed to delete
+        }
+
+        // ✅ STEP 2: Delete products one by one
+        while (true) {
+            try {
+                WebElement deleteBtn = driver.findElement(By.xpath("//div[@title='Delete']"));
+                deleteBtn.click();
+                System.out.println("🗑️ Product deleted");
+                Common.waitForElement(1); 
+            } catch (NoSuchElementException e) {
+                System.out.println("✅ No more products to delete.");
+                break;
+            } catch (Exception e) {
+                System.out.println("⚠️ Error while deleting: " + e.getMessage());
+                break;
+            }
+        }
+
+        // ✅ STEP 3: Final confirmation
+        try {
+            if (driver.findElement(By.xpath("//h5[contains(text(),'Your bag is empty')]")).isDisplayed()) {
+                System.out.println("🛍️ Cart is empty, Continue Shopping displayed.");
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("ℹ️ Bag is not empty message not found.");
+        }
+    
+
+	    
 
 
 	    try {
@@ -1744,7 +1828,7 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	        Common.waitForElement(2);
 	        // ---------------- GET PRODUCT DETAILS ----------------
 		    String productName = driver.findElement(
-		            By.xpath("//h4[@class='prod_name']"))
+		            By.xpath("//h3[@class='prod_name']"))
 		            .getText().trim();
 
 		    String selectedColor = driver.findElement(
@@ -2113,7 +2197,7 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	        // ---------------- VERIFY HEADING ----------------
 	        WebElement heading = wait.until(
 	                ExpectedConditions.visibilityOfElementLocated(
-	                        By.xpath("//div[contains(@class,'privacy__policy__title')]")));
+	                        By.xpath("//h2[contains(@class,'privacy__policy__title')]")));
 
 	        String actualHeading = heading.getText().trim();
 	        String expectedHeading = "RETURN, EXCHANGE & REPLACEMENT POLICY";
