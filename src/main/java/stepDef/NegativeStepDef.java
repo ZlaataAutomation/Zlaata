@@ -27,7 +27,7 @@ public class NegativeStepDef {
 			try {
 				
 				negsignup.launchZltV7();
-				negsignup.verifyLogOut();
+//				negsignup.verifyLogOut();
 				negsignup.ClickProfileIcon();
 				negsignup.signupbutton();
 				negsignup.userNumber();

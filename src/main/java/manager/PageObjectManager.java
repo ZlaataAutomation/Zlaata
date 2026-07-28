@@ -30,6 +30,8 @@ public class PageObjectManager {
     private AdminPanelPage admin;
     private AllBrokenLinkPage link;
     private landingPage land;
+	private BeforeLoginPage beforlogin;
+
    
 
     public PageObjectManager(WebDriver driver) {
@@ -117,5 +119,10 @@ public class PageObjectManager {
 	public landingPage  getLandingPage() {
 		return (land== null)? land = new landingPage(driver): land;
 	}
+	
+
+	public BeforeLoginPage getBeforeLogin() {
+			return (beforlogin == null)? beforlogin = new BeforeLoginPage(driver): beforlogin;
+		}
 	
 }
