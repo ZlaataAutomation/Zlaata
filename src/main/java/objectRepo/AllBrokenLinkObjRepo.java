@@ -7,9 +7,13 @@ import basePage.BasePage;
 
 public abstract class AllBrokenLinkObjRepo extends BasePage{
 	
-	@FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
-	   protected WebElement zlaataIndiaShopButton;
+//	@FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+//	   protected WebElement zlaataIndiaShopButton;
 	
+	
+	
+	@FindBy(xpath = "(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[1]")
+	protected WebElement zlaataIndiaShopButton;
 	
 
 }

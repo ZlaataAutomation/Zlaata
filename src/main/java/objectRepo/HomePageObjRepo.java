@@ -154,14 +154,14 @@ public abstract class HomePageObjRepo extends BasePage {
 	protected WebElement partySection;
 	
 	
-	@FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	@FindBy(xpath = "(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[1]")
 	   protected WebElement zlaataIndiaShopButton;
 	
 	
 	@FindBy(xpath = "//a[@class='brand_switch ']")
 	protected WebElement bosslady;
 	
-	@FindBy(xpath = "//a[@href='/boss-lady/']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+	@FindBy(xpath = "(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[2]")
 	protected WebElement clickOnBossladyShopNowButton;
 	
 	@FindBy(xpath = "//div[@class='cross__bttn_for_bosslaypopup popup_containers_cls_btn']")

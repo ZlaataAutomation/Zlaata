@@ -293,8 +293,12 @@ public abstract class ProductDetailsPageObjRepo extends BasePage
    @FindBy(xpath = "//div[@class='snackbar-container  snackbar-pos top-right']")
    protected WebElement reviewSuccessMessage;
    
-   @FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+//   @FindBy(xpath = "//a[@href='zlaata-india']//div[@class='landing_page_content']//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
+//   protected WebElement zlaataIndiaShopButton;
+   
+   @FindBy(xpath = "(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[1]")
    protected WebElement zlaataIndiaShopButton;
+
 
    
 }

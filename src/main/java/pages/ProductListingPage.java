@@ -368,16 +368,16 @@ Thread.sleep(2000);
 	    categories.click();
 	    System.out.println("✅ Opened Categories");
 
-	    // ✅ Select Accessories checkbox
-	    WebElement accessoriesCheckbox = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.id("categories_accessories")
+	    // ✅ Select categories_co_ords checkbox
+	    WebElement coOrdscheckbox = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.id("categories_co_ords")
 	    ));
 
 	    // Scroll + click (safe)
-	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", accessoriesCheckbox);
-	    js.executeScript("arguments[0].click();", accessoriesCheckbox);
+	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", coOrdscheckbox);
+	    js.executeScript("arguments[0].click();", coOrdscheckbox);
 
-	    System.out.println("✅ Selected Accessories");
+	    System.out.println("✅ Selected coords");
 
 	    // ✅ Click Apply button
 	    WebElement applyBtn = wait.until(ExpectedConditions.elementToBeClickable(
@@ -487,103 +487,192 @@ Thread.sleep(2000);
 	    }
 	    return true;
 	}
+//	public void verifySortBy() {
+//
+//	    String CYAN  = "\u001B[36m";
+//	    String BLUE  = "\u001B[34m";
+//	    String RED   = "\u001B[31m";
+//	    String GREEN = "\u001B[32m";
+//	    String RESET = "\u001B[0m";
+//
+//	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+//	    JavascriptExecutor js = (JavascriptExecutor) driver;
+//	    Actions actions = new Actions(driver);
+//
+//	    System.out.println(CYAN + "🔍 Navigating to PLP..." + RESET);
+//
+//	    // ✅ Navigate to PLP
+//	    actions.moveToElement(shopMenu).perform();
+//	    actions.moveToElement(categoryDresses).click().perform();
+//Common.waitForElement(2);
+//	    
+//	    wait.until(ExpectedConditions.visibilityOfElementLocated(
+//	            By.xpath("//div[contains(@class,'prod_listing_card')]")));
+//
+//	    // ================================
+//	    // 🔹 SORT BUTTON
+//	    // ================================
+//	    By sortBtn = By.xpath("//*[name()='svg' and contains(@class,'prod_list_sortby_btn')]");
+//
+//	    // ================================
+//	    // 🔹 1. PRICE HIGH TO LOW
+//	    // ================================
+//	    System.out.println(BLUE + "🔽 Verifying Price High to Low..." + RESET);
+//
+//	    driver.findElement(sortBtn).click();
+//	    Common.waitForElement(2);
+//	    selectSortOption("Price High to Low");
+//
+//	    waitForProductsToLoad();
+//
+//	    if (isSortedDescending(getAllPrices())) {
+//	        System.out.println(GREEN + "✅ Price High to Low working" + RESET);
+//	    } else {
+//	        System.out.println(RED + "❌ Price High to Low failed" + RESET);
+//	    }
+//	    Common.waitForElement(2);
+//	    // ================================
+//	    // 🔹 2. PRICE LOW TO HIGH
+//	    // ================================
+//	    System.out.println(BLUE + "🔼 Verifying Price Low to High..." + RESET);
+//
+//	    driver.findElement(sortBtn).click();
+//	    Common.waitForElement(2);
+//	    selectSortOption("Price Low to High");
+//
+//	    waitForProductsToLoad();
+//
+//	    if (isSortedAscending(getAllPrices())) {
+//	        System.out.println(GREEN + "✅ Price Low to High working" + RESET);
+//	    } else {
+//	        System.out.println(RED + "❌ Price Low to High failed" + RESET);
+//	    }
+//	    Common.waitForElement(2);
+//	    // ================================
+//	    // 🔹 3. DISCOUNT HIGH TO LOW
+//	    // ================================
+//	    System.out.println(BLUE + "🔽 Verifying Discount High to Low..." + RESET);
+//
+//	    driver.findElement(sortBtn).click();
+//	    Common.waitForElement(2);
+//	    selectSortOption("Discount High to Low");
+//
+//	    waitForProductsToLoad();
+//
+//	    if (isSortedDescending(getAllDiscounts())) {
+//	        System.out.println(GREEN + "✅ Discount High to Low working" + RESET);
+//	    } else {
+//	        System.out.println(RED + "❌ Discount High to Low failed" + RESET);
+//	    }
+//	    Common.waitForElement(2);
+//	    // ================================
+//	    // 🔹 4. DISCOUNT LOW TO HIGH
+//	    // ================================
+//	    System.out.println(BLUE + "🔼 Verifying Discount Low to High..." + RESET);
+//
+//	    driver.findElement(sortBtn).click();
+//	    Common.waitForElement(2);
+//	    selectSortOption("Discount Low to High");
+//
+//	    waitForProductsToLoad();
+//
+//	    if (isSortedAscending(getAllDiscounts())) {
+//	        System.out.println(GREEN + "✅ Discount Low to High working" + RESET);
+//	    } else {
+//	        System.out.println(RED + "❌ Discount Low to High failed" + RESET);
+//	    }
+//	    Common.waitForElement(2);
+//	}
+	
+	
 	public void verifySortBy() {
 
 	    String CYAN  = "\u001B[36m";
-	    String BLUE  = "\u001B[34m";
-	    String RED   = "\u001B[31m";
 	    String GREEN = "\u001B[32m";
+	    String RED   = "\u001B[31m";
 	    String RESET = "\u001B[0m";
-
+	    
+	    
+	    
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    JavascriptExecutor js = (JavascriptExecutor) driver;
 	    Actions actions = new Actions(driver);
 
 	    System.out.println(CYAN + "🔍 Navigating to PLP..." + RESET);
 
-	    // ✅ Navigate to PLP
+	    // Navigate to PLP
 	    actions.moveToElement(shopMenu).perform();
 	    actions.moveToElement(categoryDresses).click().perform();
-Common.waitForElement(2);
-	    
-	    wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//div[contains(@class,'prod_listing_card')]")));
 
-	    // ================================
-	    // 🔹 SORT BUTTON
-	    // ================================
-	    By sortBtn = By.xpath("//*[name()='svg' and contains(@class,'prod_list_sortby_btn')]");
-
-	    // ================================
-	    // 🔹 1. PRICE HIGH TO LOW
-	    // ================================
-	    System.out.println(BLUE + "🔽 Verifying Price High to Low..." + RESET);
-
-	    driver.findElement(sortBtn).click();
 	    Common.waitForElement(2);
-	    selectSortOption("Price High to Low");
 
-	    waitForProductsToLoad();
 
-	    if (isSortedDescending(getAllPrices())) {
-	        System.out.println(GREEN + "✅ Price High to Low working" + RESET);
-	    } else {
-	        System.out.println(RED + "❌ Price High to Low failed" + RESET);
+
+	    By sortButton = By.xpath("//*[@aria-label='Sort products']");
+
+	    By sortOptions = By.xpath(
+	            "//li[contains(@class,'filter_sort_list_items')]");
+
+	    // Open Sort By first time
+	    wait.until(ExpectedConditions.elementToBeClickable(sortButton)).click();
+
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(sortOptions));
+
+	    // Get all options dynamically
+	    List<WebElement> options = driver.findElements(sortOptions);
+
+	    List<String> sortNames = new ArrayList<>();
+
+	    for (WebElement option : options) {
+
+	        String value = option.getAttribute("data-value");
+
+	        if (value != null && !value.trim().isEmpty()) {
+	            sortNames.add(value.trim());
+	        }
 	    }
-	    Common.waitForElement(2);
-	    // ================================
-	    // 🔹 2. PRICE LOW TO HIGH
-	    // ================================
-	    System.out.println(BLUE + "🔼 Verifying Price Low to High..." + RESET);
 
-	    driver.findElement(sortBtn).click();
-	    Common.waitForElement(2);
-	    selectSortOption("Price Low to High");
+	    System.out.println(
+	            CYAN + "Total Sort Options : "
+	                    + sortNames.size()
+	                    + RESET);
 
-	    waitForProductsToLoad();
+	    // Click every option
+	    for (String sortName : sortNames) {
 
-	    if (isSortedAscending(getAllPrices())) {
-	        System.out.println(GREEN + "✅ Price Low to High working" + RESET);
-	    } else {
-	        System.out.println(RED + "❌ Price Low to High failed" + RESET);
+	        // Find option again
+	        WebElement option = wait.until(
+	                ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//li[@data-value=\"" + sortName + "\"]")));
+
+	        option.click();
+
+	        System.out.println(
+	                GREEN + "✅ Clicked : "
+	                        + sortName
+	                        + RESET);
+
+	        Common.waitForElement(2);
+
+	        // Open Sort By again ONLY if popup is closed
+	        if (!driver.findElements(sortOptions).stream()
+	                .anyMatch(WebElement::isDisplayed)) {
+
+	            wait.until(ExpectedConditions.elementToBeClickable(sortButton))
+	                    .click();
+
+	            wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                    sortOptions));
+	        }
 	    }
-	    Common.waitForElement(2);
-	    // ================================
-	    // 🔹 3. DISCOUNT HIGH TO LOW
-	    // ================================
-	    System.out.println(BLUE + "🔽 Verifying Discount High to Low..." + RESET);
 
-	    driver.findElement(sortBtn).click();
-	    Common.waitForElement(2);
-	    selectSortOption("Discount High to Low");
-
-	    waitForProductsToLoad();
-
-	    if (isSortedDescending(getAllDiscounts())) {
-	        System.out.println(GREEN + "✅ Discount High to Low working" + RESET);
-	    } else {
-	        System.out.println(RED + "❌ Discount High to Low failed" + RESET);
-	    }
-	    Common.waitForElement(2);
-	    // ================================
-	    // 🔹 4. DISCOUNT LOW TO HIGH
-	    // ================================
-	    System.out.println(BLUE + "🔼 Verifying Discount Low to High..." + RESET);
-
-	    driver.findElement(sortBtn).click();
-	    Common.waitForElement(2);
-	    selectSortOption("Discount Low to High");
-
-	    waitForProductsToLoad();
-
-	    if (isSortedAscending(getAllDiscounts())) {
-	        System.out.println(GREEN + "✅ Discount Low to High working" + RESET);
-	    } else {
-	        System.out.println(RED + "❌ Discount Low to High failed" + RESET);
-	    }
-	    Common.waitForElement(2);
+	    System.out.println(
+	            GREEN + "🎉 All Sort By options clicked successfully."
+	                    + RESET);
+	
 	}
-//	public void basicFilterFunction() {
+	
+	//	public void basicFilterFunction() {
 //		Common.waitForElement(5);
 //		Actions actions = new Actions(driver);
 //		actions.moveToElement(shopMenu);
