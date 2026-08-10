@@ -279,7 +279,7 @@ public void saleMenu() {
 	    System.out.println(CYAN + "URL: " + actualUrl + RESET);
 
 	    WebElement heading = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//h2[contains(text(),'NEW')]")
+	            By.xpath("//a[translate(normalize-space(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='new in']")
 	    ));
 
 	    System.out.println(GREEN + "✅ Heading displayed: " + heading.getText() + RESET);

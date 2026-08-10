@@ -1700,6 +1700,8 @@ driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl()
 	    );
 
 	    System.out.println("✅ Cart count increased successfully");
+	    
+	    Common.waitForElement(3);
 
 	    // ---------------- OPEN CART ----------------
 	    WebElement cartBtn = wait.until(
